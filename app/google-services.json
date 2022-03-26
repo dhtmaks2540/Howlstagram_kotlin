@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "375438055963",
+    "project_id": "howlstargramkotlin",
+    "storage_bucket": "howlstargramkotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375438055963:android:60f03d4d8e9bbd86dfb6be",
+        "android_client_info": {
+          "package_name": "kr.co.lee.howlstargram_kotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "375438055963-8aervd706mmof7oublerf0rnnq097vlu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfq4_NY1Svm7cwNPW3R-3BJbTQ_zwm8kM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "375438055963-8aervd706mmof7oublerf0rnnq097vlu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

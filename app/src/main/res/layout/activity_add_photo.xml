@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="kr.co.lee.howlstargram_kotlin.ui.addphoto.AddPhotoViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_add_photo"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_title" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:id="@+id/ll_toolbar_division"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/tb_add_photo"
+            android:background="@color/colorDivision"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/tb_add_photo" />
+
+        <ImageView
+            android:id="@+id/iv_addphoto"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_toolbar_division" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_toolbar_division"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_addphoto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_addphoto"
+            app:layout_constraintTop_toTopOf="@id/iv_addphoto">
+
+            <EditText
+                android:id="@+id/et_addphoto_edit_explain"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="top"
+                android:hint="@string/hint_image_content"
+                android:text="@={viewModel._description}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_addphoto_upload"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editText"
+            android:text="@string/upload_image"
+            android:theme="@style/ButtonStyle"
+            app:layout_constraintEnd_toEndOf="@id/editText"
+            app:layout_constraintStart_toStartOf="@id/editText"
+            app:layout_constraintTop_toBottomOf="@id/editText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
