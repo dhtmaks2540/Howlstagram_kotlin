@@ -10,6 +10,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityMainBinding
@@ -37,13 +39,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     // 초기화
     private fun init() {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_STORAGE)
+
+        // Navigation Graph, BottomNavigationView 연결
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fcv_main_content) as NavHostFragment
+        val navController = navHostFragment.navController
+        binding.bnvMain.setupWithNavController(navController)
     }
 
     // LiveDate Observe
     private fun observeLiveData() {
-        mainViewModel.currentPageType.observe(this) {
-            changeFragment(it)
-        }
+//        mainViewModel.currentPageType.observe(this) {
+//            changeFragment(it)
+//        }
     }
 
     // 현재 Fragment는 show, 나머지는 hide

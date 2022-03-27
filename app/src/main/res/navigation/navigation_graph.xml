@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/action_home">
+
+    <fragment
+        android:id="@+id/action_home"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.detail.DetailViewFragment"
+        android:label="DetailViewFragment" />
+    <fragment
+        android:id="@+id/action_search"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment"
+        android:label="GridFragment" />
+    <fragment
+        android:id="@+id/action_favorite_alarm"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.alarm.AlarmFragment"
+        android:label="AlarmFragment" />
+    <fragment
+        android:id="@+id/action_account"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
+        android:label="UserFragment" />
+</navigation>

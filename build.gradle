@@ -1,6 +1,16 @@
 buildscript {
+    apply from: "$rootDir/dependencies.gradle"
+    repositories {
+        google()
+        mavenCentral()
+    }
     dependencies {
-        classpath 'com.google.gms:google-services:4.3.10'
+        classpath "com.android.tools.build:gradle:$versions.gradleBuildTool"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$versions.hiltVersion"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.navigationVersion"
+        // Google services
+        classpath "com.google.gms:google-services:$versions.googleVersion"
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

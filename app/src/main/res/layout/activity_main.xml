@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="kr.co.lee.howlstargram_kotlin.ui.main.MainViewModel" />
@@ -67,6 +66,9 @@
             app:layout_constraintTop_toBottomOf="@id/tb_main" />
 
         <androidx.fragment.app.FragmentContainerView
+            app:default_mode="true"
+            app:navGraph="@navigation/navigation_graph"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:id="@+id/fcv_main_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
