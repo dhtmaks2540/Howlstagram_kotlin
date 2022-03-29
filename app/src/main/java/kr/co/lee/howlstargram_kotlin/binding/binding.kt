@@ -8,7 +8,8 @@ object ViewBinding {
     @JvmStatic
     @BindingAdapter("onNavigationItemSelected")
     fun bindOnNavigationItemSelectedListener(
-        view: BottomNavigationView, listener: NavigationBarView.OnItemSelectedListener
+        view: BottomNavigationView,
+        listener: NavigationBarView.OnItemSelectedListener
     ) {
         view.setOnItemSelectedListener(listener)
     }

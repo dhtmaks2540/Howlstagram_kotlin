@@ -66,7 +66,7 @@
             app:layout_constraintTop_toBottomOf="@id/tb_main" />
 
         <androidx.fragment.app.FragmentContainerView
-            app:default_mode="true"
+            app:defaultNavHost="true"
             app:navGraph="@navigation/navigation_graph"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:id="@+id/fcv_main_content"
