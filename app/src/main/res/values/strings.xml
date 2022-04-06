@@ -6,7 +6,7 @@
     <!-- Sign In -->
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="signin_email">Signup or Signin by email</string>
+    <string name="signin_email">Signin by email</string>
     <string name="signin_google">Google login</string>
     <string name="signin_facebook">Facebook login</string>
     <string name="signup_complete">Membership success</string>
@@ -15,6 +15,7 @@
     <string name="signout_success">Signout success</string>
     <string name="signout_fail">Signout fail</string>
     <string name="signout_fail_null">Please enter your email and password</string>
+    <string name="signup_email">Signup by email</string>
 
     <!-- Bottom Navigation View -->
     <string name="home">home</string>

@@ -6,9 +6,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
     private val loginViewModel: LoginViewModel by viewModels()
 
+    // FirebaseAuth Instance(Firebase 인증 객체)
     @Inject
     lateinit var auth: FirebaseAuth
     @Inject
@@ -34,36 +37,41 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     private val launcher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             activityResult.data?.let {
-                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(it)
-                println("result!!!")
-                if (result?.isSuccess == true) {
-                    val account = result.signInAccount
-                    // Second Step
+                println()
+                val task = GoogleSignIn.getSignedInAccountFromIntent(it)
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    val account = task.getResult(ApiException::class.java)
                     firebaseAuthWithGoogle(account)
+                } catch (e: ApiException) {
+                    showToast("Google sign in failed...")
                 }
+//                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(it)
+//                if (result?.isSuccess == true) {
+//                    println("success")
+//                    val account = result.signInAccount
+//                    // Second Step
+//                    firebaseAuthWithGoogle(account)
+//                } else {
+//                    println("fail")
+//                }
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding.apply {
             viewModel = loginViewModel
-            btEmailLogin.setOnClickListener { signInAndSignUp() }
+            btEmailLogin.setOnClickListener { signInEmail() }
+            btEmailSignup.setOnClickListener { signInAndSignUp() }
             // Google Login First Step
             btGoogleSignIn.setOnClickListener { googleLogin() }
         }
     }
 
-    // 초기화 
-//    private fun init() {
-//        println("auth : $auth")
-//        println("gso : $gso")
-//        println("googleSignInClient : $googleSignInClient")
-//    }
-
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
         val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-        println("FireBaseAuth!!")
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -84,22 +92,20 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
 
     // 회원가입 메소드
     private fun signInAndSignUp() {
+        // 유효성 검사 후 신규 사용자 생성
         auth.createUserWithEmailAndPassword(
             loginViewModel.email.value.toString(),
             loginViewModel.password.value.toString()
         ).addOnCompleteListener { task ->
             when {
+                // Sign in success, update UI with the signed-in user's information
                 task.isSuccessful -> {
                     // Create a user account
                     moveMainPage(task.result?.user)
                 }
-                task.exception?.message.isNullOrEmpty() -> {
-                    // Show the error message
-                    showToast(task.exception?.message.toString())
-                }
+                // If sign in fails, display a message to the user.
                 else -> {
-                    // Login if you have account
-                    signInEmail()
+                    showToast("Authentication failed....")
                 }
             }
         }
@@ -107,17 +113,17 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
 
     // 로그인 메소드
     private fun signInEmail() {
+        // 유효성 검사 후 로그인
         auth.signInWithEmailAndPassword(
             loginViewModel.email.value.toString().trim(),
             loginViewModel.password.value.toString().trim()
         ).addOnCompleteListener { task ->
-            println("task!!!, email : ${loginViewModel.email.value.toString()}, password : ${loginViewModel.password.value.toString()}")
             if (task.isSuccessful) {
                 // Login
                 moveMainPage(task.result?.user)
             } else {
                 // Show the error Message
-                showToast(task.exception?.message.toString())
+                showToast("Login failed.... Check id and password")
             }
         }
     }

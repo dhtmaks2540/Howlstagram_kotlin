@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="kr.co.lee.howlstargram_kotlin.ui.login.LoginViewModel" />
@@ -37,11 +38,11 @@
 
                 <!-- two way data binding -->
                 <EditText
-                    android:text="@={viewModel._email}"
                     android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email" />
+                    android:hint="@string/email"
+                    android:text="@={viewModel._email}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,12 +54,12 @@
 
                 <!-- two way data binding -->
                 <EditText
-                    android:text="@={viewModel._password}"
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:text="@={viewModel._password}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatButton
@@ -68,8 +69,18 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginBottom="35dp"
+                android:layout_marginBottom="5dp"
                 android:text="@string/signin_email"
+                android:theme="@style/ButtonStyle" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_email_signup"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="35dp"
+                android:text="@string/signup_email"
                 android:theme="@style/ButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -95,6 +106,7 @@
                 android:textColor="@color/colorWhite" />
 
         </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

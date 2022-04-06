@@ -14,18 +14,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HowlStargram_Kotlin">
         <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="false" />
-        <!-- 로그인 먼저 시작 -->
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="true">
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.addphoto.AddPhotoActivity"
             android:exported="false" />

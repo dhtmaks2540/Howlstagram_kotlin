@@ -52,7 +52,7 @@ ext.versions = [
         navigationVersion    : '2.4.1',
 
         // Google Services
-        googleVersion : '4.3.10',
+        googleVersion : '4.3.8',
 
         // Firebase
         firebaseAuthVersion : '21.0.2',
