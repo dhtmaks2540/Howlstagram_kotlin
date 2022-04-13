@@ -4,16 +4,16 @@
     <string name="fb_login_protocol_scheme">fb211403479957946</string>
 
     <!-- Sign In -->
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="signin_email">Signin by email</string>
-    <string name="signin_google">Google login</string>
-    <string name="signin_facebook">Facebook login</string>
+    <string name="email">이메일</string>
+    <string name="password">패스워드</string>
+    <string name="signin_email">이메일로 로그인</string>
+    <string name="signin_google">구글 로그인</string>
+    <string name="signin_facebook">페이스북 로그인</string>
     <string name="signup_complete">Membership success</string>
     <string name="signin_complete">Login success</string>
-    <string name="signout">Signout</string>
-    <string name="signout_success">Signout success</string>
-    <string name="signout_fail">Signout fail</string>
+    <string name="signout">로그아웃</string>
+    <string name="signout_success">로그아웃 성공</string>
+    <string name="signout_fail">로그아웃 실패</string>
     <string name="signout_fail_null">Please enter your email and password</string>
     <string name="signup_email">Signup by email</string>
 
@@ -25,12 +25,12 @@
     <string name="account">Account</string>
 
     <!-- Account -->
-    <string name="post">Post</string>
-    <string name="following">Following</string>
-    <string name="follower">Follower</string>
-    <string name="follow">Follow</string>
-    <string name="follow_cancel">Follow cancel</string>
-    <string name="profile">Profile</string>
+    <string name="post">게시물</string>
+    <string name="following">팔로잉</string>
+    <string name="follower">팔로워</string>
+    <string name="follow">팔로우</string>
+    <string name="follow_cancel">팔로우 취소</string>
+    <string name="profile">프로필</string>
     <string name="count_0">0</string>
 
     <!-- Alarm -->
@@ -53,4 +53,7 @@
     <!-- etc -->
     <item name="visible" type="id" />
     <item name="masked" type="id" />
+
+    <!-- bottom sheet -->
+    <string name="make_type">만들기</string>
 </resources>

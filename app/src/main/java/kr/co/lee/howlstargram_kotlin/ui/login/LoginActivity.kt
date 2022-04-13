@@ -6,6 +6,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -46,15 +48,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                 } catch (e: ApiException) {
                     showToast("Google sign in failed...")
                 }
-//                val result = Auth.GoogleSignInApi.getSignInResultFromIntent(it)
-//                if (result?.isSuccess == true) {
-//                    println("success")
-//                    val account = result.signInAccount
-//                    // Second Step
-//                    firebaseAuthWithGoogle(account)
-//                } else {
-//                    println("fail")
-//                }
             }
         }
 

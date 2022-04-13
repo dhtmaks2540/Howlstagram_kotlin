@@ -25,24 +25,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/iv_toolbar_back"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="17dp"
-                    android:src="@drawable/ic_arrow_back"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/iv_toolbar_back"-->
+<!--                    android:layout_width="35dp"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:layout_marginStart="17dp"-->
+<!--                    android:src="@drawable/ic_arrow_back"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
-                <TextView
-                    android:id="@+id/tv_toolbar_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="UserID"
-                    android:textColor="@color/colorNavIcon"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@id/iv_toolbar_back" />
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_toolbar_username"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="UserID"-->
+<!--                    android:textColor="@color/colorNavIcon"-->
+<!--                    android:textSize="16sp"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/iv_toolbar_back" />-->
 
                 <ImageView
                     android:id="@+id/iv_toolbar_title"
@@ -90,8 +90,7 @@
             android:background="?android:attr/windowBackground"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/bottom_navigation_main"
-            app:onNavigationItemSelected="@{viewModel::setCurrentFragment}" />
+            app:menu="@menu/bottom_navigation_main" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
