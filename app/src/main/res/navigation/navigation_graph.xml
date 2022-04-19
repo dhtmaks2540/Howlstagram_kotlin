@@ -16,7 +16,7 @@
 
     <dialog
         android:id="@+id/action_add_photo"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.bottomsheet.AddBottomSheetDialogFragment"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.mainbottomsheet.AddBottomSheetDialogFragment"
         android:label="AddBottomSheetDialogFragment" />
 
     <fragment
@@ -28,5 +28,10 @@
         android:id="@+id/action_account"
         android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
         android:label="UserFragment" />
+
+    <activity
+        android:id="@+id/galleryActivity"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity"
+        android:label="GalleryActivity" />
 
 </navigation>

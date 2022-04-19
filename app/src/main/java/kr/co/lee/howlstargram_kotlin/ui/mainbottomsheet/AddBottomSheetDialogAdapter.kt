@@ -1,9 +1,11 @@
-package kr.co.lee.howlstargram_kotlin.ui.bottomsheet.adapter
+package kr.co.lee.howlstargram_kotlin.ui.mainbottomsheet
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.lee.howlstargram_kotlin.databinding.ItemAddBottomSheetBinding
+import kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity
 
 class AddBottomSheetDialogAdapter :
     RecyclerView.Adapter<AddBottomSheetDialogAdapter.AddBottomViewHolder>() {
@@ -22,8 +24,23 @@ class AddBottomSheetDialogAdapter :
 
     override fun getItemCount(): Int = itemList.size
 
-    inner class AddBottomViewHolder(val binding: ItemAddBottomSheetBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+
+    inner  class AddBottomViewHolder(val binding: ItemAddBottomSheetBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.layout.setOnClickListener {
+                when(itemList[adapterPosition]) {
+                    "게시물" -> {
+                        println("게시물!!")
+                        val intent = Intent(binding.layout.context, GalleryActivity::class.java)
+                        binding.layout.context.startActivity(intent)
+                    }
+                    "스토리" -> {
+                        println("스토리!!!")
+                    }
+                }
+            }
+        }
+
         fun bindTo(typeString: String) {
             binding.apply {
                 type = typeString

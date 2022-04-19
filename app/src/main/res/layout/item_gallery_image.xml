@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryViewModel" />
+
+        <variable
+            name="imageItem"
+            type="kr.co.lee.howlstargram_kotlin.model.GalleryImage" />
+
+        <import type="android.widget.Toast" />
+
+        <import type="android.graphics.Color" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility='@{viewModel.currentSelectedImage.equals(imageItem.uri) ? View.INVISIBLE : View.VISIBLE}'
+            app:set_glide_image="@{imageItem.uri}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

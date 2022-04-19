@@ -1,11 +1,9 @@
 package kr.co.lee.howlstargram_kotlin.binding
 
-import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import kr.co.lee.howlstargram_kotlin.R
-import java.net.URL
 
 object AdapterBinding {
     @JvmStatic
@@ -16,6 +14,7 @@ object AdapterBinding {
     ) {
         Glide.with(imageView.context)
             .load(url)
+            .centerCrop()
             .into(imageView)
     }
 

@@ -10,21 +10,28 @@ import androidx.activity.viewModels
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.AndroidEntryPoint
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityAddPhotoBinding
+import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddPhotoActivity: BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_add_photo) {
-
     private val addViewModel by viewModels<AddPhotoViewModel>()
 
-    private lateinit var storage: FirebaseStorage
-    private lateinit var auth: FirebaseAuth
-    private lateinit var fireStore: FirebaseFirestore
+    @Inject
+    lateinit var storage: FirebaseStorage
+    @Inject
+    lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var fireStore: FirebaseFirestore
 
     var photoUri: Uri? = null
+
     private val launcher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if(it.resultCode == RESULT_OK) {
@@ -53,11 +60,6 @@ class AddPhotoActivity: BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_
     }
 
     private fun init() {
-        // FirebaseStorage 초기화
-        storage = FirebaseStorage.getInstance()
-        auth = FirebaseAuth.getInstance()
-        fireStore = FirebaseFirestore.getInstance()
-
         // 앨범 열기
         val photoPickerIntent = Intent(Intent.ACTION_PICK)
         photoPickerIntent.type = "image/*"
