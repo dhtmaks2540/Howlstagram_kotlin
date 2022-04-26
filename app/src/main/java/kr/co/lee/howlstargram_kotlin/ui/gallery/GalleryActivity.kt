@@ -1,23 +1,30 @@
 package kr.co.lee.howlstargram_kotlin.ui.gallery
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityGalleryBinding
 import kr.co.lee.howlstargram_kotlin.model.GalleryImage
+import kr.co.lee.howlstargram_kotlin.ui.addphoto.AddPhotoActivity
 import java.io.File
 import java.util.*
 import javax.inject.Inject
+
+private const val READ_EXTERNAL_STORAGE_PERMISSION = 10
 
 @AndroidEntryPoint
 class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_gallery) {
@@ -36,18 +43,23 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
         init()
     }
 
+    // Toolbar Menu 초기화
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.gallery_menu, menu)
         return true
     }
 
+    // Toolbar Menu 선택
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
             R.id.action_next -> {
-                // 글 작성 화면으로
+                // AddPhotoActivity
+                val intent = Intent(this, AddPhotoActivity::class.java)
+                intent.putExtra("uri", galleryViewModel.currentSelectedImage.value)
+                startActivity(intent)
             }
         }
 
@@ -56,75 +68,70 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
 
     private fun init() {
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_close_black_20)
 
-        getFolderList()
+        binding.grantPermissionButton.setOnClickListener { openMediaStore() }
+        openMediaStore()
         observeLiveData()
     }
 
+    private fun showImages() {
+        galleryViewModel.loadImages()
+        binding.ivSelect.visibility = View.VISIBLE
+        binding.grantPermissionButton.visibility = View.GONE
+    }
+
+    private fun openMediaStore() {
+        if(checkPermission()) {
+            showImages()
+        } else {
+            requestPermission()
+        }
+    }
+
     private fun observeLiveData() {
-        galleryViewModel.imageList.observe(this) {
-            adapter.setImageList(it, galleryViewModel)
+        galleryViewModel.imageList.observe(this) { galleryImageList ->
+            adapter.setImageList(galleryImageList, galleryViewModel, this)
             binding.recyclerView.adapter = adapter
         }
 
-        galleryViewModel.currentSelectedImage.observe(this) {
+        galleryViewModel.currentSelectedImage.observe(this) { uri ->
             Glide.with(binding.ivSelect.context)
-                .load(it)
+                .load(uri)
                 .centerCrop()
                 .into(binding.ivSelect)
         }
     }
 
-    private fun getFolderList(): ArrayList<GalleryImage> {
-        val isPermission = checkPermission()
-        val imageList = ArrayList<GalleryImage>()
-        if (isPermission) {
-            val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            val projection = arrayOf(
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATE_TAKEN
+    private fun requestPermission() {
+        if(!checkPermission()) {
+            val permissions = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
-            val query = contentResolver.query(uri, projection, null, null, null)
-            query?.use { cursor ->
-                // Cache Column indices
-                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-                val dateColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
-
-                while (cursor.moveToNext()) {
-                    val id = cursor.getLong(idColumn)
-                    val name = cursor.getString(nameColumn)
-                    val date = cursor.getLong(dateColumn)
-                    val contentUri = Uri.withAppendedPath(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        id.toString()
-                    )
-                    val galleryImage = GalleryImage(contentUri.toString(), name, date)
-                    if (!imageList.contains(galleryImage)) {
-                        imageList.add(galleryImage)
-                    }
-                }
-            }
+            ActivityCompat.requestPermissions(this, permissions, READ_EXTERNAL_STORAGE_PERMISSION)
         }
-        galleryViewModel.setImageList(imageList)
-        return imageList
     }
 
-    private fun checkPermission(): Boolean {
-        val isPermission =
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        return if (isPermission == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                1
-            )
-            false
-        } else {
-            true
+    private fun checkPermission() =
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+
+    private fun showNoAccess() {
+        binding.ivSelect.visibility = View.INVISIBLE
+        binding.grantPermissionButton.visibility = View.VISIBLE
+    }
+
+    private fun goToSetting() {
+        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")).apply {
+            addCategory(Intent.CATEGORY_DEFAULT)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }.also { intent ->
+            startActivity(intent)
         }
     }
 
@@ -134,9 +141,20 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
         grantResults: IntArray
     ) {
         when (requestCode) {
-            1 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    showToast("권한이 허용되지 않아서 이전 화면으로 돌아갑니다.")
+            READ_EXTERNAL_STORAGE_PERMISSION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showImages()
+                } else {
+                    val showRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    )
+
+                    if(showRationale) {
+                        showNoAccess()
+                    } else {
+                        goToSetting()
+                    }
                 }
             }
         }
