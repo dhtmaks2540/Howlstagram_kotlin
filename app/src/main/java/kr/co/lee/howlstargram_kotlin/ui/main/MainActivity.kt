@@ -39,12 +39,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     // 초기화
     private fun init() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            READ_STORAGE
-        )
-
         // Navigation Graph, BottomNavigationView 연결
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fcv_main_content) as NavHostFragment
