@@ -43,9 +43,13 @@
 
     <!-- Add Photo -->
     <string name="upload_image">Photo Upload</string>
-    <string name="hint_image_content">문구 입력</string>
+    <string name="hint_image_content">문구 입력...</string>
     <string name="upload_success">Upload success</string>
     <string name="upload_fail">Upload fail</string>
+    <string name="menu_finish">완료</string>
+
+    <!-- Gallery -->
+    <string name="menu_next">다음</string>
 
     <!-- Toolbar -->
     <string name="back">Back</string>
@@ -57,6 +61,4 @@
     <!-- bottom sheet -->
     <string name="make_type">만들기</string>
 
-    <!-- gallery menu -->
-    <string name="menu_next">다음</string>
 </resources>
