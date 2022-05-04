@@ -4,9 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -24,73 +27,61 @@ class AddPhotoActivity: BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_
     private val addViewModel by viewModels<AddPhotoViewModel>()
 
     @Inject
-    lateinit var storage: FirebaseStorage
-    @Inject
-    lateinit var auth: FirebaseAuth
-    @Inject
     lateinit var fireStore: FirebaseFirestore
-
-    var photoUri: Uri? = null
-
-    private val launcher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if(it.resultCode == RESULT_OK) {
-                // This is path to the selected image
-                photoUri = it.data?.data
-                binding.ivAddphoto.setImageURI(photoUri)
-            } else {
-                // 사진 선택없이 나간다면 Activity 종료
-                finish()
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.apply {
             viewModel = addViewModel
-
-            // Image Upload 이벤트
-            btnAddphotoUpload.setOnClickListener {
-                contentUpload()
-            }
         }
 
         init()
         observeLiveDate()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.add_photo_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.action_finish -> {
+                addViewModel.contentUploadImage()
+            }
+        }
+
+        return true
+    }
+
     private fun init() {
-        // 앨범 열기
-        val photoPickerIntent = Intent(Intent.ACTION_PICK)
-        photoPickerIntent.type = "image/*"
-        launcher.launch(photoPickerIntent)
+        addViewModel.setUri(intent.getStringExtra("uri")!!)
+        toolbarInit()
+    }
+
+    private fun toolbarInit() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun observeLiveDate() {
         addViewModel.contentDTO.observe(this) {
             fireStore.collection("images").document().set(addViewModel.contentDTO.value!!)
-
             setResult(Activity.RESULT_OK)
+
             finish()
         }
-    }
 
-    // 이미지 업로드 메소드
-    private fun contentUpload() {
-        // 파일 이름 생성
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val imageFileName = "IMAGE_${timeStamp}_.png"
-
-        val storageRef = storage.reference.child("images").child(imageFileName)
-
-        photoUri?.let {
-            // Callback Method
-            storageRef.putFile(it).addOnSuccessListener {
-                storageRef.downloadUrl.addOnCompleteListener { uri ->
-                    addViewModel.setContentDTO(uri.toString(), auth.currentUser?.uid,
-                        auth.currentUser?.email, addViewModel.description.value.toString())
-                }
-            }
+        // 선택된 이미지
+        addViewModel.uri.observe(this) {
+            Glide.with(binding.ivAddphoto.context)
+                .load(it)
+                .centerCrop()
+                .into(binding.ivAddphoto)
         }
     }
 }
