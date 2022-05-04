@@ -89,4 +89,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$versions.playServicesAuthVersion"
     implementation "com.google.firebase:firebase-storage-ktx:$versions.firebaseStorageVersion"
     implementation "com.google.firebase:firebase-firestore-ktx:$versions.firebaseFireStoreVersion"
+
+    // CircleImageView
+    implementation "de.hdodenhof:circleimageview:$versions.circleImageViewVersion"
 }

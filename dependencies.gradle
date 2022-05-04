@@ -61,4 +61,7 @@ ext.versions = [
 
         // play services
         playServicesAuthVersion : '20.1.0',
+
+        // CircleImageView
+        circleImageViewVersion : '3.1.0',
 ]
