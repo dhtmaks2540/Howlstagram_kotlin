@@ -68,6 +68,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:visibility="gone"
             android:id="@+id/btn_addphoto_upload"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

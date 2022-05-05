@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="uid"
+            type="String" />
 
+        <variable
+            name="contentDTO"
+            type="kr.co.lee.howlstargram_kotlin.model.ContentDTO" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +34,8 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_detailviewitem_profile"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@{contentDTO.userId}" />
         </LinearLayout>
 
         <!--올린 사진이 뜨는 ImageView-->
@@ -37,9 +44,11 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:scaleType="fitXY"
-            app:layout_constraintTop_toBottomOf="@id/layout_name" />
+            app:layout_constraintTop_toBottomOf="@id/layout_name"
+            app:set_glide_image="@{contentDTO.imageUrl}" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            app:set_favorite_image="@{contentDTO.favorites.containsKey(uid)}"
             android:id="@+id/iv_detailviewitem_favorite"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -75,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/favorite_count"
+            android:text='@{"좋아요 " + contentDTO.favoriteCount + "개"}'
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/iv_detailviewitem_favorite"
             app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_favorite" />
@@ -84,7 +93,7 @@
             android:id="@+id/tv_detailviewitem_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="아이디"
+            android:text="@{contentDTO.userId}"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_favoritecounter"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_favoritecounter" />
@@ -96,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@string/explain"
+            android:text="@{contentDTO.explain}"
             app:layout_constraintStart_toEndOf="@id/tv_detailviewitem_name"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_favoritecounter" />
 

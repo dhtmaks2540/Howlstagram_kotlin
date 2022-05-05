@@ -24,6 +24,11 @@
     <string name="favorite">Favorite</string>
     <string name="account">Account</string>
 
+    <!-- DetailActivity -->
+    <string name="comment">댓글 0개 모두 보기</string>
+    <string name="favorite_count">좋아요 0개</string>
+    <string name="explain">설명</string>
+
     <!-- Account -->
     <string name="post">게시물</string>
     <string name="following">팔로잉</string>
