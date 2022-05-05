@@ -10,6 +10,8 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,6 +34,12 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
     @Inject
     lateinit var adapter: GalleryRecyclerAdapter
     private val galleryViewModel: GalleryViewModel by viewModels()
+    private val launcher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if(it.resultCode == RESULT_OK) {
+                finish()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +67,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
                 // AddPhotoActivity
                 val intent = Intent(this, AddPhotoActivity::class.java)
                 intent.putExtra("uri", galleryViewModel.currentSelectedImage.value)
-                startActivity(intent)
+                launcher.launch(intent)
             }
         }
 

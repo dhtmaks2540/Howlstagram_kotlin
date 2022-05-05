@@ -1,10 +1,16 @@
 package kr.co.lee.howlstargram_kotlin.ui.gallery
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,7 +26,9 @@ class GalleryViewModel @Inject constructor(application: Application): AndroidVie
     val currentSelectedImage = _currentSelectedImage
 
     fun setCurrentImage(image: String) {
-        _currentSelectedImage.postValue(image)
+        viewModelScope.launch {
+            _currentSelectedImage.postValue(image)
+        }
     }
 
     fun loadImages() {
