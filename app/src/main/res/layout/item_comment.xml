@@ -7,15 +7,16 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_commentviewitem_profile"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_margin="7.5dp"
+            android:src="@drawable/baseline_account_circle_black_20"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_commentviewitem_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="7.5dp"
+            android:maxLines="5"
             android:text="Message"
             app:layout_constraintStart_toEndOf="@id/tv_commentviewitem_profile"
             app:layout_constraintTop_toTopOf="parent" />

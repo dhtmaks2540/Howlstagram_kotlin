@@ -25,7 +25,6 @@
     <string name="account">Account</string>
 
     <!-- DetailActivity -->
-    <string name="comment">댓글 0개 모두 보기</string>
     <string name="favorite_count">좋아요 0개</string>
     <string name="explain">설명</string>
 
@@ -55,6 +54,11 @@
 
     <!-- Gallery -->
     <string name="menu_next">다음</string>
+
+    <!-- Comment -->
+    <string name="write_comment">댓글 달기...</string>
+    <string name="upload">게시</string>
+    <string name="comment">댓글</string>
 
     <!-- Toolbar -->
     <string name="back">Back</string>

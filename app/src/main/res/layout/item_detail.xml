@@ -4,12 +4,12 @@
 
     <data>
         <variable
-            name="uid"
-            type="String" />
+            name="contentItem"
+            type="kr.co.lee.howlstargram_kotlin.model.Content" />
 
         <variable
-            name="contentDTO"
-            type="kr.co.lee.howlstargram_kotlin.model.ContentDTO" />
+            name="viewModel"
+            type="kr.co.lee.howlstargram_kotlin.ui.detail.DetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,18 +24,18 @@
             android:gravity="center_vertical"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_detailviewitem_profile"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_margin="7.5dp"
-                android:src="@drawable/baseline_account_circle_black_20" />
+                app:set_glide_circle_image="@{contentItem.profileUrl}" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_detailviewitem_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{contentDTO.userId}" />
+                android:text="@{contentItem.contentDTO.userId}" />
         </LinearLayout>
 
         <!--올린 사진이 뜨는 ImageView-->
@@ -45,10 +45,9 @@
             android:layout_height="250dp"
             android:scaleType="fitXY"
             app:layout_constraintTop_toBottomOf="@id/layout_name"
-            app:set_glide_image="@{contentDTO.imageUrl}" />
+            app:set_glide_image="@{contentItem.contentDTO.imageUrl}" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            app:set_favorite_image="@{contentDTO.favorites.containsKey(uid)}"
             android:id="@+id/iv_detailviewitem_favorite"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -56,7 +55,8 @@
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_favorite_border"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_content" />
+            app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_content"
+            app:set_favorite_image="@{contentItem.contentDTO.favorites.containsKey(viewModel.uid)}" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_detailviewitem_comment"
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text='@{"좋아요 " + contentDTO.favoriteCount + "개"}'
+            android:text='@{"좋아요 " + contentItem.contentDTO.favoriteCount + "개"}'
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/iv_detailviewitem_favorite"
             app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_favorite" />
@@ -93,7 +93,7 @@
             android:id="@+id/tv_detailviewitem_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{contentDTO.userId}"
+            android:text="@{contentItem.contentDTO.userId}"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_favoritecounter"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_favoritecounter" />
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@{contentDTO.explain}"
+            android:text="@{contentItem.contentDTO.explain}"
             app:layout_constraintStart_toEndOf="@id/tv_detailviewitem_name"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_favoritecounter" />
 
@@ -113,7 +113,7 @@
             android:id="@+id/tv_detailviewitem_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/comment"
+            android:text='@{"댓글 " + contentItem.commentSize + "개 모두보기"}'
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_name"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_name" />
 
@@ -125,7 +125,7 @@
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_comment"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_comment" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_detailviewitem_comment_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -134,14 +134,6 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_detailviewitem_user_comment"
             app:layout_constraintStart_toEndOf="@id/iv_detailviewitem_user_comment"
             app:layout_constraintTop_toTopOf="@id/iv_detailviewitem_user_comment" />
-
-        <TextView
-            android:id="@+id/tv_detailviewitem_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="며칠 전"
-            app:layout_constraintStart_toStartOf="@id/iv_detailviewitem_user_comment"
-            app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_user_comment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
