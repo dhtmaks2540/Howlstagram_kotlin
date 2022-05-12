@@ -92,4 +92,9 @@ dependencies {
 
     // CircleImageView
     implementation "de.hdodenhof:circleimageview:$versions.circleImageViewVersion"
+
+    // Coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutineCoreVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutineAndroidVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$versions.coroutinePlayServiceVersion"
 }
