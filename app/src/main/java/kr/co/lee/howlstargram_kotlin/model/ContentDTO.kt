@@ -7,5 +7,5 @@ data class ContentDTO(
     var userId: String? = null,
     var timestamp: Long = 0,
     var favoriteCount: Int = 0,
-    var favorites: Map<String, Boolean> = HashMap()
+    var favorites: MutableMap<String, Boolean> = HashMap(),
 )
