@@ -69,4 +69,8 @@ ext.versions = [
         coroutineCoreVersion : '1.6.1',
         coroutineAndroidVersion : '1.6.1',
         coroutinePlayServiceVersion : '1.3.6',
+
+        // JodaTime
+        jodaTimeVersion : '2.10.14',
+
 ]

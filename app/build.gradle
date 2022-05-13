@@ -97,4 +97,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutineCoreVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutineAndroidVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$versions.coroutinePlayServiceVersion"
+
+    // Joda Time
+    implementation "joda-time:joda-time:$versions.jodaTimeVersion"
 }
