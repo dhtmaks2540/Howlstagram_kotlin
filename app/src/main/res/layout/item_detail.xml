@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="contentItem"
             type="kr.co.lee.howlstargram_kotlin.model.Content" />
@@ -117,23 +118,13 @@
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_name"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_name" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_detailviewitem_user_comment"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/baseline_account_circle_black_20"
-            app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_comment"
-            app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_comment" />
-
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_detailviewitem_comment_text"
+            android:id="@+id/tv_detailviewitem_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="댓글 달기..."
-            app:layout_constraintBottom_toBottomOf="@id/iv_detailviewitem_user_comment"
-            app:layout_constraintStart_toEndOf="@id/iv_detailviewitem_user_comment"
-            app:layout_constraintTop_toTopOf="@id/iv_detailviewitem_user_comment" />
+            app:set_datetime="@{contentItem.contentDTO.timestamp}"
+            app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_comment"
+            app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_comment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

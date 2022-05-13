@@ -3,9 +3,16 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="commentItem"
+            type="kr.co.lee.howlstargram_kotlin.model.Comment" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="60dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_commentviewitem_profile"
@@ -14,27 +21,37 @@
             android:layout_margin="7.5dp"
             android:src="@drawable/baseline_account_circle_black_20"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:set_glide_circle_image="@{commentItem.profileUrl}" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_commentviewitem_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="7.5dp"
-            android:text="UserId"
+            android:text="@{commentItem.commentDTO.userId}"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/iv_commentviewitem_profile"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_commentviewitem_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="7.5dp"
             android:maxLines="5"
-            android:text="Message"
+            android:text="@{commentItem.commentDTO.comment}"
             app:layout_constraintStart_toEndOf="@id/tv_commentviewitem_profile"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_commentviewitem_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/tv_commentviewitem_profile"
+            app:layout_constraintTop_toBottomOf="@id/tv_commentviewitem_profile"
+            app:set_datetime="@{commentItem.commentDTO.timestamp}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,6 +58,7 @@
             app:layout_constraintStart_toEndOf="@id/iv_user_profile">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:text="@={viewModel._commentContent}"
                 android:id="@+id/et_comment_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
