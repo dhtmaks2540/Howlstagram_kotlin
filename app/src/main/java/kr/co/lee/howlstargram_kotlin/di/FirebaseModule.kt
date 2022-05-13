@@ -20,18 +20,22 @@ object FirebaseSingletonModule {
     fun providesFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
     }
-}
 
-@Module
-@InstallIn(ActivityRetainedComponent::class)
-object FirebaseActivityModule {
     @Provides
+    @Singleton
     fun providesFirebaseStorage(): FirebaseStorage {
         return FirebaseStorage.getInstance()
     }
 
     @Provides
+    @Singleton
     fun providesFirebaseFirestore(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 }
+
+//@Module
+//@InstallIn(ActivityRetainedComponent::class)
+//object FirebaseActivityModule {
+//
+//}
