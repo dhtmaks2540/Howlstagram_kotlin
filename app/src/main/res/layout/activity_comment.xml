@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentViewModel" />
@@ -34,10 +35,12 @@
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/layout_comment"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <de.hdodenhof.circleimageview.CircleImageView
+            app:set_glide_circle_image="@{viewModel.profileUrl}"
             android:id="@+id/iv_user_profile"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -58,17 +61,17 @@
             app:layout_constraintStart_toEndOf="@id/iv_user_profile">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:text="@={viewModel._commentContent}"
                 android:id="@+id/et_comment_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/write_comment"
                 android:inputType="text"
-                android:maxLines="3" />
+                android:maxLines="3"
+                android:text="@={viewModel._commentContent}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_upload_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

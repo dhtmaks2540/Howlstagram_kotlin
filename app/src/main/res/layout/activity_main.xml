@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="kr.co.lee.howlstargram_kotlin.ui.main.MainViewModel" />
@@ -15,65 +16,21 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.MainActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_main"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/iv_toolbar_back"-->
-<!--                    android:layout_width="35dp"-->
-<!--                    android:layout_height="35dp"-->
-<!--                    android:layout_marginStart="17dp"-->
-<!--                    android:src="@drawable/ic_arrow_back"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_toolbar_username"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="UserID"-->
-<!--                    android:textColor="@color/colorNavIcon"-->
-<!--                    android:textSize="16sp"-->
-<!--                    app:layout_constraintStart_toEndOf="@id/iv_toolbar_back" />-->
-
-                <ImageView
-                    android:id="@+id/iv_toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/logo_title"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <View
-            android:id="@+id/ll_toolbar_division"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/tb_main"
-            android:background="@color/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@id/tb_main" />
+        <!--        <View-->
+        <!--            android:id="@+id/ll_toolbar_division"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="1dp"-->
+        <!--            android:layout_below="@id/tb_main"-->
+        <!--            android:background="@color/colorPrimary"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tb_main" />-->
 
         <androidx.fragment.app.FragmentContainerView
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/navigation_graph"
-            android:name="androidx.navigation.fragment.NavHostFragment"
             android:id="@+id/fcv_main_content"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/ll_bnv_division"
-            app:layout_constraintTop_toBottomOf="@id/ll_toolbar_division" />
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/navigation_graph" />
 
         <View
             android:id="@+id/ll_bnv_division"

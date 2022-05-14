@@ -2,36 +2,51 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/action_home">
+    app:startDestination="@id/screen_home">
 
     <fragment
-        android:id="@+id/action_home"
+        android:id="@+id/screen_home"
         android:name="kr.co.lee.howlstargram_kotlin.ui.detail.DetailViewFragment"
-        android:label="DetailViewFragment" />
+        android:label="DetailViewFragment"></fragment>
 
     <fragment
-        android:id="@+id/action_search"
+        android:id="@+id/screen_search"
         android:name="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment"
         android:label="GridFragment" />
 
     <dialog
-        android:id="@+id/action_add_photo"
+        android:id="@+id/screen_add_photo"
         android:name="kr.co.lee.howlstargram_kotlin.ui.mainbottomsheet.AddBottomSheetDialogFragment"
         android:label="AddBottomSheetDialogFragment" />
 
     <fragment
-        android:id="@+id/action_favorite_alarm"
+        android:id="@+id/screen_favorite_alarm"
         android:name="kr.co.lee.howlstargram_kotlin.ui.alarm.AlarmFragment"
         android:label="AlarmFragment" />
 
     <fragment
-        android:id="@+id/action_account"
+        android:id="@+id/screen_account"
         android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
-        android:label="UserFragment" />
+        android:label="UserFragment">
+    </fragment>
 
     <activity
         android:id="@+id/galleryActivity"
         android:name="kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity"
         android:label="GalleryActivity" />
+
+    <activity
+        android:id="@+id/commentActivity"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.comment.CommentActivity"
+        android:label="CommentActivity" />
+
+    <activity
+        android:id="@+id/addPhotoActivity"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.addphoto.AddPhotoActivity"
+        android:label="AddPhotoActivity" />
+
+    <action
+        android:id="@+id/action_global_account_screen"
+        app:destination="@id/screen_account" />
 
 </navigation>
