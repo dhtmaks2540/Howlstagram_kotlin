@@ -17,15 +17,17 @@ class DetailRecyclerAdapter @Inject constructor(
     private lateinit var contents: List<Content>
     private lateinit var favoriteClickListener: FavoriteClickListener
     private lateinit var commentClickListener: CommentClickListener
+    private lateinit var profileClickListener: ProfileClickListener
 
     fun setItems(contents: List<Content>) {
         this.contents = contents
         notifyDataSetChanged()
     }
 
-    fun setOnClickListener(favoriteClickListener: FavoriteClickListener, commentClickListener: CommentClickListener) {
+    fun setOnClickListener(favoriteClickListener: FavoriteClickListener, commentClickListener: CommentClickListener, profileClickListener: ProfileClickListener) {
         this.favoriteClickListener = favoriteClickListener
         this.commentClickListener = commentClickListener
+        this.profileClickListener = profileClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,17 +53,22 @@ class DetailRecyclerAdapter @Inject constructor(
 
             // 댓글 사진 클릭(to CommentActivity)
             binding.ivDetailviewitemComment.setOnClickListener {
-                commentClickListener.click(contents[adapterPosition].contentUid, contents[adapterPosition].contentDTO?.uid)
+                commentClickListener.click(contents[adapterPosition])
             }
 
             // 댓글 텍스트 클릭(to CommentActivity)
             binding.tvDetailviewitemComment.setOnClickListener {
-                commentClickListener.click(contents[adapterPosition].contentUid, contents[adapterPosition].contentDTO?.uid)
+                commentClickListener.click(contents[adapterPosition])
             }
             
             // 내용 클릭(to CommentActivity)
             binding.tvDetailviewitemExplain.setOnClickListener {
-                commentClickListener.click(contents[adapterPosition].contentUid, contents[adapterPosition].contentDTO?.uid)
+                commentClickListener.click(contents[adapterPosition])
+            }
+
+            // 프로필 이미지 클릭
+            binding.ivDetailviewitemProfile.setOnClickListener {
+                profileClickListener.click(contents[adapterPosition].contentDTO?.uid!!, contents[adapterPosition].contentDTO?.userId!!, contents[adapterPosition].profileUrl!!)
             }
         }
 
@@ -96,6 +103,10 @@ class DetailRecyclerAdapter @Inject constructor(
     }
 
     interface CommentClickListener {
-        fun click(contentUid: String?, destinationUid: String?)
+        fun click(content: Content)
+    }
+
+    interface ProfileClickListener {
+        fun click(destinationUid: String, userId: String, profileUrl: String)
     }
 }
