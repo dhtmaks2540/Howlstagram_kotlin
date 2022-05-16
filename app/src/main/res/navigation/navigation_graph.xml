@@ -2,51 +2,68 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/screen_home">
+    app:startDestination="@+id/detail">
 
-    <fragment
-        android:id="@+id/screen_home"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.detail.DetailViewFragment"
-        android:label="DetailViewFragment"></fragment>
+    <include app:graph="@navigation/detail" />
+    <include app:graph="@navigation/grid" />
+    <include app:graph="@navigation/reels" />
+    <include app:graph="@navigation/alarm" />
+    <include app:graph="@navigation/user" />
 
-    <fragment
-        android:id="@+id/screen_search"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment"
-        android:label="GridFragment" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/screen_home"-->
+    <!--        android:name="kr.co.lee.howlstargram_kotlin.ui.home.HomeFragment"-->
+    <!--        android:label="HomeFragment" />-->
 
-    <dialog
-        android:id="@+id/screen_add_photo"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.mainbottomsheet.AddBottomSheetDialogFragment"
-        android:label="AddBottomSheetDialogFragment" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/screen_detail"-->
+    <!--        android:name="kr.co.lee.howlstargram_kotlin.ui.detail.DetailFragment"-->
+    <!--        android:label="DetailViewFragment">-->
+    <!--        <action-->
+    <!--            android:id="@+id/action_detailFragment_to_UserFragment"-->
+    <!--            app:destination="@id/screen_user"-->
+    <!--            app:popUpTo="@id/screen_detail" />-->
+    <!--    </fragment>-->
 
-    <fragment
-        android:id="@+id/screen_favorite_alarm"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.alarm.AlarmFragment"
-        android:label="AlarmFragment" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/screen_grid"-->
+    <!--        android:name="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment"-->
+    <!--        android:label="GridFragment" />-->
 
-    <fragment
-        android:id="@+id/screen_account"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
-        android:label="UserFragment">
-    </fragment>
+    <!--    <dialog-->
+    <!--        android:id="@+id/screen_add_photo"-->
+    <!--        android:name="kr.co.lee.howlstargram_kotlin.ui.mainbottomsheet.AddBottomSheetDialogFragment"-->
+    <!--        android:label="AddBottomSheetDialogFragment" />-->
 
-    <activity
-        android:id="@+id/galleryActivity"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity"
-        android:label="GalleryActivity" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/screen_alarm"-->
+    <!--        android:name="kr.co.lee.howlstargram_kotlin.ui.alarm.AlarmFragment"-->
+    <!--        android:label="AlarmFragment" />-->
 
-    <activity
-        android:id="@+id/commentActivity"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.comment.CommentActivity"
-        android:label="CommentActivity" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/screen_user"-->
+    <!--        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"-->
+    <!--        android:label="UserFragment" />-->
 
-    <activity
-        android:id="@+id/addPhotoActivity"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.addphoto.AddPhotoActivity"
-        android:label="AddPhotoActivity" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/screen_like"-->
+    <!--        android:name="kr.co.lee.howlstargram_kotlin.ui.like.LikeFragment"-->
+    <!--        android:label="LikeFragment" />-->
 
-    <action
-        android:id="@+id/action_global_account_screen"
-        app:destination="@id/screen_account" />
+    <!--    &lt;!&ndash;    <action&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:id="@+id/action_global_account_screen"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:destination="@id/screen_account" />&ndash;&gt;-->
+
+    <!--    <action-->
+    <!--        android:id="@+id/action_global_like_screen"-->
+    <!--        app:destination="@id/screen_like" />-->
+
+    <!--    &lt;!&ndash;    <action&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:id="@+id/action_global_home_screen"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:destination="@id/screen_home" />&ndash;&gt;-->
+
+    <!--    &lt;!&ndash;    <action&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:id="@+id/action_global_search_screen"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:destination="@id/screen_search" />&ndash;&gt;-->
 
 </navigation>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/detail"
+    app:startDestination="@id/screen_detail">
+
+    <fragment
+        android:id="@+id/screen_detail"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.detail.DetailFragment"
+        android:label="DetailFragment">
+        <action
+            android:id="@+id/detail_to_user"
+            app:destination="@id/screen_user" />
+        <action
+            android:id="@+id/detail_to_like"
+            app:destination="@id/screen_like" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/screen_user"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
+        android:label="UserFragment" />
+
+    <fragment
+        android:id="@+id/screen_like"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.like.LikeFragment"
+        android:label="LikeFragment" />
+</navigation>

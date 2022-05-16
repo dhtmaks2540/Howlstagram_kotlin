@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/add"
+    app:startDestination="@id/test_screen">
+
+    <fragment
+        android:id="@+id/test_screen"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment"
+        android:label="GridFragment" />
+</navigation>

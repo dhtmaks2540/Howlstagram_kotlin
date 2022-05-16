@@ -18,7 +18,7 @@ import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DetailViewFragment: BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
+class DetailViewFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
 
     @Inject
     lateinit var fireStore: FirebaseFirestore
@@ -53,13 +53,13 @@ class DetailViewFragment: BaseFragment<FragmentDetailBinding>(R.layout.fragment_
 
     // Toolbar 메뉴 선택
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.action_add -> {
 
             }
 
             R.id.action_activity -> {
-                
+
             }
         }
 
@@ -75,15 +75,29 @@ class DetailViewFragment: BaseFragment<FragmentDetailBinding>(R.layout.fragment_
                 override fun click(contentUid: String) {
                     detailViewModel.setFavoriteEvent(contentUid = contentUid)
                 }
-        },
+            },
             object : DetailRecyclerAdapter.CommentClickListener {
                 override fun click(content: Content) {
                     startCommentIntent(content = content)
                 }
-        }, object : DetailRecyclerAdapter.ProfileClickListener {
+            }, object : DetailRecyclerAdapter.ProfileClickListener {
                 override fun click(destinationUid: String, userId: String, profileUrl: String) {
-                    val bundle = bundleOf("userId" to userId, "destinationUid" to destinationUid, "profileUrl" to profileUrl)
-                    Navigation.findNavController(binding.recyclerView).navigate(R.id.action_global_account_screen, bundle)
+                    val bundle = bundleOf(
+                        "userId" to userId,
+                        "destinationUid" to destinationUid,
+                        "profileUrl" to profileUrl
+                    )
+                    Navigation.findNavController(binding.recyclerView)
+                        .navigate(R.id.action_detailFragment_to_UserFragment, bundle)
+                }
+            }, object : DetailRecyclerAdapter.LikeClickListener {
+                override fun click(favorites: Map<String, Boolean>) {
+                    val bundle = bundleOf(
+                        "favorites" to favorites
+                    )
+
+                    Navigation.findNavController(binding.recyclerView)
+                        .navigate(R.id.action_global_like_screen, bundle)
                 }
             })
     }

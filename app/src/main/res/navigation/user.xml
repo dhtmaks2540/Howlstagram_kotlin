@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/user"
+    app:startDestination="@id/screen_user">
+
+    <fragment
+        android:id="@+id/screen_user"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
+        android:label="UserFragment" />
+</navigation>

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/screen_home"
+        android:id="@+id/detail"
+        android:enabled="true"
         android:icon="@drawable/ic_home"
-        android:enabled="true"
-        android:title="@string/home"/>
+        android:title="@string/home" />
 
     <item
-        android:id="@+id/screen_search"
+        android:id="@+id/grid"
+        android:enabled="true"
         android:icon="@drawable/ic_search"
-        android:enabled="true"
-        android:title="@string/search"/>
+        android:title="@string/search" />
 
     <item
-        android:id="@+id/screen_add_photo"
+        android:id="@+id/reels"
+        android:enabled="true"
         android:icon="@drawable/ic_add_a_photo"
-        android:enabled="true"
-        android:title="@string/upload_image"/>
+        android:title="@string/upload_image" />
 
     <item
-        android:id="@+id/screen_favorite_alarm"
+        android:id="@+id/alarm"
+        android:enabled="true"
         android:icon="@drawable/ic_favorite_border"
-        android:enabled="true"
-        android:title="@string/favorite"/>
+        android:title="@string/favorite" />
 
     <item
-        android:id="@+id/screen_account"
-        android:icon="@drawable/ic_account"
+        android:id="@+id/user"
         android:enabled="true"
-        android:title="@string/account"/>
+        android:icon="@drawable/ic_account"
+        android:title="@string/account" />
 </menu>
