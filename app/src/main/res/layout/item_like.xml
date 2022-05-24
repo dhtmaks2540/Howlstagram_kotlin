@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="favoriteDTOItem"
+            type="kr.co.lee.howlstargram_kotlin.model.FavoriteDTO" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="7.5dp"
+            android:src="@drawable/baseline_account_circle_black_20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:set_glide_circle_image="@{favoriteDTOItem.profileUrl}" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_user_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7.5dp"
+            android:ellipsize="end"
+            android:ems="15"
+            android:maxLines="1"
+            android:text="@{favoriteDTOItem.userNickName}"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_user_name"
+            app:layout_constraintStart_toEndOf="@id/iv_profile"
+            app:layout_constraintTop_toTopOf="@id/iv_profile" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            android:maxLines="1"
+            android:text="@{favoriteDTOItem.userName}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+            app:layout_constraintStart_toStartOf="@id/tv_user_nickname"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_nickname" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7.5dp"
+            android:text='@{favoriteDTOItem.follow ? "팔로우 취소" : "팔로우"}'
+            app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_profile" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
