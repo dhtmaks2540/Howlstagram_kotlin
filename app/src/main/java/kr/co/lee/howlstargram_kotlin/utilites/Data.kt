@@ -8,4 +8,7 @@ enum class PageType(val pageTitle: String, val pageTag: String) {
     PAGE5("Page5", "UserFragment");
 }
 
-const val READ_STORAGE = 1
+enum class ImageType {
+    PROFILE_TYPE,
+    POST_TYPE;
+}

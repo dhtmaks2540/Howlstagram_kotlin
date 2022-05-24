@@ -71,6 +71,7 @@ class AddPhotoActivity: BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_
     private fun observeLiveDate() {
         addViewModel.contentDTO.observe(this) {
             fireStore.collection("images").document().set(addViewModel.contentDTO.value!!)
+            fireStore.collection("")
             setResult(Activity.RESULT_OK)
 
             finish()
