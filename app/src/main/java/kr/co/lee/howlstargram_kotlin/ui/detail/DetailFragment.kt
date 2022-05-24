@@ -1,6 +1,7 @@
 package kr.co.lee.howlstargram_kotlin.ui.detail
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -18,7 +19,7 @@ import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DetailViewFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
+class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
 
     @Inject
     lateinit var fireStore: FirebaseFirestore
@@ -82,13 +83,9 @@ class DetailViewFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment
                 }
             }, object : DetailRecyclerAdapter.ProfileClickListener {
                 override fun click(destinationUid: String, userId: String, profileUrl: String) {
-                    val bundle = bundleOf(
-                        "userId" to userId,
-                        "destinationUid" to destinationUid,
-                        "profileUrl" to profileUrl
-                    )
+                    val action = DetailFragmentDirections.detailToUser(userId = userId, destinationUid = destinationUid, profileUrl = profileUrl)
                     Navigation.findNavController(binding.recyclerView)
-                        .navigate(R.id.action_detailFragment_to_UserFragment, bundle)
+                        .navigate(action)
                 }
             }, object : DetailRecyclerAdapter.LikeClickListener {
                 override fun click(favorites: Map<String, Boolean>) {
@@ -97,7 +94,7 @@ class DetailViewFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment
                     )
 
                     Navigation.findNavController(binding.recyclerView)
-                        .navigate(R.id.action_global_like_screen, bundle)
+                        .navigate(R.id.detail_to_like, bundle)
                 }
             })
     }

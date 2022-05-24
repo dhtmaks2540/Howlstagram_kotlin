@@ -2,6 +2,7 @@ package kr.co.lee.howlstargram_kotlin.ui.detail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,16 +19,19 @@ class DetailRecyclerAdapter @Inject constructor(
     private lateinit var favoriteClickListener: FavoriteClickListener
     private lateinit var commentClickListener: CommentClickListener
     private lateinit var profileClickListener: ProfileClickListener
+    private lateinit var likeClickListener: LikeClickListener
 
     fun setItems(contents: List<Content>) {
         this.contents = contents
         notifyDataSetChanged()
     }
 
-    fun setOnClickListener(favoriteClickListener: FavoriteClickListener, commentClickListener: CommentClickListener, profileClickListener: ProfileClickListener) {
+    fun setOnClickListener(favoriteClickListener: FavoriteClickListener, commentClickListener: CommentClickListener,
+                           profileClickListener: ProfileClickListener, likeClickListener: LikeClickListener) {
         this.favoriteClickListener = favoriteClickListener
         this.commentClickListener = commentClickListener
         this.profileClickListener = profileClickListener
+        this.likeClickListener = likeClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -70,6 +74,21 @@ class DetailRecyclerAdapter @Inject constructor(
             binding.ivDetailviewitemProfile.setOnClickListener {
                 profileClickListener.click(contents[adapterPosition].contentDTO?.uid!!, contents[adapterPosition].contentDTO?.userId!!, contents[adapterPosition].profileUrl!!)
             }
+
+            // 유저 아이디 클릭
+            binding.tvDetailviewitemName.setOnClickListener {
+                profileClickListener.click(contents[adapterPosition].contentDTO?.uid!!, contents[adapterPosition].contentDTO?.userId!!, contents[adapterPosition].profileUrl!!)
+            }
+
+            // 유저 아이디 클릭
+            binding.tvDetailviewitemProfile.setOnClickListener {
+                profileClickListener.click(contents[adapterPosition].contentDTO?.uid!!, contents[adapterPosition].contentDTO?.userId!!, contents[adapterPosition].profileUrl!!)
+            }
+
+            // 좋아요 클릭
+            binding.tvDetailviewitemFavoritecounter.setOnClickListener {
+                likeClickListener.click(favorites = contents[adapterPosition].contentDTO?.favorites!!)
+            }
         }
 
         fun bind(content: Content) {
@@ -108,5 +127,9 @@ class DetailRecyclerAdapter @Inject constructor(
 
     interface ProfileClickListener {
         fun click(destinationUid: String, userId: String, profileUrl: String)
+    }
+
+    interface LikeClickListener {
+        fun click(favorites: Map<String, Boolean>)
     }
 }

@@ -9,12 +9,17 @@ import com.google.firebase.firestore.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(val fireStore: FirebaseFirestore, val firebaseAuth: FirebaseAuth): ViewModel() {
+class DetailViewModel @Inject constructor(
+    private val fireStore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth,
+    private val detailRepository: DetailRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher): ViewModel() {
     private val _uid = MutableLiveData<String>()
     private val _contents = MutableLiveData<List<Content>>()
 
@@ -31,13 +36,31 @@ class DetailViewModel @Inject constructor(val fireStore: FirebaseFirestore, val 
         }
     }
 
+    fun test() {
+        viewModelScope.launch {
+            val result = try {
+                detailRepository.loadImage()
+            } catch (e: Exception) {
+                println("Error!!")
+            }
+
+            when(result) {
+                is ArrayList<*> -> {
+                    println("RESULT!!! : $result")
+                }
+            }
+        }
+    }
+
     fun loadImages() {
         viewModelScope.launch {
             val snapshot = fireStore.collection("images")
+//                .whereEqualTo("uid", uid.value)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get().await()
 
-            launch {
+
+            withContext(ioDispatcher) {
                 val contents = ArrayList<Content>()
                 snapshot.documents.forEach { documentSnapshot ->
                     val item = documentSnapshot.toObject(ContentDTO::class.java)!!
@@ -54,7 +77,7 @@ class DetailViewModel @Inject constructor(val fireStore: FirebaseFirestore, val 
     }
 
     private suspend fun favoriteEvent(contentUid: String) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             val tsDoc = fireStore.collection("images").document(contentUid)
             fireStore.runTransaction { transaction ->
                 val contentDTO = transaction.get(tsDoc).toObject(ContentDTO::class.java)
