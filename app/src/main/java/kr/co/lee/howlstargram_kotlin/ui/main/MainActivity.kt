@@ -2,6 +2,8 @@ package kr.co.lee.howlstargram_kotlin.ui.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.os.bundleOf
+import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -44,6 +46,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         // BottomNavigationView와 navController 연결
         binding.bnvMain.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            when(destination.id) {
+                R.id.screen_user -> {
+                    val userIdArgument = NavArgument.Builder().setDefaultValue(mainViewModel.userId.value).build()
+                    val destinationUidArgument = NavArgument.Builder().setDefaultValue(mainViewModel.uid.value).build()
+                    val profileUrlArgument = NavArgument.Builder().setDefaultValue("").build()
+
+                    destination.addArgument("userId", userIdArgument)
+                    destination.addArgument("destinationUid", destinationUidArgument)
+                    destination.addArgument("profileUrl", profileUrlArgument)
+                }
+            }
+        }
 
 //        appBarConfiguration = AppBarConfiguration(
 //            setOf(R.id.screen_detail, R.id.screen_grid, R.id.test_screen, R.id.screen_alarm, R.id.screen_user)

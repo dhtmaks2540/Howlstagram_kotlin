@@ -4,13 +4,31 @@ import android.view.MenuItem
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.utilites.PageType
+import javax.inject.Inject
 
-class MainViewModel: ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val firebaseAuth: FirebaseAuth): ViewModel() {
     private val _currentPageType = MutableLiveData<PageType>(PageType.PAGE1)
-
     val currentPageType: LiveData<PageType> = _currentPageType
+
+    private val _userId = MutableLiveData<String>()
+    val userId: LiveData<String> = _userId
+
+    private val _uid = MutableLiveData<String>()
+    val uid: LiveData<String> = _uid
+
+    init {
+        viewModelScope.launch {
+            _userId.postValue(firebaseAuth.currentUser?.email)
+            _uid.postValue(firebaseAuth.currentUser?.uid)
+        }
+    }
 
     // PageType에 따라 currentPageType 변경
     // BindingAdapter에 의해서 호출 될 메소드

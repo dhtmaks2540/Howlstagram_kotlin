@@ -7,5 +7,18 @@
     <fragment
         android:id="@+id/screen_user"
         android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
-        android:label="UserFragment" />
+        android:label="UserFragment">
+        <argument
+            android:name="userId"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="destinationUid"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="profileUrl"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.lee.howlstargram_kotlin.databinding.ItemAddBottomSheetBinding
 import kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity
+import kr.co.lee.howlstargram_kotlin.utilites.ImageType
 
 class AddBottomSheetDialogAdapter :
     RecyclerView.Adapter<AddBottomSheetDialogAdapter.AddBottomViewHolder>() {
@@ -30,12 +31,12 @@ class AddBottomSheetDialogAdapter :
             binding.layout.setOnClickListener {
                 when(itemList[adapterPosition]) {
                     "게시물" -> {
-                        println("게시물!!")
                         val intent = Intent(binding.layout.context, GalleryActivity::class.java)
+                        intent.putExtra("imageType", ImageType.POST_TYPE)
                         binding.layout.context.startActivity(intent)
                     }
                     "스토리" -> {
-                        println("스토리!!!")
+
                     }
                 }
             }

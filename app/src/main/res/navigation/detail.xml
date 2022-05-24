@@ -19,10 +19,30 @@
     <fragment
         android:id="@+id/screen_user"
         android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
-        android:label="UserFragment" />
+        android:label="UserFragment">
+        <argument
+            android:name="userId"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="destinationUid"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="profileUrl"
+            android:defaultValue=""
+            app:argType="string" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/screen_like"
         android:name="kr.co.lee.howlstargram_kotlin.ui.like.LikeFragment"
-        android:label="LikeFragment" />
+        android:label="LikeFragment">
+        <action
+            android:id="@+id/action_like_to_user"
+            app:destination="@id/screen_user" />
+    </fragment>
 </navigation>
