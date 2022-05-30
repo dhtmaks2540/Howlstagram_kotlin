@@ -42,9 +42,8 @@ class LikeFragment: BaseFragment<FragmentLikeBinding>(R.layout.fragment_like) {
         recyclerAdapter = LikeRecyclerAdapter()
         recyclerAdapter.setOnClickListener(object : UserClickListener {
             override fun userClick(userId: String, destinationUid: String, profileUrl: String) {
-                val action = LikeFragmentDirections.actionLikeToUser(userId = userId, destinationUid = destinationUid, profileUrl = profileUrl)
-                Navigation.findNavController(binding.recyclerView)
-                    .navigate(action)
+                val action = LikeFragmentDirections.detailToUser(userId = userId, destinationUid = destinationUid, profileUrl = profileUrl)
+                findNavController().navigate(action)
             }
         })
     }
