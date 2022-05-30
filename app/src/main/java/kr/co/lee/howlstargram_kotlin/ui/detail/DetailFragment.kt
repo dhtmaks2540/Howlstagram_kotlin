@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     @Inject
     lateinit var fireStore: FirebaseFirestore
     lateinit var adapter: DetailRecyclerAdapter
+    lateinit var navController: NavController
     private val detailViewModel: DetailViewModel by viewModels()
 
     override fun initView() {
@@ -32,8 +34,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
     // 전체 초기화
     private fun init() {
-        setHasOptionsMenu(true)
-
+        navController = Navigation.findNavController(binding.recyclerView)
         setAdapter()
         setToolbar()
         detailViewModel.loadImages()
@@ -42,6 +43,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
     // 툴바 지정
     private fun setToolbar() {
+        setHasOptionsMenu(true)
         (activity as MainActivity).setSupportActionBar(binding.toolbar)
     }
 
@@ -56,7 +58,8 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_add -> {
-
+                val action = DetailFragmentDirections.detailToBottomSheet()
+                navController.navigate(action)
             }
 
             R.id.action_activity -> {
@@ -84,8 +87,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
             }, object : DetailRecyclerAdapter.ProfileClickListener {
                 override fun click(destinationUid: String, userId: String, profileUrl: String) {
                     val action = DetailFragmentDirections.detailToUser(userId = userId, destinationUid = destinationUid, profileUrl = profileUrl)
-                    Navigation.findNavController(binding.recyclerView)
-                        .navigate(action)
+                    navController.navigate(action)
                 }
             }, object : DetailRecyclerAdapter.LikeClickListener {
                 override fun click(favorites: Map<String, Boolean>) {
@@ -93,13 +95,12 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
                         "favorites" to favorites
                     )
 
-                    Navigation.findNavController(binding.recyclerView)
-                        .navigate(R.id.detail_to_like, bundle)
+                    navController.navigate(R.id.detail_to_user, bundle)
                 }
             })
     }
 
-    // Intent 시작 메서드
+    // Intent 시작 메서드 -> 댓글 액티비티
     private fun startCommentIntent(content: Content) {
         val intent = Intent(requireContext(), CommentActivity::class.java)
         intent.putExtra("content", content)

@@ -8,11 +8,15 @@ data class ContentDTO(
     var imageUrl: String? = null,
     var uid: String? = null,
     var userId: String? = null,
+    var userNickName: String? = null,
+    var userName: String? = null,
     var timestamp: Long = 0,
     var favoriteCount: Int = 0,
     var favorites: MutableMap<String, Boolean> = HashMap(),
-): Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -26,6 +30,8 @@ data class ContentDTO(
         parcel.writeString(imageUrl)
         parcel.writeString(uid)
         parcel.writeString(userId)
+        parcel.writeString(userNickName)
+        parcel.writeString(userName)
         parcel.writeLong(timestamp)
         parcel.writeInt(favoriteCount)
     }
