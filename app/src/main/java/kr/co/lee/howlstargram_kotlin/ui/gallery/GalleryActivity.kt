@@ -98,7 +98,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
     }
 
     // Intent Data 셋팅
-    fun setIntentData() {
+    private fun setIntentData() {
         (intent.getSerializableExtra("imageType") as? ImageType)?.let {
             galleryViewModel.setImageType(it)
         }
