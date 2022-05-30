@@ -7,14 +7,7 @@
     <fragment
         android:id="@+id/screen_detail"
         android:name="kr.co.lee.howlstargram_kotlin.ui.detail.DetailFragment"
-        android:label="DetailFragment">
-        <action
-            android:id="@+id/detail_to_user"
-            app:destination="@id/screen_user" />
-        <action
-            android:id="@+id/detail_to_like"
-            app:destination="@id/screen_like" />
-    </fragment>
+        android:label="DetailFragment" />
 
     <fragment
         android:id="@+id/screen_user"
@@ -40,9 +33,41 @@
     <fragment
         android:id="@+id/screen_like"
         android:name="kr.co.lee.howlstargram_kotlin.ui.like.LikeFragment"
-        android:label="LikeFragment">
+        android:label="LikeFragment" />
+
+    <fragment
+        android:id="@+id/screen_follow_home"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowHomeFragment"
+        android:label="FollowHomeFragment">
         <action
-            android:id="@+id/action_like_to_user"
-            app:destination="@id/screen_user" />
+            android:id="@+id/detail_follow_home_to_follow"
+            app:destination="@id/screen_follow" />
     </fragment>
+
+    <fragment
+        android:id="@+id/screen_follow"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowFragment"
+        android:label="FollowFragment" />
+
+    <dialog
+        android:id="@+id/screen_bottom_sheet"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.gallerybottomsheet.BottomSheetDialogFragment" />
+
+    <action
+        android:id="@+id/detail_to_user"
+        app:destination="@id/screen_user" />
+
+    <action
+        android:id="@+id/detail_to_like"
+        app:destination="@id/screen_like" />
+
+    <action
+        android:id="@+id/detail_to_bottom_sheet"
+        app:destination="@id/screen_bottom_sheet"
+        app:popUpTo="@id/screen_detail" />
+
+    <action
+        android:id="@+id/detail_user_to_follow"
+        app:destination="@id/screen_follow_home" />
+
 </navigation>

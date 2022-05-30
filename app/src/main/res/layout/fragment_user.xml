@@ -68,6 +68,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_follower"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -75,10 +76,10 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:text="@{Integer.toString(viewModel.userDTO.followerCount)}"
                     android:id="@+id/tv_account_follower_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="@{Integer.toString(viewModel.userDTO.followerCount)}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
@@ -88,6 +89,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_following"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -98,7 +100,7 @@
                     android:id="@+id/tv_account_following_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{Integer.toString(viewModel.userDTO.followingCount)}"/>
+                    android:text="@{Integer.toString(viewModel.userDTO.followingCount)}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"

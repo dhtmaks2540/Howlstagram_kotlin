@@ -21,4 +21,27 @@
             android:defaultValue=""
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/screen_follow_home"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowHomeFragment"
+        android:label="FollowHomeFragment">
+        <action
+            android:id="@+id/follow_home_to_follow"
+            app:destination="@id/screen_follow" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/screen_follow"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowFragment"
+        android:label="FollowFragment" />
+
+    <action
+        android:id="@+id/user_to_follow"
+        app:destination="@id/screen_follow_home" />
+
+    <action
+        android:id="@+id/follow_to_user"
+        app:destination="@id/screen_user" />
+
 </navigation>
