@@ -1,28 +1,21 @@
 package kr.co.lee.howlstargram_kotlin.ui.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
-import androidx.core.os.bundleOf
-import androidx.navigation.NavArgument
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityMainBinding
-import kr.co.lee.howlstargram_kotlin.utilites.PageType
+import kr.co.lee.howlstargram_kotlin.utilites.setupWithNavController
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private val mainViewModel by viewModels<MainViewModel>()
-    private lateinit var navController: NavController
-    private lateinit var appBarConfiguration: AppBarConfiguration
+    private var navController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,40 +23,43 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             viewModel = mainViewModel
         }
 
+        if(savedInstanceState == null)
+            init()
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
         init()
     }
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        return navController.navigateUp(appBarConfiguration)
-//    }
-
     // 초기화
     private fun init() {
-        // Navigation Graph, BottomNavigationView 연결
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fcv_main_content) as NavHostFragment
-        navController = navHostFragment.navController
+        val graphIds = listOf(R.navigation.detail, R.navigation.grid, R.navigation.user)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bnv_main)
+        val controller = bottomNav.setupWithNavController(
+            graphIds,
+            supportFragmentManager,
+            R.id.fcv_main_content,
+            intent
+        )
 
-        // BottomNavigationView와 navController 연결
-        binding.bnvMain.setupWithNavController(navController)
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            when(destination.id) {
-                R.id.screen_user -> {
-                    val userIdArgument = NavArgument.Builder().setDefaultValue(mainViewModel.userId.value).build()
-                    val destinationUidArgument = NavArgument.Builder().setDefaultValue(mainViewModel.uid.value).build()
-                    val profileUrlArgument = NavArgument.Builder().setDefaultValue("").build()
-
-                    destination.addArgument("userId", userIdArgument)
-                    destination.addArgument("destinationUid", destinationUidArgument)
-                    destination.addArgument("profileUrl", profileUrlArgument)
+        controller.observe(this) {
+            it.addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.screen_comment -> {
+                        binding.bnvMain.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.bnvMain.visibility = View.VISIBLE
+                    }
                 }
             }
         }
 
-//        appBarConfiguration = AppBarConfiguration(
-//            setOf(R.id.screen_detail, R.id.screen_grid, R.id.test_screen, R.id.screen_alarm, R.id.screen_user)
-//        )
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        navController = controller
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return navController?.value?.navigateUp()!! || super.onSupportNavigateUp()
+    }
 }

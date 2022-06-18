@@ -7,5 +7,109 @@
     <fragment
         android:id="@+id/screen_grid"
         android:name="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment"
-        android:label="GridFragment" />
+        android:label="GridFragment">
+        <action
+            android:id="@+id/action_to_research"
+            app:destination="@id/screen_research"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <action
+            android:id="@+id/action_to_search"
+            app:destination="@id/screen_search"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/screen_research"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.research.ResearchFragment"
+        android:label="ResearchFragment" />
+
+    <fragment
+        android:id="@+id/screen_user"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
+        android:label="UserFragment">
+        <argument
+            android:name="destinationUid"
+            android:defaultValue=""
+            app:argType="string" />
+        <action
+            android:id="@+id/action_to_follow"
+            app:destination="@id/screen_follow_home"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/screen_like"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.like.LikeFragment"
+        android:label="LikeFragment" />
+
+    <fragment
+        android:id="@+id/screen_follow_home"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowHomeFragment"
+        android:label="FollowHomeFragment">
+        <action
+            android:id="@+id/detail_follow_home_to_follow"
+            app:destination="@id/screen_follow"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/screen_follow"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowFragment"
+        android:label="FollowFragment" />
+
+    <fragment
+        android:id="@+id/screen_comment"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.comment.CommentFragment"
+        android:label="CommentFragment" />
+
+    <fragment
+        android:id="@+id/screen_search"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.search.SearchFragment"
+        android:label="SearchFragment" />
+
+    <action
+        android:id="@+id/action_to_user"
+        app:destination="@id/screen_user"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    <action
+        android:id="@+id/action_to_like"
+        app:destination="@id/screen_like"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    <action
+        android:id="@+id/action_to_bottom"
+        app:destination="@id/screen_bottom_sheet"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    <action
+        android:id="@+id/action_to_comment"
+        app:destination="@id/screen_comment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
 </navigation>

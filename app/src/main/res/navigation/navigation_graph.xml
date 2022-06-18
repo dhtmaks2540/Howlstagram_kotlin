@@ -6,8 +6,7 @@
 
     <include app:graph="@navigation/detail" />
     <include app:graph="@navigation/grid" />
-    <include app:graph="@navigation/reels" />
-    <include app:graph="@navigation/alarm" />
+<!--    <include app:graph="@navigation/reels" />-->
     <include app:graph="@navigation/user" />
 
 </navigation>

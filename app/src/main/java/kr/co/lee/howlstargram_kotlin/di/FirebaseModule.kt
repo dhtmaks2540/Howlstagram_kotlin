@@ -6,9 +6,10 @@ import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -34,8 +35,15 @@ object FirebaseSingletonModule {
     }
 }
 
-//@Module
-//@InstallIn(ActivityRetainedComponent::class)
-//object FirebaseActivityModule {
-//
-//}
+@Module
+@InstallIn(ActivityRetainedComponent::class)
+object FirebaseUidModule {
+    @Provides
+    @CurrentUserUid
+    @ActivityRetainedScoped
+    fun getUid() = FirebaseAuth.getInstance().currentUser?.uid!!
+}
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class CurrentUserUid

@@ -4,6 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="uidItem"
+            type="Boolean" />
+
         <variable
             name="favoriteDTOItem"
             type="kr.co.lee.howlstargram_kotlin.model.FavoriteDTO" />
@@ -19,6 +26,8 @@
             android:layout_height="50dp"
             android:layout_marginStart="7.5dp"
             android:src="@drawable/baseline_account_circle_black_20"
+            app:civ_border_color="@color/black"
+            app:civ_border_width="0.5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="7.5dp"
             android:text='@{favoriteDTOItem.follow ? "팔로우 취소" : "팔로우"}'
+            android:visibility="@{uidItem ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_profile" />

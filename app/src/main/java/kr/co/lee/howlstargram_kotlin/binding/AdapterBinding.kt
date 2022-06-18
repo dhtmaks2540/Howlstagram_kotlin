@@ -13,11 +13,11 @@ object AdapterBinding {
     @BindingAdapter("set_glide_image")
     fun setGlideImage(
         imageView: AppCompatImageView,
-        url: String
+        url: String?
     ) {
         Glide.with(imageView.context)
             .load(url)
-            .error(R.drawable.baseline_account_circle_black_20)
+            .thumbnail(0.1f)
             .centerCrop()
             .into(imageView)
     }
@@ -29,8 +29,10 @@ object AdapterBinding {
         url: String?
     ) {
         Glide.with(imageView.context)
-            .load(url ?: "")
-            .error(R.drawable.baseline_account_circle_black_20)
+            .load(url)
+            .placeholder(R.drawable.baseline_account_circle_black_20)
+            .thumbnail(0.1f)
+            .fallback(R.drawable.baseline_account_circle_black_20)
             .centerCrop()
             .into(imageView)
     }
@@ -74,6 +76,5 @@ object AdapterBinding {
                 }
             }
         }
-
     }
 }

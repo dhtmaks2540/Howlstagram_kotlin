@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="kr.co.lee.howlstargram_kotlin.ui.research.ResearchViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                app:title="AppBar Title">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:actionBarSize"
+                    app:layout_collapseMode="parallax"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/research_tab"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_user_profile"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="7.5dp"
+                    android:layout_marginTop="10dp"
+                    app:civ_border_color="@color/black"
+                    app:civ_border_width="0.5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:set_glide_circle_image="@{viewModel.content.profileUrl}" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_user_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7.5dp"
+                    android:text="@{viewModel.content.contentDTO.userNickName}"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_user_profile"
+                    app:layout_constraintStart_toEndOf="@id/iv_user_profile"
+                    app:layout_constraintTop_toTopOf="@id/iv_user_profile" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_follow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7.5dp"
+                    android:text='@{viewModel.isFollow ? "팔로우 취소" : "팔로우"}'
+                    android:visibility="@{viewModel.isMyPost ? View.VISIBLE : View.INVISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/iv_user_profile"
+                    app:set_glide_image="@{viewModel.content.contentDTO.imageUrl}" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_item_favorite"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_favorite_border"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_item"
+                    app:set_favorite_image="@{viewModel.content.contentDTO.favorites.containsKey(viewModel.currentUserUid)}" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_item_comment"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_chat_black"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_item_favorite"
+                    app:layout_constraintStart_toEndOf="@id/iv_item_favorite"
+                    app:layout_constraintTop_toTopOf="@id/iv_item_favorite" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_item_favoritecounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text='@{"좋아요 " + viewModel.content.contentDTO.favoriteCount + "개"}'
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@id/iv_item_favorite"
+                    app:layout_constraintTop_toBottomOf="@id/iv_item_favorite" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.content.contentDTO.userNickName}"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@id/tv_item_favoritecounter"
+                    app:layout_constraintTop_toBottomOf="@id/tv_item_favoritecounter" />
+
+                <!--설명글을 보여주는 Textview-->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_item_explain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@{viewModel.content.contentDTO.explain}"
+                    app:layout_constraintStart_toEndOf="@id/tv_item_name"
+                    app:layout_constraintTop_toBottomOf="@id/tv_item_favoritecounter" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_item_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{"댓글 " + viewModel.content.commentSize + "개 모두보기"}'
+                    app:layout_constraintStart_toStartOf="@id/tv_item_name"
+                    app:layout_constraintTop_toBottomOf="@id/tv_item_name" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_item_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintStart_toStartOf="@id/tv_item_comment"
+                    app:layout_constraintTop_toBottomOf="@id/tv_item_comment"
+                    app:set_datetime="@{viewModel.content.contentDTO.timestamp}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

@@ -2,24 +2,30 @@ package kr.co.lee.howlstargram_kotlin.ui.like
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.lee.howlstargram_kotlin.databinding.ItemLikeBinding
 import kr.co.lee.howlstargram_kotlin.model.FavoriteDTO
+import kr.co.lee.howlstargram_kotlin.utilites.FollowClickListener
+import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
 
-class LikeRecyclerAdapter: RecyclerView.Adapter<LikeRecyclerAdapter.ViewHolder>() {
+class LikeRecyclerAdapter(private val currentUserUid: String) : ListAdapter<FavoriteDTO, LikeRecyclerAdapter.ViewHolder>(LikeDiffCallback())
+//    : RecyclerView.Adapter<LikeRecyclerAdapter.ViewHolder>()
+{
+    private lateinit var profileClickListener: ProfileClickListener
+    private lateinit var followClickListener: FollowClickListener
+    private lateinit var uid: String
 
-    private lateinit var favoriteDTOs: List<FavoriteDTO>
-    private lateinit var userClickListener: UserClickListener
-    private lateinit var userId: String
+//    fun setItems(favoriteDTOs: List<FavoriteDTO>, uid: String) {
+//        this.favoriteDTOs = favoriteDTOs
+//        this.uid = uid
+//        notifyDataSetChanged()
+//    }
 
-    fun setItems(favoriteDTOs: List<FavoriteDTO>, userId: String) {
-        this.favoriteDTOs = favoriteDTOs
-        this.userId = userId
-        notifyDataSetChanged()
-    }
-
-    fun setOnClickListener(userClickListener: UserClickListener) {
-        this.userClickListener = userClickListener
+    fun setOnClickListener(profileClickListener: ProfileClickListener, followClickListener: FollowClickListener) {
+        this.profileClickListener = profileClickListener
+        this.followClickListener = followClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,26 +34,61 @@ class LikeRecyclerAdapter: RecyclerView.Adapter<LikeRecyclerAdapter.ViewHolder>(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(favoriteDTOs[position])
+        holder.bind(getItem(position), currentUserUid)
     }
 
-    override fun getItemCount(): Int = favoriteDTOs.size
+//    override fun getItemCount(): Int = favoriteDTOs.size
 
-    inner class ViewHolder(private val binding: ItemLikeBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemLikeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.ivProfile.setOnClickListener { userClickListener.userClick(favoriteDTOs[adapterPosition].userNickName, favoriteDTOs[adapterPosition].userUid, favoriteDTOs[adapterPosition].profileUrl) }
-            binding.tvUserNickname.setOnClickListener { userClickListener.userClick(favoriteDTOs[adapterPosition].userNickName, favoriteDTOs[adapterPosition].userUid, favoriteDTOs[adapterPosition].profileUrl) }
-            binding.tvUserName.setOnClickListener { userClickListener.userClick(favoriteDTOs[adapterPosition].userNickName, favoriteDTOs[adapterPosition].userUid, favoriteDTOs[adapterPosition].profileUrl) }
+            binding.apply {
+                // 프로필 이미지 클릭
+                ivProfile.setOnClickListener {
+                    profileClickListener.click(getItem(adapterPosition).userUid)
+                }
+
+                // 닉네임 클릭
+                tvUserNickname.setOnClickListener {
+                    profileClickListener.click(getItem(adapterPosition).userUid,)
+                }
+
+                // 유저 이름 클릭
+                tvUserName.setOnClickListener {
+                    profileClickListener.click(getItem(adapterPosition).userUid,)
+                }
+
+                // 팔로우 버튼 클릭
+                btnFollow.setOnClickListener {
+                    followClickListener.followClick(
+                        userUid = getItem(adapterPosition).userUid,
+                        position = adapterPosition
+                    )
+                }
+            }
         }
 
-        fun bind(item: FavoriteDTO) {
+        fun bind(item: FavoriteDTO, uid: String) {
             binding.apply {
+                uidItem = uid != item.userUid
                 favoriteDTOItem = item
             }
         }
     }
 }
 
-interface UserClickListener {
-    fun userClick(userId: String, destinationUid: String, profileUrl: String)
+private class LikeDiffCallback : DiffUtil.ItemCallback<FavoriteDTO>() {
+    override fun areItemsTheSame(
+        oldItem: FavoriteDTO,
+        newItem: FavoriteDTO
+    ): Boolean {
+        return oldItem.userUid == newItem.userUid
+    }
+
+    override fun areContentsTheSame(
+        oldItem: FavoriteDTO,
+        newItem: FavoriteDTO
+    ): Boolean {
+        return oldItem == newItem
+    }
 }

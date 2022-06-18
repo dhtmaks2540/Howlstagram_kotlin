@@ -11,10 +11,13 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_comment"
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            app:civ_border_width="0.5dp"
+            app:civ_border_color="@color/black"
             android:id="@+id/iv_commentviewitem_profile"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -29,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="7.5dp"
-            android:text="@{commentItem.commentDTO.userId}"
+            android:text="@{commentItem.commentDTO.userNickName}"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/iv_commentviewitem_profile"
             app:layout_constraintTop_toTopOf="parent" />

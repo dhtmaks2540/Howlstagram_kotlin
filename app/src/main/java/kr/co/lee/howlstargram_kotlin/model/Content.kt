@@ -8,7 +8,7 @@ data class Content(
     var contentUid: String? = null,
     var profileUrl: String? = null,
     var commentSize: Int = 0
-): Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(ContentDTO::class.java.classLoader),
         parcel.readString(),

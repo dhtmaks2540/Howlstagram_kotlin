@@ -9,13 +9,13 @@
             type="kr.co.lee.howlstargram_kotlin.model.Content" />
 
         <variable
-            name="viewModel"
-            type="kr.co.lee.howlstargram_kotlin.ui.detail.DetailViewModel" />
+            name="currentUserIdItem"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <!--사진을 올린 사람의 프로필과 이름이 뜨는 LinearLayout-->
         <LinearLayout
@@ -30,13 +30,15 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_margin="7.5dp"
+                app:civ_border_color="@color/black"
+                app:civ_border_width="0.5dp"
                 app:set_glide_circle_image="@{contentItem.profileUrl}" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_detailviewitem_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{contentItem.contentDTO.userId}" />
+                android:text="@{contentItem.contentDTO.userNickName}" />
         </LinearLayout>
 
         <!--올린 사진이 뜨는 ImageView-->
@@ -44,6 +46,7 @@
             android:id="@+id/iv_detailviewitem_content"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:adjustViewBounds="true"
             android:scaleType="fitXY"
             app:layout_constraintTop_toBottomOf="@id/layout_name"
             app:set_glide_image="@{contentItem.contentDTO.imageUrl}" />
@@ -57,7 +60,7 @@
             android:src="@drawable/ic_favorite_border"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_content"
-            app:set_favorite_image="@{contentItem.contentDTO.favorites.containsKey(viewModel.uid)}" />
+            app:set_favorite_image="@{contentItem.contentDTO.favorites.containsKey(currentUserIdItem)}" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_detailviewitem_comment"
@@ -94,7 +97,7 @@
             android:id="@+id/tv_detailviewitem_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{contentItem.contentDTO.userId}"
+            android:text="@{contentItem.contentDTO.userNickName}"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_favoritecounter"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_favoritecounter" />
@@ -122,9 +125,10 @@
             android:id="@+id/tv_detailviewitem_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:set_datetime="@{contentItem.contentDTO.timestamp}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_comment"
-            app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_comment" />
+            app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_comment"
+            app:set_datetime="@{contentItem.contentDTO.timestamp}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

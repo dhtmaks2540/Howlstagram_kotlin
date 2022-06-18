@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
@@ -20,11 +19,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityGalleryBinding
-import kr.co.lee.howlstargram_kotlin.model.GalleryImage
 import kr.co.lee.howlstargram_kotlin.ui.addphoto.AddPhotoActivity
+import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
+import kr.co.lee.howlstargram_kotlin.utilites.IMAGE_TYPE
 import kr.co.lee.howlstargram_kotlin.utilites.ImageType
-import java.io.File
-import java.util.*
+import kr.co.lee.howlstargram_kotlin.utilites.PROFILE_URL
+import kr.co.lee.howlstargram_kotlin.utilites.URI
 import javax.inject.Inject
 
 private const val READ_EXTERNAL_STORAGE_PERMISSION = 10
@@ -61,18 +61,20 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
                 finish()
             }
             R.id.action_next -> {
-                // 프로필 업로드
                 when(galleryViewModel.imageType.value) {
+                    // 프로필 업로드
                     ImageType.PROFILE_TYPE -> {
                         galleryViewModel.addProfile()
-                        intent.putExtra("profileUrl", galleryViewModel.currentSelectedImage.value)
-                        setResult(RESULT_OK)
+                        val mainIntent = Intent(this, MainActivity::class.java).apply {
+                            putExtra(PROFILE_URL, galleryViewModel.currentSelectedImage.value)
+                        }
+                        setResult(RESULT_OK, mainIntent)
                         finish()
                     }
                     ImageType.POST_TYPE -> {
                         // 게시글 업로드
                         val intent = Intent(this, AddPhotoActivity::class.java)
-                        intent.putExtra("uri", galleryViewModel.currentSelectedImage.value)
+                        intent.putExtra(URI, galleryViewModel.currentSelectedImage.value)
                         launcher.launch(intent)
                     }
                     null -> {
@@ -99,7 +101,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_g
 
     // Intent Data 셋팅
     private fun setIntentData() {
-        (intent.getSerializableExtra("imageType") as? ImageType)?.let {
+        (intent.getSerializableExtra(IMAGE_TYPE) as? ImageType)?.let {
             galleryViewModel.setImageType(it)
         }
 

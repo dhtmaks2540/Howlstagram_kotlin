@@ -9,17 +9,17 @@
         android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
         android:label="UserFragment">
         <argument
-            android:name="userId"
-            android:defaultValue=""
-            app:argType="string" />
-        <argument
             android:name="destinationUid"
             android:defaultValue=""
             app:argType="string" />
-        <argument
-            android:name="profileUrl"
-            android:defaultValue=""
-            app:argType="string" />
+
+        <action
+            android:id="@+id/action_to_follow"
+            app:destination="@id/screen_follow_home"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -28,7 +28,11 @@
         android:label="FollowHomeFragment">
         <action
             android:id="@+id/follow_home_to_follow"
-            app:destination="@id/screen_follow" />
+            app:destination="@id/screen_follow"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -36,12 +40,24 @@
         android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowFragment"
         android:label="FollowFragment" />
 
-    <action
-        android:id="@+id/user_to_follow"
-        app:destination="@id/screen_follow_home" />
+    <dialog
+        android:id="@+id/screen_bottom_sheet"
+        android:name="kr.co.lee.howlstargram_kotlin.ui.gallerybottomsheet.BottomSheetDialogFragment" />
 
     <action
-        android:id="@+id/follow_to_user"
-        app:destination="@id/screen_user" />
+        android:id="@+id/action_to_user"
+        app:destination="@id/screen_user"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    <action
+        android:id="@+id/action_to_bottom"
+        app:destination="@id/screen_bottom_sheet"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
 </navigation>

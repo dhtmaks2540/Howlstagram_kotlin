@@ -4,14 +4,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="0dp">
+        android:layout_height="300dp"
+        app:behavior_draggable="true"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_make"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_make"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout></layout>

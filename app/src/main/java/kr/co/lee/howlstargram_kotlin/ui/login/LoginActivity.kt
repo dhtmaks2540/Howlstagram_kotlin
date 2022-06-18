@@ -22,6 +22,7 @@ import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityLoginBinding
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.ui.register.RegisterActivity
+import kr.co.lee.howlstargram_kotlin.utilites.USER
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,14 +34,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     lateinit var auth: FirebaseAuth
 
     // Intent의 결과를 받기 위한 ActivityResultLauncher
-    private val launcher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            if(activityResult.resultCode == RESULT_OK) {
-                val user = intent.getParcelableExtra<FirebaseUser>("user")
-                moveMainPage(user)
-                finish()
-            }
+    private val registerLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+        if (activityResult.resultCode == RESULT_OK) {
+            val user = intent.getParcelableExtra<FirebaseUser>(USER)
+            moveMainPage(user)
+            finish()
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +49,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
             viewModel = loginViewModel
             btEmailLogin.setOnClickListener { signInEmail() }
             btEmailSignup.setOnClickListener { signUp() }
-            // Google Login First Step
-//            btGoogleSignIn.setOnClickListener { googleLogin() }
         }
     }
 
@@ -62,28 +60,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     // 회원가입
     private fun signUp() {
         val intent = Intent(this, RegisterActivity::class.java)
-        launcher.launch(intent)
+        registerLauncher.launch(intent)
     }
-
-//    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
-//        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-//        auth.signInWithCredential(credential)
-//            .addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    // Login
-//                    moveMainPage(task.result?.user)
-//                } else {
-//                    // Show the error Message
-//                    showToast(task.exception?.message.toString())
-//                }
-//            }
-//    }
-
-    // 구글 로그인 메소드
-//    private fun googleLogin() {
-//        val signInClient = googleSignInClient.signInIntent
-//        launcher.launch(signInClient)
-//    }
 
     // 로그인 메소드
     private fun signInEmail() {
@@ -97,7 +75,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                 moveMainPage(task.result?.user)
             } else {
                 // Show the error Message
-                showToast("Login failed.... Check id and password")
+                showToast(resources.getString(R.string.checkout_id_password))
             }
         }
     }
@@ -108,6 +86,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
         user?.let {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

@@ -19,18 +19,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HowlStargram_Kotlin">
         <activity
+            android:name=".ui.profile.ProfileEditActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="false" />
@@ -39,6 +42,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.gallery.GalleryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.register.RegisterActivity"
             android:exported="false" />
     </application>
 

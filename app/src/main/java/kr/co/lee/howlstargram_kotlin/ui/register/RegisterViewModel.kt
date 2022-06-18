@@ -35,7 +35,7 @@ class RegisterViewModel @Inject constructor(
     private val _user = MutableLiveData<FirebaseUser>()
     val user: LiveData<FirebaseUser> = _user
 
-    private val _success = MutableLiveData<Boolean>(false)
+    private val _success = MutableLiveData<Boolean>()
     val success: LiveData<Boolean> = _success
 
     fun signUp() {
@@ -62,10 +62,13 @@ class RegisterViewModel @Inject constructor(
                 } else {
                     _success.postValue(false)
                 }
+            }.addOnFailureListener {
+                println("FAILURE!!! : ${it.message}")
             }
         }
     }
 
+    // 유저 정보 삽입
     private suspend fun insertUserInformation(userItem: FirebaseUser) {
         withContext(ioDispatcher) {
             val tsDocUser = fireStore.collection("users").document(userItem.uid)

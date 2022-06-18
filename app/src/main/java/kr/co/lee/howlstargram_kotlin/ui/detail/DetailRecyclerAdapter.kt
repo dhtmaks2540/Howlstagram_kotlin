@@ -2,30 +2,26 @@ package kr.co.lee.howlstargram_kotlin.ui.detail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.Navigation
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.databinding.ItemDetailBinding
 import kr.co.lee.howlstargram_kotlin.model.Content
+import kr.co.lee.howlstargram_kotlin.utilites.CommentClickListener
+import kr.co.lee.howlstargram_kotlin.utilites.FavoriteClickListener
+import kr.co.lee.howlstargram_kotlin.utilites.LikeClickListener
+import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
 import javax.inject.Inject
 
-class DetailRecyclerAdapter @Inject constructor(
-    private val detailViewModel: DetailViewModel)
-    : RecyclerView.Adapter<DetailRecyclerAdapter.ViewHolder>() {
+class DetailRecyclerAdapter @Inject constructor(private val currentUserUid: String)
+    : ListAdapter<Content, DetailRecyclerAdapter.ViewHolder>(ContentDiffCallback()) {
 
-    private lateinit var contents: List<Content>
     private lateinit var favoriteClickListener: FavoriteClickListener
     private lateinit var commentClickListener: CommentClickListener
     private lateinit var profileClickListener: ProfileClickListener
     private lateinit var likeClickListener: LikeClickListener
 
-    fun setItems(contents: List<Content>) {
-        this.contents = contents
-        notifyDataSetChanged()
-    }
-
+    // 클릭 리스너
     fun setOnClickListener(favoriteClickListener: FavoriteClickListener, commentClickListener: CommentClickListener,
                            profileClickListener: ProfileClickListener, likeClickListener: LikeClickListener) {
         this.favoriteClickListener = favoriteClickListener
@@ -40,96 +36,92 @@ class DetailRecyclerAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(contents[position])
-    }
-
-    override fun getItemCount(): Int {
-        return contents.size
+        holder.bind(getItem(position), currentUserUid)
     }
 
     inner class ViewHolder(val binding: ItemDetailBinding): RecyclerView.ViewHolder(binding.root) {
         init {
-            // 좋아요 사진 클릭
-            binding.ivDetailviewitemFavorite.setOnClickListener {
-                favoriteClickListener.click(contents[adapterPosition].contentUid!!)
-                updateFavorite()
-            }
+            binding.apply {
+                // 좋아요 사진 클릭
+                ivDetailviewitemFavorite.setOnClickListener {
+                    favoriteClickListener.click(getItem(adapterPosition).contentUid!!, adapterPosition)
+                }
 
-            // 댓글 사진 클릭(to CommentActivity)
-            binding.ivDetailviewitemComment.setOnClickListener {
-                commentClickListener.click(contents[adapterPosition])
-            }
+                // 댓글 사진 클릭(to CommentActivity)
+                ivDetailviewitemComment.setOnClickListener {
+                    commentClickListener.click(getItem(adapterPosition))
+                }
 
-            // 댓글 텍스트 클릭(to CommentActivity)
-            binding.tvDetailviewitemComment.setOnClickListener {
-                commentClickListener.click(contents[adapterPosition])
-            }
-            
-            // 내용 클릭(to CommentActivity)
-            binding.tvDetailviewitemExplain.setOnClickListener {
-                commentClickListener.click(contents[adapterPosition])
-            }
+                // 댓글 텍스트 클릭(to CommentActivity)
+                tvDetailviewitemComment.setOnClickListener {
+                    commentClickListener.click(getItem(adapterPosition))
+                }
 
-            // 프로필 이미지 클릭
-            binding.ivDetailviewitemProfile.setOnClickListener {
-                profileClickListener.click(contents[adapterPosition].contentDTO?.uid!!, contents[adapterPosition].contentDTO?.userId!!, contents[adapterPosition].profileUrl!!)
-            }
+                // 내용 클릭(to CommentActivity)
+                tvDetailviewitemExplain.setOnClickListener {
+                    commentClickListener.click(getItem(adapterPosition))
+                }
 
-            // 유저 아이디 클릭
-            binding.tvDetailviewitemName.setOnClickListener {
-                profileClickListener.click(contents[adapterPosition].contentDTO?.uid!!, contents[adapterPosition].contentDTO?.userId!!, contents[adapterPosition].profileUrl!!)
-            }
+                // 프로필 이미지 클릭
+                ivDetailviewitemProfile.setOnClickListener {
+                    profileClickListener.click(getItem(adapterPosition).contentDTO?.uid!!)
+                }
 
-            // 유저 아이디 클릭
-            binding.tvDetailviewitemProfile.setOnClickListener {
-                profileClickListener.click(contents[adapterPosition].contentDTO?.uid!!, contents[adapterPosition].contentDTO?.userId!!, contents[adapterPosition].profileUrl!!)
-            }
+                // 유저 아이디 클릭
+                tvDetailviewitemName.setOnClickListener {
+                    profileClickListener.click(getItem(adapterPosition).contentDTO?.uid!!)
+                }
 
-            // 좋아요 클릭
-            binding.tvDetailviewitemFavoritecounter.setOnClickListener {
-                likeClickListener.click(favorites = contents[adapterPosition].contentDTO?.favorites!!)
+                // 유저 아이디 클릭
+                tvDetailviewitemProfile.setOnClickListener {
+                    profileClickListener.click(getItem(adapterPosition).contentDTO?.uid!!)
+                }
+
+                // 좋아요 클릭
+                tvDetailviewitemFavoritecounter.setOnClickListener {
+                    likeClickListener.click(favorites = getItem(adapterPosition).contentDTO?.favorites!!)
+                }
             }
         }
 
-        fun bind(content: Content) {
+        fun bind(content: Content, currentUserUid: String) {
             binding.apply {
-                viewModel = detailViewModel
+                currentUserIdItem = currentUserUid
                 contentItem = content
                 executePendingBindings()
             }
         }
 
         // 좋아요 UI 업데이트
-        private fun updateFavorite() {
-            CoroutineScope(Dispatchers.Main).launch {
-                if(contents[adapterPosition].contentDTO?.favorites?.containsKey(detailViewModel.uid.value)!!) {
-                    contents[adapterPosition].contentDTO?.favoriteCount = contents[adapterPosition].contentDTO?.favoriteCount?.minus(1)!!
-                    contents[adapterPosition].contentDTO?.favorites?.remove(detailViewModel.uid.value)
+//        private fun updateFavorite() {
+//            CoroutineScope(Dispatchers.Main).launch {
+//                if(contents[adapterPosition].contentDTO?.favorites?.containsKey(detailViewModel.uid.value)!!) {
+//                    contents[adapterPosition].contentDTO?.favoriteCount = contents[adapterPosition].contentDTO?.favoriteCount?.minus(1)!!
+//                    contents[adapterPosition].contentDTO?.favorites?.remove(detailViewModel.uid.value)
+//
+//                } else {
+//                    contents[adapterPosition].contentDTO?.favoriteCount = contents[adapterPosition].contentDTO?.favoriteCount?.plus(1)!!
+//                    contents[adapterPosition].contentDTO?.favorites?.set(detailViewModel.uid.value!!, true)
+//                }
+//
+//                notifyItemChanged(adapterPosition)
+//            }
+//        }
+    }
+}
 
-                } else {
-                    contents[adapterPosition].contentDTO?.favoriteCount = contents[adapterPosition].contentDTO?.favoriteCount?.plus(1)!!
-                    contents[adapterPosition].contentDTO?.favorites?.set(detailViewModel.uid.value!!, true)
-                }
-
-                notifyItemChanged(adapterPosition)
-            }
-        }
+private class ContentDiffCallback : DiffUtil.ItemCallback<Content>() {
+    override fun areItemsTheSame(
+        oldItem: Content,
+        newItem: Content
+    ): Boolean {
+        return oldItem.contentUid == newItem.contentUid
     }
 
-    // 좋아요 인터페이스
-    interface FavoriteClickListener {
-        fun click(contentUid: String)
-    }
-
-    interface CommentClickListener {
-        fun click(content: Content)
-    }
-
-    interface ProfileClickListener {
-        fun click(destinationUid: String, userId: String, profileUrl: String)
-    }
-
-    interface LikeClickListener {
-        fun click(favorites: Map<String, Boolean>)
+    override fun areContentsTheSame(
+        oldItem: Content,
+        newItem: Content
+    ): Boolean {
+        return oldItem == newItem
     }
 }

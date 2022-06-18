@@ -8,8 +8,14 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_menu"
-        android:icon="@drawable/baseline_expand_more_black_20"
-        android:title="메뉴"
+        android:id="@+id/action_logout"
+        android:icon="@drawable/baseline_logout_black_20"
+        android:title="로그아웃"
         app:showAsAction="ifRoom" />
+
+<!--    <item-->
+<!--        android:id="@+id/action_menu"-->
+<!--        android:icon="@drawable/baseline_expand_more_black_20"-->
+<!--        android:title="메뉴"-->
+<!--        app:showAsAction="ifRoom" />-->
 </menu>

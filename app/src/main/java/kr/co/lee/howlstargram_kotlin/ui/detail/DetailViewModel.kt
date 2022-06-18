@@ -9,6 +9,7 @@ import com.google.firebase.firestore.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
@@ -17,81 +18,85 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val fireStore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth,
     private val detailRepository: DetailRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher): ViewModel() {
-    private val _uid = MutableLiveData<String>()
+    @CurrentUserUid val currentUserUid: String,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) : ViewModel() {
     private val _contents = MutableLiveData<List<Content>>()
-
     val contents: LiveData<List<Content>> = _contents
-    val uid: LiveData<String> = _uid
 
-    init {
-        _uid.postValue(firebaseAuth.currentUser!!.uid)
-    }
-
-    fun setFavoriteEvent(contentUid: String) {
+    fun setFavoriteEvent(contentUid: String, position: Int) {
         viewModelScope.launch {
-            favoriteEvent(contentUid)
+            favoriteEvent(contentUid, position)
         }
     }
 
-    fun test() {
-        viewModelScope.launch {
-            val result = try {
-                detailRepository.loadImage()
-            } catch (e: Exception) {
-                println("Error!!")
-            }
-
-            when(result) {
-                is ArrayList<*> -> {
-                    println("RESULT!!! : $result")
-                }
-            }
+    // 게시글 불러오기
+    fun loadContents(): Job {
+        val job = viewModelScope.launch {
+            val result = detailRepository.requestLoadImage()
+            _contents.postValue(result)
         }
+
+        return job
     }
 
-    fun loadImages() {
-        viewModelScope.launch {
-            val snapshot = fireStore.collection("images")
-//                .whereEqualTo("uid", uid.value)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get().await()
+    // 게시글 불러오기
+//    fun loadImages(): Job {
+//        val job = viewModelScope.launch {
+//            val mySnapshot = fireStore.collection("users")
+//                .document(currentUserUid)
+//                .get().await()
+//
+//            val followings = mySnapshot.data?.get("followings") as Map<*, *>
+//            val myFollowings = if(followings.keys.isNotEmpty()) {
+//                followings
+//            } else {
+//                hashMapOf("key" to true)
+//            }
+//
+//            val snapshot = fireStore.collection("images")
+//                .orderBy("timestamp", Query.Direction.DESCENDING)
+//                .whereIn("uid", myFollowings.keys.toList())
+//                .limit(20)
+//                .get().await()
+//
+//            withContext(ioDispatcher) {
+//                val contents = ArrayList<Content>()
+//                snapshot.documents.forEach { documentSnapshot ->
+//                    val item = documentSnapshot.toObject(ContentDTO::class.java)!!
+//
+//                    val profileShot = fireStore.collection("profileImages").document(item.uid!!).get().await()
+//                    val commentShot = fireStore.collection("images").document(documentSnapshot.id).collection("comments").get().await()
+//
+//                    val content = Content(item, documentSnapshot.id, profileShot.data?.get("image").toString(), commentShot.size())
+//                    contents.add(content)
+//                }
+//                _contents.postValue(contents)
+//            }
+//        }
+//
+//        return job
+//    }
 
-
-            withContext(ioDispatcher) {
-                val contents = ArrayList<Content>()
-                snapshot.documents.forEach { documentSnapshot ->
-                    val item = documentSnapshot.toObject(ContentDTO::class.java)!!
-
-                    val profileShot = fireStore.collection("profileImages").document(item.uid!!).get().await()
-                    val commentShot = fireStore.collection("images").document(documentSnapshot.id).collection("comments").get().await()
-
-                    val content = Content(item, documentSnapshot.id, profileShot.data?.get("image").toString(), commentShot.size())
-                    contents.add(content)
-                }
-                _contents.postValue(contents)
-            }
-        }
-    }
-
-    private suspend fun favoriteEvent(contentUid: String) {
+    //     좋아요 이벤트
+    private suspend fun favoriteEvent(contentUid: String, position: Int) {
         withContext(ioDispatcher) {
             val tsDoc = fireStore.collection("images").document(contentUid)
             fireStore.runTransaction { transaction ->
                 val contentDTO = transaction.get(tsDoc).toObject(ContentDTO::class.java)
-                uid.value?.let {
-                    if(contentDTO?.favorites?.containsKey(it)!!) {
-                        contentDTO.favoriteCount = contentDTO.favoriteCount - 1
-                        contentDTO.favorites.remove(it)
-                    } else {
-                        contentDTO.favoriteCount = contentDTO.favoriteCount + 1
-                        contentDTO.favorites[it] = true
-                    }
+                if (contentDTO?.favorites?.containsKey(currentUserUid)!!) {
+                    contentDTO.favoriteCount = contentDTO.favoriteCount - 1
+                    contentDTO.favorites.remove(currentUserUid)
+                } else {
+                    contentDTO.favoriteCount = contentDTO.favoriteCount + 1
+                    contentDTO.favorites[currentUserUid] = true
                 }
-                transaction.set(tsDoc, contentDTO!!)
 
+                transaction.set(tsDoc, contentDTO)
+                val newContents = contents.value?.toMutableList()
+                newContents?.set(position, newContents[position].copy(contentDTO = contentDTO))
+                _contents.postValue(newContents!!)
             }
         }
     }

@@ -1,32 +1,29 @@
 package kr.co.lee.howlstargram_kotlin.ui.detail
 
-import android.content.Intent
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentDetailBinding
 import kr.co.lee.howlstargram_kotlin.model.Content
-import kr.co.lee.howlstargram_kotlin.ui.comment.CommentActivity
+import kr.co.lee.howlstargram_kotlin.ui.like.LikeFragmentDirections
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
-import javax.inject.Inject
+import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
-
-    @Inject
-    lateinit var fireStore: FirebaseFirestore
-    lateinit var adapter: DetailRecyclerAdapter
-    lateinit var navController: NavController
     private val detailViewModel: DetailViewModel by viewModels()
+
+    private lateinit var adapter: DetailRecyclerAdapter
+    private lateinit var navController: NavController
 
     override fun initView() {
         init()
@@ -34,10 +31,21 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
     // 전체 초기화
     private fun init() {
-        navController = Navigation.findNavController(binding.recyclerView)
+        navController = findNavController()
+
+        binding.apply {
+            refreshLayout.setOnRefreshListener {
+                lifecycleScope.launch {
+                    val job = detailViewModel.loadContents()
+                    job.join()
+                    refreshLayout.isRefreshing = false
+                }
+            }
+        }
+
         setAdapter()
         setToolbar()
-        detailViewModel.loadImages()
+        detailViewModel.loadContents()
         observeLiveData()
     }
 
@@ -58,12 +66,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_add -> {
-                val action = DetailFragmentDirections.detailToBottomSheet()
-                navController.navigate(action)
-            }
-
-            R.id.action_activity -> {
-
+                navController.navigate(R.id.action_to_bottom)
             }
         }
 
@@ -72,46 +75,52 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
     // RecyclerView Adapter 초기화
     private fun setAdapter() {
-        adapter = DetailRecyclerAdapter(detailViewModel)
-        // 클릭 리스너
+        adapter = DetailRecyclerAdapter(detailViewModel.currentUserUid)
+        binding.recyclerView.adapter = adapter
+
         adapter.setOnClickListener(
-            object : DetailRecyclerAdapter.FavoriteClickListener {
-                override fun click(contentUid: String) {
-                    detailViewModel.setFavoriteEvent(contentUid = contentUid)
+            // 좋아요 버튼 클릭
+            object : FavoriteClickListener {
+                override fun click(contentUid: String, position: Int) {
+                    detailViewModel.setFavoriteEvent(contentUid, position)
                 }
             },
-            object : DetailRecyclerAdapter.CommentClickListener {
+            // 댓글 클릭
+            object : CommentClickListener {
                 override fun click(content: Content) {
-                    startCommentIntent(content = content)
-                }
-            }, object : DetailRecyclerAdapter.ProfileClickListener {
-                override fun click(destinationUid: String, userId: String, profileUrl: String) {
-                    val action = DetailFragmentDirections.detailToUser(userId = userId, destinationUid = destinationUid, profileUrl = profileUrl)
-                    navController.navigate(action)
-                }
-            }, object : DetailRecyclerAdapter.LikeClickListener {
-                override fun click(favorites: Map<String, Boolean>) {
                     val bundle = bundleOf(
-                        "favorites" to favorites
+                        CONTENT to content
                     )
 
-                    navController.navigate(R.id.detail_to_user, bundle)
+                    navController.navigate(R.id.action_to_comment, bundle)
+                }
+            },
+            // 프로필 클릭
+            object : ProfileClickListener {
+                override fun click(destinationUid: String) {
+                    val action =
+                        LikeFragmentDirections.actionToUser(destinationUid = destinationUid)
+                    navController.navigate(action)
+                }
+            },
+            // 좋아요 텍스트 클릭
+            object : LikeClickListener {
+                override fun click(favorites: Map<String, Boolean>) {
+
+                    val bundle = bundleOf(
+                        FAVORITES to favorites
+                    )
+
+                    navController.navigate(R.id.action_to_like, bundle)
                 }
             })
     }
 
-    // Intent 시작 메서드 -> 댓글 액티비티
-    private fun startCommentIntent(content: Content) {
-        val intent = Intent(requireContext(), CommentActivity::class.java)
-        intent.putExtra("content", content)
-        startActivity(intent)
-    }
-
     // LiveData 관찰
     private fun observeLiveData() {
-        detailViewModel.contents.observe(this) {
-            adapter.setItems(it)
-            binding.recyclerView.adapter = adapter
+        detailViewModel.contents.observe(viewLifecycleOwner) { result ->
+            binding.hasFollowings = !result.isNullOrEmpty()
+            adapter.submitList(result)
         }
     }
 }

@@ -7,9 +7,9 @@
         android:title="추가"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/action_activity"
-        android:icon="@drawable/baseline_favorite_border_black_20"
-        android:title="활동"
-        app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--        android:id="@+id/action_activity"-->
+<!--        android:icon="@drawable/baseline_favorite_border_black_20"-->
+<!--        android:title="활동"-->
+<!--        app:showAsAction="ifRoom" />-->
 </menu>

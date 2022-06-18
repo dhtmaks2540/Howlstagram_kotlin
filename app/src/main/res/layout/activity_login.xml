@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="kr.co.lee.howlstargram_kotlin.ui.login.LoginViewModel" />
@@ -16,16 +17,16 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/signin_layout"
             android:layout_alignParentTop="true"
             android:src="@drawable/logo_title"
-            app:layout_constraintBottom_toTopOf="@id/signin_layout"
+            app:layout_constraintBottom_toTopOf="@id/layout_sign"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/signin_layout"
+            android:id="@+id/layout_sign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -42,6 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:text="@={viewModel._email}" />
 
@@ -70,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
                 android:text="@string/signin_email"
@@ -87,7 +89,6 @@
                 android:theme="@style/ButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:visibility="gone"
                 android:id="@+id/bt_facebook_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -96,10 +97,10 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/btn_signin_facebook"
                 android:text="@string/signin_facebook"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/colorWhite"
+                android:visibility="gone" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:visibility="gone"
                 android:id="@+id/bt_google_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -108,7 +109,8 @@
                 android:layout_marginBottom="80dp"
                 android:background="@drawable/btn_signin_google"
                 android:text="@string/signin_google"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/colorWhite"
+                android:visibility="gone" />
 
         </LinearLayout>
 

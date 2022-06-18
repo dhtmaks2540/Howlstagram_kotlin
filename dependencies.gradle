@@ -49,7 +49,7 @@ ext.versions = [
         mockitoInlineVersion : '3.5.13',
 
         // Navigation
-        navigationVersion    : '2.4.1',
+        navigationVersion    : '2.3.1',
 
         // Google Services
         googleVersion : '4.3.8',

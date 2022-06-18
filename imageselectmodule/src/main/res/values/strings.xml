@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">ImageSelectModule</string>
-
-    <!-- gallery menu -->
-    <string name="menu_next">다음</string>
-</resources>

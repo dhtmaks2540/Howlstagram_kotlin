@@ -1,29 +1,22 @@
 package kr.co.lee.howlstargram_kotlin.ui.addphoto
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityAddPhotoBinding
-import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
-import java.text.SimpleDateFormat
-import java.util.*
+import kr.co.lee.howlstargram_kotlin.utilites.URI
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddPhotoActivity: BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_add_photo) {
+class AddPhotoActivity : BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_add_photo) {
     private val addViewModel by viewModels<AddPhotoViewModel>()
 
     @Inject
@@ -36,7 +29,6 @@ class AddPhotoActivity: BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_
         }
 
         init()
-        observeLiveDate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -45,38 +37,48 @@ class AddPhotoActivity: BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
             R.id.action_finish -> {
-                addViewModel.contentUploadImage()
+                lifecycleScope.launch {
+                    try {
+                        val job = addViewModel.contentUploadImage()
+                        job.join()
+                    } catch (e: Exception) {
+                        showToast(message = "AddPhotoActivity :  ${e.message}")
+                    } finally {
+                        setResult(RESULT_OK)
+                        finish()
+                    }
+                }
             }
         }
 
         return true
     }
 
+    // 초기화 메서드
     private fun init() {
-        addViewModel.setUri(intent.getStringExtra("uri")!!)
-        toolbarInit()
+        getIntentData()
+        setToolbar()
+        observeLiveDate()
     }
 
-    private fun toolbarInit() {
+    // Intent Data 획득(Image Uri)
+    private fun getIntentData() {
+        addViewModel.setUri(intent.getStringExtra(URI)!!)
+    }
+
+    // 툴바 설정
+    private fun setToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun observeLiveDate() {
-        addViewModel.contentDTO.observe(this) {
-            fireStore.collection("images").document().set(addViewModel.contentDTO.value!!)
-            fireStore.collection("")
-            setResult(Activity.RESULT_OK)
-
-            finish()
-        }
-
         // 선택된 이미지
         addViewModel.uri.observe(this) {
             Glide.with(binding.ivAddphoto.context)
