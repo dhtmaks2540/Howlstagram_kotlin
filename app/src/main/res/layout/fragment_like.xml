@@ -3,11 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+
+        <variable
+            name="adapter"
+            type="kr.co.lee.howlstargram_kotlin.ui.like.LikeRecyclerAdapter" />
+
+        <variable
+            name="vm"
+            type="kr.co.lee.howlstargram_kotlin.ui.like.LikeViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:clickable="true">
+        android:background="@color/white">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,9 +40,23 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:adapter="@{adapter}"
+            app:contentItems="@{vm.uiState}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:toast="@{UiStateKt.throwableOrNull(vm.uiState)}"
+            tools:listitem="@layout/item_like" />
+
+        <ProgressBar
+            android:id="@+id/loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:show="@{vm.uiState}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

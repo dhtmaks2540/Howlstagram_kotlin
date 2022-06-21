@@ -7,7 +7,11 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="adapter"
+            type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentRecyclerAdapter" />
+
+        <variable
+            name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentViewModel" />
     </data>
 
@@ -35,9 +39,11 @@
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/layout_comment"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:listitem="@layout/item_comment" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_user_profile"
@@ -50,7 +56,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/layout_comment"
-            app:set_glide_circle_image="@{viewModel.user.profileUrl}" />
+            app:set_glide_circle_image="@{vm.user.profileUrl}" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_comment"
@@ -69,7 +75,7 @@
                 android:hint="@string/write_comment"
                 android:inputType="text"
                 android:maxLines="3"
-                android:text="@={viewModel._commentContent}" />
+                android:text="@={vm._commentContent}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

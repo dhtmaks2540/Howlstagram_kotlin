@@ -2,22 +2,44 @@ package kr.co.lee.howlstargram_kotlin.ui.like
 
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentLikeBinding
+import kr.co.lee.howlstargram_kotlin.ui.comment.CommentFragmentDirections
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
-import kr.co.lee.howlstargram_kotlin.utilites.FAVORITES
-import kr.co.lee.howlstargram_kotlin.utilites.FollowClickListener
-import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
+import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
 class LikeFragment: BaseFragment<FragmentLikeBinding>(R.layout.fragment_like) {
-
-    private val likeViewModel: LikeViewModel by viewModels()
-    private lateinit var recyclerAdapter: LikeRecyclerAdapter
+    private val viewModel: LikeViewModel by viewModels()
+    private val recyclerAdapter: LikeRecyclerAdapter by lazy {
+        LikeRecyclerAdapter(
+            currentUserUid = viewModel.currentUserUid,
+            profileItemClicked = { destinationUid ->
+                val action = CommentFragmentDirections.actionToUser(destinationUid = destinationUid)
+                navController.navigate(action)
+            },
+            followItemClicked = { userUid, position ->
+                lifecycleScope.launch {
+                    viewModel.requestFollow(userUid, position).collect { state ->
+                        when(state) {
+                            is UiState.Success -> {
+                                recyclerAdapter.changeFavoriteDTOs(state.successOrNull()!!, position)
+                            }
+                            is UiState.Failed -> {
+                                showToast("Error Message : ${state.throwableOrNull()}")
+                            }
+                        }
+                    }
+                }
+            }
+        )
+    }
     private lateinit var navController : NavController
 
     override fun initView() {
@@ -36,27 +58,13 @@ class LikeFragment: BaseFragment<FragmentLikeBinding>(R.layout.fragment_like) {
 
     private fun init() {
         navController = findNavController()
-        setAdapter()
         setToolbar()
-        getBundleData()
         observeLiveData()
-    }
 
-    // RecyclerAdapter 설정
-    private fun setAdapter() {
-        recyclerAdapter = LikeRecyclerAdapter(likeViewModel.currentUserUid)
-        binding.recyclerView.adapter = recyclerAdapter
-
-        recyclerAdapter.setOnClickListener(object : ProfileClickListener {
-            override fun click(destinationUid: String) {
-                val action = LikeFragmentDirections.actionToUser(destinationUid = destinationUid)
-                findNavController().navigate(action)
-            }
-        }, object : FollowClickListener {
-            override fun followClick(userUid: String, position: Int) {
-                likeViewModel.requestFollow(userUid, position)
-            }
-        })
+        binding.apply {
+            vm = viewModel
+            adapter = recyclerAdapter
+        }
     }
 
     // 툴바 설정
@@ -68,19 +76,10 @@ class LikeFragment: BaseFragment<FragmentLikeBinding>(R.layout.fragment_like) {
         setHasOptionsMenu(true)
     }
 
-    // Bundle 데이터 획득
-    private fun getBundleData() {
-        val favorites = (arguments?.getSerializable(FAVORITES) as? Map<String, Boolean>)
-        likeViewModel.setFavorites(favorites = favorites)
-    }
 
     // LiveData 관찰
     private fun observeLiveData() {
-        likeViewModel.favorites.observe(viewLifecycleOwner) {
-             likeViewModel.loadFavorite(it)
-        }
-
-        likeViewModel.favoriteDTOs.observe(viewLifecycleOwner) {
+        viewModel.favoriteDTOs.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it)
         }
     }

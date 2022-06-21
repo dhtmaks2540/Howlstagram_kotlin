@@ -10,16 +10,25 @@ import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentGridBinding
-import kr.co.lee.howlstargram_kotlin.model.ContentDTO
 import kr.co.lee.howlstargram_kotlin.utilites.CONTENT_DTO
 import kr.co.lee.howlstargram_kotlin.utilites.CONTENT_UID
-import kr.co.lee.howlstargram_kotlin.utilites.ImageClickListener
 
 @AndroidEntryPoint
 class GridFragment : BaseFragment<FragmentGridBinding>(R.layout.fragment_grid) {
-    private val gridViewModel: GridViewModel by viewModels()
+    private val viewModel: GridViewModel by viewModels()
+    private val recyclerAdapter: GridRecyclerAdapter by lazy {
+        GridRecyclerAdapter(
+            widthPixels = resources.displayMetrics.widthPixels / 3,
+            imageItemClick = { contentDTO, contentUid ->
+                val bundle = bundleOf(
+                    CONTENT_DTO to contentDTO,
+                    CONTENT_UID to contentUid
+                )
+                navController.navigate(R.id.action_to_research, bundle)
+            }
+        )
+    }
 
-    private lateinit var recyclerAdapter: GridRecyclerAdapter
     private lateinit var navController: NavController
 
     override fun initView() {
@@ -31,6 +40,9 @@ class GridFragment : BaseFragment<FragmentGridBinding>(R.layout.fragment_grid) {
         navController = findNavController()
 
         binding.apply {
+            vm = viewModel
+            adapter = recyclerAdapter
+
             // 검색창 클릭
             etSearch.setOnClickListener {
                 navController.navigate(R.id.action_to_search)
@@ -39,38 +51,11 @@ class GridFragment : BaseFragment<FragmentGridBinding>(R.layout.fragment_grid) {
             // 새로고침 클릭
             refreshLayout.setOnRefreshListener {
                 lifecycleScope.launch {
-                    val job = gridViewModel.loadContentDTO()
+                    val job = viewModel.refresh()
                     job.join()
                     refreshLayout.isRefreshing = false
                 }
             }
-        }
-
-        initAdapter()
-        gridViewModel.loadContentDTO()
-        observeLiveData()
-    }
-
-    // RecyclerView 초기화
-    private fun initAdapter() {
-        recyclerAdapter = GridRecyclerAdapter(resources.displayMetrics.widthPixels / 3)
-        binding.rcvGridFragment.adapter = recyclerAdapter
-
-        recyclerAdapter.setClickListener(object : ImageClickListener {
-            override fun click(contentDTO: ContentDTO?, contentUid: String?) {
-                val bundle = bundleOf(
-                    CONTENT_DTO to contentDTO,
-                    CONTENT_UID to contentUid
-                )
-                navController.navigate(R.id.action_to_research, bundle)
-            }
-        })
-    }
-
-    // LiveData 관찰
-    private fun observeLiveData() {
-        gridViewModel.contents.observe(viewLifecycleOwner) {
-            recyclerAdapter.submitList(it)
         }
     }
 }

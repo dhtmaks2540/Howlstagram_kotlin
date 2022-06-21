@@ -3,12 +3,16 @@ package kr.co.lee.howlstargram_kotlin.ui.detail
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
@@ -20,49 +24,45 @@ import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
-    private val detailViewModel: DetailViewModel by viewModels()
-
-    private lateinit var adapter: DetailRecyclerAdapter
+    private val viewModel: DetailViewModel by viewModels()
     private lateinit var navController: NavController
+    private val detailAdapter: DetailRecyclerAdapter by lazy {
+        DetailRecyclerAdapter(
+            currentUserUid = viewModel.currentUserUid,
+            favoriteItemClicked = { contentUid, position ->
+                viewModel.setFavoriteEvent(contentUid, position)
+            },
+            commentItemClicked = { content ->
+                val bundle = bundleOf(
+                    CONTENT to content
+                )
+
+                navController.navigate(R.id.action_to_comment, bundle)
+            },
+            profileItemClicked = { destinationUid ->
+                val action = LikeFragmentDirections.actionToUser(destinationUid = destinationUid)
+                navController.navigate(action)
+            },
+            likeItemClicked = { favorites ->
+                val bundle = bundleOf(
+                    FAVORITES to favorites
+                )
+
+                navController.navigate(R.id.action_to_like, bundle)
+            }
+        )
+    }
 
     override fun initView() {
         init()
     }
 
-    // 전체 초기화
-    private fun init() {
-        navController = findNavController()
-
-        binding.apply {
-            refreshLayout.setOnRefreshListener {
-                lifecycleScope.launch {
-                    val job = detailViewModel.loadContents()
-                    job.join()
-                    refreshLayout.isRefreshing = false
-                }
-            }
-        }
-
-        setAdapter()
-        setToolbar()
-        detailViewModel.loadContents()
-        observeLiveData()
-    }
-
-    // 툴바 지정
-    private fun setToolbar() {
-        setHasOptionsMenu(true)
-        (activity as MainActivity).setSupportActionBar(binding.toolbar)
-    }
-
-    // 메뉴 초기화
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.detail_menu, menu)
 
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    // Toolbar 메뉴 선택
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_add -> {
@@ -73,54 +73,75 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         return super.onOptionsItemSelected(item)
     }
 
-    // RecyclerView Adapter 초기화
-    private fun setAdapter() {
-        adapter = DetailRecyclerAdapter(detailViewModel.currentUserUid)
-        binding.recyclerView.adapter = adapter
+//    private suspend fun loadContents() {
+//        loadJob?.cancel()
+//        loadJob = lifecycleScope.launch {
+//            viewModel.getAllContents().collectLatest { state ->
+//                when(state) {
+//                    is State.Loading -> {
+//                        showToast("글을 불러오고 있습니다.")
+//                    }
+//
+//                    is State.Success -> {
+//                        val contents = state.data
+//                        if(contents.isNullOrEmpty()) {
+//                            binding.tvEmpty.visibility = View.VISIBLE
+//                        } else {
+//                            binding.tvEmpty.visibility = View.INVISIBLE
+//                        }
+//                        viewModel.setContents(contents)
+//                    }
+//
+//                    is State.Failed -> {
+//                        showToast("${state.message}로 인해 글을 불러오는데 실패!!")
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-        adapter.setOnClickListener(
-            // 좋아요 버튼 클릭
-            object : FavoriteClickListener {
-                override fun click(contentUid: String, position: Int) {
-                    detailViewModel.setFavoriteEvent(contentUid, position)
-                }
-            },
-            // 댓글 클릭
-            object : CommentClickListener {
-                override fun click(content: Content) {
-                    val bundle = bundleOf(
-                        CONTENT to content
-                    )
+    // 전체 초기화
+    private fun init() {
+        navController = findNavController()
+        binding.apply {
+            vm = viewModel
+            adapter = detailAdapter
 
-                    navController.navigate(R.id.action_to_comment, bundle)
+            refreshLayout.setOnRefreshListener {
+                lifecycleScope.launch {
+                    refreshLayout.isRefreshing = false
+                    val job = viewModel.refresh()
+                    job.join()
+                    refreshLayout.isRefreshing = false
                 }
-            },
-            // 프로필 클릭
-            object : ProfileClickListener {
-                override fun click(destinationUid: String) {
-                    val action =
-                        LikeFragmentDirections.actionToUser(destinationUid = destinationUid)
-                    navController.navigate(action)
-                }
-            },
-            // 좋아요 텍스트 클릭
-            object : LikeClickListener {
-                override fun click(favorites: Map<String, Boolean>) {
+            }
+        }
+        setToolbar()
+//        observeLiveData()
+    }
 
-                    val bundle = bundleOf(
-                        FAVORITES to favorites
-                    )
-
-                    navController.navigate(R.id.action_to_like, bundle)
-                }
-            })
+    // 툴바 지정
+    private fun setToolbar() {
+        setHasOptionsMenu(true)
+        (activity as MainActivity).setSupportActionBar(binding.toolbar)
     }
 
     // LiveData 관찰
-    private fun observeLiveData() {
-        detailViewModel.contents.observe(viewLifecycleOwner) { result ->
-            binding.hasFollowings = !result.isNullOrEmpty()
-            adapter.submitList(result)
-        }
-    }
+//    private fun observeLiveData() {
+//        lifecycleScope.launch {
+//            viewModel.test.collect { state ->
+//                when(state) {
+//                    is State.Loading -> {
+//                        println("LOADING!!!")
+//                    }
+//                    is State.Success -> {
+//                        println("DATE!!! ${state.data}")
+//                    }
+//                    is State.Failed -> {
+//                        println("FAILED!!! ${state.message}")
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

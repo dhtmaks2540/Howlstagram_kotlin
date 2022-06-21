@@ -6,8 +6,14 @@
 
     <data>
 
+        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+
         <variable
-            name="viewModel"
+            name="adapter"
+            type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentRecyclerAdapter" />
+
+        <variable
+            name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentViewModel" />
     </data>
 
@@ -35,9 +41,23 @@
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:adapter="@{adapter}"
+            app:contentItems="@{vm.uiState}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/layout_comment"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:toast="@{UiStateKt.throwableOrNull(vm.uiState)}"
+            tools:listitem="@layout/item_comment" />
+
+        <ProgressBar
+            android:id="@+id/loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:show="@{vm.uiState}" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_user_profile"
@@ -50,7 +70,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/layout_comment"
-            app:set_glide_circle_image="@{viewModel.user.profileUrl}" />
+            app:set_glide_circle_image="@{vm.user.profileUrl}" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_comment"
@@ -69,7 +89,7 @@
                 android:hint="@string/write_comment"
                 android:inputType="text"
                 android:maxLines="3"
-                android:text="@={viewModel._commentContent}" />
+                android:text="@={vm._commentContent}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

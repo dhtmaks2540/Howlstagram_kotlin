@@ -73,4 +73,6 @@ ext.versions = [
         // JodaTime
         jodaTimeVersion : '2.10.14',
 
+        // RecyclerView
+        recyclerViewVersions : '1.2.1',
 ]

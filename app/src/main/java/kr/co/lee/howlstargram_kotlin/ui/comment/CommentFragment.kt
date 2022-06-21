@@ -2,25 +2,33 @@ package kr.co.lee.howlstargram_kotlin.ui.comment
 
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityCommentBinding
+import kr.co.lee.howlstargram_kotlin.databinding.FragmentCommentBinding
 import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
-import kr.co.lee.howlstargram_kotlin.utilites.CONTENT
-import kr.co.lee.howlstargram_kotlin.utilites.CONTENT_UID
-import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
+import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
-class CommentFragment : BaseFragment<ActivityCommentBinding>(R.layout.activity_comment) {
-
-    private val commentViewModel: CommentViewModel by viewModels()
-
+class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_comment) {
+    private val viewModel: CommentViewModel by viewModels()
+    private val recyclerAdapter: CommentRecyclerAdapter by lazy {
+        CommentRecyclerAdapter(
+            profileItemClicked = { destinationUid ->
+                val action = CommentFragmentDirections.actionToUser(destinationUid = destinationUid)
+                navController.navigate(action)
+            }
+        )
+    }
     private lateinit var navController: NavController
-    private lateinit var recyclerAdapter: CommentRecyclerAdapter
+
 
     override fun initView() {
         init()
@@ -39,43 +47,26 @@ class CommentFragment : BaseFragment<ActivityCommentBinding>(R.layout.activity_c
         navController = findNavController()
 
         binding.apply {
-            viewModel = commentViewModel
+            vm = viewModel
+            adapter = recyclerAdapter
 
             tvUploadComment.setOnClickListener {
-                commentViewModel.addComment()
-                etCommentMessage.setText("")
+                lifecycleScope.launch {
+                    viewModel.addComment().collect { state ->
+                        when(state) {
+                            is UiState.Success -> {
+                                recyclerAdapter.addComment(state.successOrNull())
+                            }
+                        }
+                    }
+
+                    etCommentMessage.setText("")
+                }
             }
         }
 
-        commentViewModel.loadMyInfo()
-        setAdapter()
-        getBundleData()
+        viewModel.loadMyInfo()
         initToolbar()
-        observeLiveData()
-    }
-
-    // RecyclerView Adapter 초기화
-    private fun setAdapter() {
-        recyclerAdapter = CommentRecyclerAdapter()
-        binding.recyclerview.adapter = recyclerAdapter
-
-        recyclerAdapter.setClickListener(object : ProfileClickListener {
-            override fun click(destinationUid: String) {
-                val action = CommentFragmentDirections.actionToUser(destinationUid = destinationUid)
-                navController.navigate(action)
-            }
-        })
-    }
-
-    // LiveData 관찰
-    private fun observeLiveData() {
-        commentViewModel.content.observe(viewLifecycleOwner) {
-            commentViewModel.loadComments(contentUid = it.contentUid!!)
-        }
-
-        commentViewModel.comments.observe(viewLifecycleOwner) {
-            recyclerAdapter.submitList(it)
-        }
     }
 
     // 툴바 설정
@@ -84,11 +75,5 @@ class CommentFragment : BaseFragment<ActivityCommentBinding>(R.layout.activity_c
         mainActivity.setSupportActionBar(binding.toolbar)
         mainActivity.supportActionBar?.setDisplayShowTitleEnabled(false)
         mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    // Bundle Data 획득
-    private fun getBundleData() {
-        val content = arguments?.getParcelable<Content>(CONTENT)
-        commentViewModel.setInitData(content = content)
     }
 }

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+
+        <variable
+            name="adapter"
+            type="kr.co.lee.howlstargram_kotlin.ui.search.SearchRecyclerAdapter" />
+
+        <variable
+            name="vm"
+            type="kr.co.lee.howlstargram_kotlin.ui.search.SearchViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,7 +37,8 @@
                     android:layout_height="match_parent"
                     android:hint="@string/search"
                     android:inputType="text"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:text="@={vm._textInput}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -43,22 +58,27 @@
                 android:background="@color/black"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/label_wait"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/recyclerView"
                 app:layout_constraintStart_toStartOf="@id/recyclerView"
-                app:layout_constraintTop_toTopOf="@id/recyclerView" />
+                app:layout_constraintTop_toTopOf="@id/recyclerView"
+                app:search="@{vm.uiState}"
+                app:searchText="@{vm.textInput}" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="7.5dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                app:adapter="@{adapter}"
+                app:contentItems="@{vm.uiState}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:toast="@{UiStateKt.throwableOrNull(vm.uiState)}"
+                tools:listitem="@layout/item_user" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

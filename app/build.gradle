@@ -53,6 +53,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$versions.fragmentVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$versions.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycleVersion"
     implementation "androidx.room:room-runtime:$versions.roomVersion"
     implementation "androidx.room:room-ktx:$versions.roomVersion"
     kapt "androidx.room:room-compiler:$versions.roomVersion"
@@ -100,4 +101,7 @@ dependencies {
 
     // Joda Time
     implementation "joda-time:joda-time:$versions.jodaTimeVersion"
+
+    // RecyclerView
+    implementation "androidx.recyclerview:recyclerview:$versions.recyclerViewVersions"
 }

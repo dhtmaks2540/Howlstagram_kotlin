@@ -9,25 +9,38 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
+import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.model.User
 import kr.co.lee.howlstargram_kotlin.model.UserDTO
+import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
+    private val searchRepository: SearchRepository,
     private val fireStore: FirebaseFirestore,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ): ViewModel() {
-    private val _users = MutableLiveData<List<User>>()
-    val users: LiveData<List<User>> = _users
+    private val _uiState = MutableStateFlow<UiState<List<User>>>(UiState.Loading)
+    val uiState: StateFlow<UiState<List<User>>> = _uiState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = UiState.Loading
+    )
+
+    val _textInput = MutableLiveData<String>()
+    val textInput: LiveData<String> = _textInput
 
     fun findUsers(text: String): Job {
         val job = viewModelScope.launch {
-            val result = requestFindUsers(text)
-            _users.postValue(result)
+            searchRepository.getAllUsers(text)
+                .collect { state ->
+                    _uiState.value = state
+                }
         }
 
         return job

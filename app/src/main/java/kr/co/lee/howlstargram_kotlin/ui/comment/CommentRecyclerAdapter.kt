@@ -9,33 +9,35 @@ import kr.co.lee.howlstargram_kotlin.databinding.ItemCommentBinding
 import kr.co.lee.howlstargram_kotlin.model.Comment
 import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
+import kr.co.lee.howlstargram_kotlin.utilites.successOrNull
 
-class CommentRecyclerAdapter : ListAdapter<Comment, CommentRecyclerAdapter.ViewHolder>(CommentDiffCallback())
-{
-    private lateinit var profileClickListener: ProfileClickListener
-
-    // 클릭 리스너
-    fun setClickListener(profileClickListener: ProfileClickListener) {
-        this.profileClickListener = profileClickListener
-    }
-
+class CommentRecyclerAdapter(
+    private val profileItemClicked: (String) -> Unit,
+) : ListAdapter<Comment, CommentRecyclerAdapter.ViewHolder>(diffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding).apply {
+            binding.layoutComment.setOnClickListener {
+                val position = bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: return@setOnClickListener
+
+                profileItemClicked(
+                    getItem(position).commentDTO?.uid!!
+                )
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindTo(getItem(position))
     }
 
-//    override fun getItemCount(): Int = comments.size
+    fun addComment(comment: Comment?) {
+        val newCommentList = currentList.toMutableList()
+        newCommentList.add(1, comment)
+        submitList(newCommentList)
+    }
 
-    inner class ViewHolder(private val binding: ItemCommentBinding) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.layoutComment.setOnClickListener {
-                profileClickListener.click(getItem(adapterPosition).commentDTO?.uid!!)
-            }
-        }
+    class ViewHolder(private val binding: ItemCommentBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindTo(comment: Comment) {
             binding.apply {
@@ -44,20 +46,14 @@ class CommentRecyclerAdapter : ListAdapter<Comment, CommentRecyclerAdapter.ViewH
             }
         }
     }
-}
 
-private class CommentDiffCallback : DiffUtil.ItemCallback<Comment>() {
-    override fun areItemsTheSame(
-        oldItem: Comment,
-        newItem: Comment
-    ): Boolean {
-        return oldItem.commentUid == newItem.commentUid
-    }
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<Comment>() {
+            override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean =
+                oldItem.commentUid == newItem.commentUid
 
-    override fun areContentsTheSame(
-        oldItem: Comment,
-        newItem: Comment
-    ): Boolean {
-        return oldItem.commentDTO == newItem.commentDTO
+            override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean =
+                oldItem.commentDTO == newItem.commentDTO
+        }
     }
 }

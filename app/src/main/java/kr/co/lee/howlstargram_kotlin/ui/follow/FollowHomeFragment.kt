@@ -13,12 +13,11 @@ import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
 class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding>(R.layout.fragment_follow_home) {
-    private val followHomeViewModel: FollowHomeViewModel by viewModels()
+    private val viewModel: FollowHomeViewModel by viewModels()
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun initView() {
         init()
-        getBundleData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -32,6 +31,10 @@ class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding>(R.layout.frag
     }
 
     private fun init() {
+        binding.apply {
+            vm = viewModel
+        }
+
         setToolbar()
         observeLiveData()
     }
@@ -45,21 +48,12 @@ class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding>(R.layout.frag
         mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    // Bundle 획득
-    private fun getBundleData() {
-        val userNickName = arguments?.getString(USER_NICKNAME)
-        val followers = arguments?.getSerializable(FOLLOWER) as? Map<String, Boolean>
-        val followings = arguments?.getSerializable(FOLLOWING) as? Map<String, Boolean>
-        val tabType = arguments?.getSerializable(TAB_TYPE) as TabType
-        followHomeViewModel.getBundleData(followers, followings, tabType, userNickName)
-    }
-
     // Observe LiveData
     private fun observeLiveData() {
-        followHomeViewModel.follow.observe(viewLifecycleOwner) {
+        viewModel.follow.observe(viewLifecycleOwner) {
             viewPagerAdapter = ViewPagerAdapter(it, this)
             binding.pager.adapter = viewPagerAdapter
-            when(followHomeViewModel.tabType.value) {
+            when(viewModel.tabType) {
                 TabType.FOLLOWER_TAB ->
                     binding.pager.setCurrentItem(0, false)
                 TabType.FOLLOWING_TAB ->

@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="contentItem"
+            name="content"
             type="kr.co.lee.howlstargram_kotlin.model.Content" />
 
         <variable
@@ -32,13 +32,13 @@
                 android:layout_margin="7.5dp"
                 app:civ_border_color="@color/black"
                 app:civ_border_width="0.5dp"
-                app:set_glide_circle_image="@{contentItem.profileUrl}" />
+                app:set_glide_circle_image="@{content.profileUrl}" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_detailviewitem_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{contentItem.contentDTO.userNickName}" />
+                android:text="@{content.contentDTO.userNickName}" />
         </LinearLayout>
 
         <!--올린 사진이 뜨는 ImageView-->
@@ -49,7 +49,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             app:layout_constraintTop_toBottomOf="@id/layout_name"
-            app:set_glide_image="@{contentItem.contentDTO.imageUrl}" />
+            app:set_glide_image="@{content.contentDTO.imageUrl}" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_detailviewitem_favorite"
@@ -60,7 +60,7 @@
             android:src="@drawable/ic_favorite_border"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_content"
-            app:set_favorite_image="@{contentItem.contentDTO.favorites.containsKey(currentUserIdItem)}" />
+            app:set_favorite_image="@{content.contentDTO.favorites.containsKey(currentUserIdItem)}" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_detailviewitem_comment"
@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text='@{"좋아요 " + contentItem.contentDTO.favoriteCount + "개"}'
+            android:text='@{"좋아요 " + content.contentDTO.favoriteCount + "개"}'
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/iv_detailviewitem_favorite"
             app:layout_constraintTop_toBottomOf="@id/iv_detailviewitem_favorite" />
@@ -97,7 +97,7 @@
             android:id="@+id/tv_detailviewitem_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{contentItem.contentDTO.userNickName}"
+            android:text="@{content.contentDTO.userNickName}"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_favoritecounter"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_favoritecounter" />
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@{contentItem.contentDTO.explain}"
+            android:text="@{content.contentDTO.explain}"
             app:layout_constraintStart_toEndOf="@id/tv_detailviewitem_name"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_favoritecounter" />
 
@@ -117,7 +117,7 @@
             android:id="@+id/tv_detailviewitem_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{"댓글 " + contentItem.commentSize + "개 모두보기"}'
+            android:text='@{"댓글 " + content.commentSize + "개 모두보기"}'
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_name"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_name" />
 
@@ -125,10 +125,11 @@
             android:id="@+id/tv_detailviewitem_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_detailviewitem_comment"
             app:layout_constraintTop_toBottomOf="@id/tv_detailviewitem_comment"
-            app:set_datetime="@{contentItem.contentDTO.timestamp}" />
+            app:set_datetime="@{content.contentDTO.timestamp}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
