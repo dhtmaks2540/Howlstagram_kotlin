@@ -25,11 +25,15 @@ import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
 class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
-    private val userViewModel: UserViewModel by viewModels()
+    private val viewModel: UserViewModel by viewModels()
+    private val recyclerAdapter: UserRecyclerAdapter by lazy {
+        UserRecyclerAdapter(
+            resources.displayMetrics.widthPixels / 3
+        )
+    }
 
     private lateinit var profileLauncher: ActivityResultLauncher<Intent>
     private lateinit var profileEditLauncher: ActivityResultLauncher<Intent>
-    private lateinit var recyclerAdapter: UserRecyclerAdapter
     private lateinit var navController: NavController
 
     override fun initView() {
@@ -54,7 +58,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             }
 
             R.id.action_logout -> {
-                userViewModel.logout()
+                viewModel.logout()
                 startActivity(Intent(activity, LoginActivity::class.java))
                 activity?.finish()
             }
@@ -67,12 +71,13 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
         navController = findNavController()
 
         binding.apply {
-            viewModel = userViewModel
+            vm = viewModel
+            adapter = recyclerAdapter
 
             // 프로필 이미지 클릭 이벤트
             ivAccountProfile.setOnClickListener {
                 // 내 프로필이라면 -> 프로필 이미지 수정
-                if(userViewModel.uid.value == userViewModel.currentUserId) {
+                if (viewModel.uid.value == viewModel.currentUserId) {
                     val intent = Intent(activity, GalleryActivity::class.java)
                     intent.putExtra(IMAGE_TYPE, ImageType.PROFILE_TYPE)
                     profileLauncher.launch(intent)
@@ -82,20 +87,21 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             // Follow 버튼 클릭 
             btnAccountFollowSignout.setOnClickListener {
                 // 내 프로필이라면 -> 프로필 수정
-                if(userViewModel.uid.value == userViewModel.currentUserId) {
+                if (viewModel.uid.value == viewModel.currentUserId) {
                     val intent = Intent(activity, ProfileEditActivity::class.java)
-                    intent.putExtra(PROFILE_URL, userViewModel.user.value?.profileUrl)
-                    intent.putExtra(USER_NAME, userViewModel.user.value?.userDTO?.userName)
-                    intent.putExtra(USER_NICKNAME, userViewModel.user.value?.userDTO?.userNickName)
+                    intent.putExtra(PROFILE_URL, viewModel.userAndContent.value?.first?.profileUrl)
+                    intent.putExtra(
+                        USER_NAME,
+                        viewModel.userAndContent.value?.first?.userDTO?.userName
+                    )
+                    intent.putExtra(
+                        USER_NICKNAME,
+                        viewModel.userAndContent.value?.first?.userDTO?.userNickName
+                    )
                     profileEditLauncher.launch(intent)
                 } else { // 상대방 프로필이라면 -> 팔로우 요청
                     lifecycleScope.launch {
-                        setUiFalse(false)
-
-                        val job = userViewModel.requestFollow()
-                        job.join()
-
-                        setUiFalse(true)
+                        viewModel.requestFollow()
                     }
                 }
             }
@@ -103,10 +109,10 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             // 팔로워 버튼 클릭
             layoutFollower.setOnClickListener {
                 val bundle = bundleOf(
-                    USER_NICKNAME to userViewModel.user.value?.userDTO?.userNickName,
-                    FOLLOWER to userViewModel.user.value?.userDTO?.followers,
-                    FOLLOWING to userViewModel.user.value?.userDTO?.followings,
-                    TAB_TYPE  to TabType.FOLLOWER_TAB
+                    USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
+                    FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
+                    FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
+                    TAB_TYPE to TabType.FOLLOWER_TAB
                 )
 
                 // 팔로워로 이동
@@ -116,10 +122,10 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             // 팔로잉 버튼 클릭
             layoutFollowing.setOnClickListener {
                 val bundle = bundleOf(
-                    USER_NICKNAME to userViewModel.user.value?.userDTO?.userNickName,
-                    FOLLOWER to userViewModel.user.value?.userDTO?.followers,
-                    FOLLOWING to userViewModel.user.value?.userDTO?.followings,
-                    TAB_TYPE  to TabType.FOLLOWING_TAB
+                    USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
+                    FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
+                    FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
+                    TAB_TYPE to TabType.FOLLOWING_TAB
                 )
 
                 // 팔로잉으로 이동
@@ -129,36 +135,29 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             // 새로고침
             refreshLayout.setOnRefreshListener {
                 lifecycleScope.launch {
-                    setUiFalse(false)
-                    val job = userViewModel.loadUser()
+                    val job = viewModel.refresh()
                     job.join()
                     refreshLayout.isRefreshing = false
-                    setUiFalse(true)
                 }
             }
 
-            // RecyclerView Adapter 초기화
-            recyclerAdapter = UserRecyclerAdapter(resources.displayMetrics.widthPixels / 3)
-        }
+            // Launcher 초기화
+            profileLauncher =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    if (it.resultCode == Activity.RESULT_OK) {
+                        viewModel.refresh()
+                    }
+                }
 
-        // Launcher 초기화
-        profileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if(it.resultCode == Activity.RESULT_OK) {
-                val profileUrl = it.data?.getStringExtra(PROFILE_URL)
-                userViewModel.updateProfileUrl(profileUrl)
-            }
-        }
+            profileEditLauncher =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    if (it.resultCode == Activity.RESULT_OK) {
+                        viewModel.refresh()
+                    }
+                }
 
-        profileEditLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if(it.resultCode == Activity.RESULT_OK) {
-                userViewModel.loadUser()
-            }
+            observeLiveData()
         }
-
-        getBundleData()
-        observeLiveData()
-        setToolbar(true)
-        setUiFalse(false)
     }
 
     // 툴바 초기화
@@ -170,43 +169,20 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
         mainActivity.supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    // Bundle 데이터
-    private fun getBundleData() {
-        val destinationUid = arguments?.getString(DESTINATION_UID)
-        userViewModel.setIntentData(uid = destinationUid)
-    }
-
-    // 팔로우, 팔로워 버튼 Clickable
-    private fun setUiFalse(boolean: Boolean) {
-        binding.apply {
-            tvAccountFollowerCount.isClickable = boolean
-            tvAccountFollowingCount.isClickable = boolean
-            btnAccountFollowSignout.isClickable = boolean
-        }
-    }
-
     // LiveData Observe
     private fun observeLiveData() {
-        userViewModel.uid.observe(this) {
-            // 내 아이디라면
-            if(it == "") {
-                userViewModel.loadMyUid()
-                setToolbar(false)
-                return@observe
+        viewModel.uid.observe(viewLifecycleOwner) {
+            if (it != "") {
+                binding.isMyProfile = it == viewModel.currentUserId
             }
-
-            userViewModel.loadUser()
-            binding.isMyProfile = it == userViewModel.currentUserId
-            setUiFalse(true)
         }
 
-        userViewModel.contentDTOs.observe(this) {
-            recyclerAdapter.setItems(it)
-            binding.rcvAccont.adapter = recyclerAdapter
+        viewModel.userAndContent.observe(viewLifecycleOwner) {
+            recyclerAdapter.submitList(it.second)
         }
 
-        userViewModel.userDTO.observe(this) {
-            setUiFalse(true)
+        viewModel.isMyProfile.observe(viewLifecycleOwner) {
+            setToolbar(it)
         }
     }
 }

@@ -59,6 +59,7 @@
     <string name="send">Send</string>
 
     <!-- Add Photo -->
+    <string name="new_content">새 게시글</string>
     <string name="upload_image">이미지 업로드</string>
     <string name="hint_image_content">문구 입력</string>
     <string name="upload_success">Upload success</string>

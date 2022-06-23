@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -15,11 +16,14 @@ import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityProfileBinding
 import kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity
-import kr.co.lee.howlstargram_kotlin.utilites.*
+import kr.co.lee.howlstargram_kotlin.utilites.IMAGE_TYPE
+import kr.co.lee.howlstargram_kotlin.utilites.ImageType
+import kr.co.lee.howlstargram_kotlin.utilites.PROFILE_URL
+import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 
 @AndroidEntryPoint
 class ProfileEditActivity : BaseActivity<ActivityProfileBinding>(R.layout.activity_profile) {
-    private val profileViewModel: ProfileViewModel by viewModels()
+    private val viewModel: ProfileViewModel by viewModels()
     private lateinit var profileLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,17 +47,21 @@ class ProfileEditActivity : BaseActivity<ActivityProfileBinding>(R.layout.activi
             R.id.action_finish -> {
                 lifecycleScope.launch {
                     // userName이나 userNickName이 수정되었다면 변경 요청 후 종료
-                    if(profileViewModel.userName.value != binding.etUserName.text.toString().trim() || profileViewModel.userNickName.value != binding.etUserNickname.text.toString().trim()) {
-                        val job = profileViewModel.updateUser(
-                            binding.etUserName.text.toString().trim(),
-                            binding.etUserNickname.text.toString().trim()
-                        )
-
-                        job.join()
+                    if(
+                        viewModel.userName != binding.etUserName.text.toString().trim() ||
+                        viewModel.userNickName != binding.etUserNickname.text.toString().trim()
+                    ) {
+                        binding.layoutRoot.forEachChildView { it.isEnabled = false }
+                        binding.loadingBar.visibility = View.VISIBLE
+                        val task = viewModel.updateUser(binding.etUserName.text.toString().trim(), binding.etUserNickname.text.toString().trim())
+                        task.addOnSuccessListener {
+                            setResult(RESULT_OK)
+                            finish()
+                        }
+                    } else {
+                        setResult(RESULT_CANCELED)
+                        finish()
                     }
-
-                    setResult(RESULT_OK)
-                    finish()
                 }
             }
         }
@@ -63,7 +71,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileBinding>(R.layout.activi
 
     private fun init() {
         binding.apply {
-            viewModel = profileViewModel
+            vm = viewModel
 
             // 프로필 이미지 수정
             tvEditProfile.setOnClickListener {
@@ -77,11 +85,12 @@ class ProfileEditActivity : BaseActivity<ActivityProfileBinding>(R.layout.activi
         profileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if(it.resultCode == Activity.RESULT_OK) {
                 val profileUrl = it.data?.getStringExtra(PROFILE_URL)
-                profileViewModel.updateProfile(profileUrl)
+                viewModel.updateProfile(profileUrl)
+                setResult(RESULT_OK)
+                finish()
             }
         }
 
-        getIntentData()
         setToolbar()
     }
 
@@ -91,13 +100,5 @@ class ProfileEditActivity : BaseActivity<ActivityProfileBinding>(R.layout.activi
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_close_black_20)
-    }
-
-    // Intent Data 획득
-    private fun getIntentData() {
-        val profileUrl = intent.getStringExtra(PROFILE_URL)
-        val userName = intent.getStringExtra(USER_NAME)
-        val userNickName = intent.getStringExtra(USER_NICKNAME)
-        profileViewModel.getIntentData(profileUrl = profileUrl, userName = userName, userNickName = userNickName)
     }
 }

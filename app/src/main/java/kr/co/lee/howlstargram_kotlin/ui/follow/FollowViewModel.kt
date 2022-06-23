@@ -44,11 +44,8 @@ class FollowViewModel @Inject constructor(
         }
     }
 
-    private val _followDTOs = MutableLiveData<List<FavoriteDTO>>()
-    val followDTOs: LiveData<List<FavoriteDTO>> = _followDTOs
-
     // 팔로우 요청
-    suspend fun requestFollow(userUid: String, position: Int): Flow<UiState<Boolean>> {
+    suspend fun requestFollow(userUid: String): Flow<UiState<Boolean>> {
         return withContext(viewModelScope.coroutineContext) {
             followRepository.saveThirdPerson(userUid)
             followRepository.saveMyAccount(userUid)

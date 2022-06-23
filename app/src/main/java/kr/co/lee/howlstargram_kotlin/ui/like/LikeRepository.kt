@@ -10,7 +10,6 @@ import kotlinx.coroutines.withContext
 import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.FavoriteDTO
-import kr.co.lee.howlstargram_kotlin.model.User
 import kr.co.lee.howlstargram_kotlin.model.UserDTO
 import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import javax.inject.Inject
@@ -109,41 +108,4 @@ class LikeRepository @Inject constructor(
 
         }
     }
-
-//    fun requestSaveMyAccount(userUid: String) = flow<UiState<UserDTO>> {
-//        println("REQUEST SAVE!!!")
-//        val tsDocFollowing = fireStore.collection("users").document(currentUserUid)
-//        var followDTO = tsDocFollowing.get().await().toObject(UserDTO::class.java)
-//
-//        println("FOLLOWDTO!!! : ${followDTO}")
-//
-//        if (followDTO == null) {
-//            followDTO = UserDTO()
-//            followDTO.followingCount = 1
-//            followDTO.followings[userUid] = true
-//
-//            fireStore.collection("users").add(followDTO).await()
-//            return@flow
-//        }
-//
-//        if (followDTO.followings.containsKey(userUid)) {
-//            // remove
-//            followDTO.followingCount = followDTO.followingCount - 1
-//            followDTO.followings.remove(userUid)
-//        } else {
-//            // add
-//            followDTO.followingCount = followDTO.followingCount + 1
-//            followDTO.followings[userUid] = true
-//        }
-//
-//        val ref = fireStore.collection("users").add(followDTO).await()
-//        ref.addSnapshotListener { value, error ->
-//            println("ADD SNAPSHOT!!! : ${value?.toObject(UserDTO::class.java)}")
-//
-//        }
-//
-//        emit(UiState.Success(followDTO))
-//    }.catch {
-//        emit(UiState.Failed(it.message.toString()))
-//    }.flowOn(ioDispatcher)
 }

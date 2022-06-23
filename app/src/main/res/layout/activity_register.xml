@@ -7,11 +7,12 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.register.RegisterViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.register.RegisterActivity">
@@ -59,7 +60,7 @@
                 android:hint="@string/email"
                 android:maxLength="30"
                 android:maxLines="1"
-                android:text="@={viewModel._userEmail}" />
+                android:text="@={vm._userEmail}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,7 +84,7 @@
                 android:inputType="textPassword"
                 android:maxLength="30"
                 android:maxLines="1"
-                android:text="@={viewModel._userPassword}" />
+                android:text="@={vm._userPassword}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -105,7 +106,7 @@
                 android:inputType="text"
                 android:maxLength="30"
                 android:maxLines="1"
-                android:text="@={viewModel._userName}" />
+                android:text="@={vm._userName}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -127,8 +128,18 @@
                 android:inputType="text"
                 android:maxLength="30"
                 android:maxLines="1"
-                android:text="@={viewModel._userNickName}" />
+                android:text="@={vm._userNickName}" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ProgressBar
+            android:id="@+id/loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

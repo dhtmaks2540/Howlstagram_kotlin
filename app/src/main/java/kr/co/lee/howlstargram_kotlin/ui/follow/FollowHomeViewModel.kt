@@ -14,9 +14,9 @@ class FollowHomeViewModel @Inject constructor(
         ?: throw IllegalStateException("There is no tab.")
     val userNickName = savedStateHandle.get<String>(USER_NICKNAME)
         ?: throw IllegalStateException("There is no userNickName.")
-    val followers = savedStateHandle.get<Map<String, Boolean>>(FOLLOWER)
+    private val followers = savedStateHandle.get<Map<String, Boolean>>(FOLLOWER)
         ?: throw IllegalStateException("There is no followers.")
-    val followings = savedStateHandle.get<Map<String, Boolean>>(FOLLOWING)
+    private val followings = savedStateHandle.get<Map<String, Boolean>>(FOLLOWING)
         ?: throw IllegalStateException("There is no followings.")
 
     private val _follow = MutableLiveData(Pair(followers, followings))

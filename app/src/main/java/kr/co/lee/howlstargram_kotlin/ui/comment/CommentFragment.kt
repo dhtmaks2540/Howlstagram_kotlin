@@ -1,20 +1,20 @@
 package kr.co.lee.howlstargram_kotlin.ui.comment
 
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
-import kr.co.lee.howlstargram_kotlin.databinding.ActivityCommentBinding
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentCommentBinding
-import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
-import kr.co.lee.howlstargram_kotlin.utilites.*
+import kr.co.lee.howlstargram_kotlin.utilites.UiState
+import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
+import kr.co.lee.howlstargram_kotlin.utilites.successOrNull
 
 @AndroidEntryPoint
 class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_comment) {
@@ -52,15 +52,27 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
 
             tvUploadComment.setOnClickListener {
                 lifecycleScope.launch {
+                    binding.loadingBar.visibility = View.VISIBLE
+                    binding.layoutRoot.forEachChildView { it.isEnabled = false }
                     viewModel.addComment().collect { state ->
-                        when(state) {
+                        when (state) {
                             is UiState.Success -> {
+                                binding.loadingBar.visibility = View.GONE
+                                binding.layoutRoot.forEachChildView { it.isEnabled = true }
                                 recyclerAdapter.addComment(state.successOrNull())
                             }
                         }
                     }
 
                     etCommentMessage.setText("")
+                }
+            }
+
+            refreshLayout.setOnRefreshListener {
+                lifecycleScope.launch {
+                    val job = viewModel.refresh()
+                    job.join()
+                    binding.refreshLayout.isRefreshing = false
                 }
             }
         }

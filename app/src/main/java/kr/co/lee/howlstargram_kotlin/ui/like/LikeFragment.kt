@@ -26,7 +26,7 @@ class LikeFragment: BaseFragment<FragmentLikeBinding>(R.layout.fragment_like) {
             },
             followItemClicked = { userUid, position ->
                 lifecycleScope.launch {
-                    viewModel.requestFollow(userUid, position).collect { state ->
+                    viewModel.requestFollow(userUid).collect { state ->
                         when(state) {
                             is UiState.Success -> {
                                 recyclerAdapter.changeFavoriteDTOs(state.successOrNull()!!, position)

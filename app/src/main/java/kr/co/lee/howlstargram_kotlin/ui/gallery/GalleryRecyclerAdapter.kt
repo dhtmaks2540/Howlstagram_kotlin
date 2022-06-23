@@ -2,41 +2,45 @@ package kr.co.lee.howlstargram_kotlin.ui.gallery
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kr.co.lee.howlstargram_kotlin.databinding.ItemGalleryImageBinding
 import kr.co.lee.howlstargram_kotlin.model.GalleryImage
-import javax.inject.Inject
 
-class GalleryRecyclerAdapter @Inject constructor()
-    : RecyclerView.Adapter<GalleryRecyclerAdapter.ViewHolder>() {
+class GalleryRecyclerAdapter(
+    private val lifeCycle: LifecycleOwner,
+    private val viewModel: GalleryViewModel,
+    private val imageItemClicked: (String) -> Unit,
+) : ListAdapter<GalleryImage, GalleryRecyclerAdapter.ViewHolder>(diffCallback) {
 
-    private lateinit var imageList: List<GalleryImage>
-    private lateinit var galleryViewModel: GalleryViewModel
-    private lateinit var lifeCycle: LifecycleOwner
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemGalleryImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding, lifeCycle).apply {
+            binding.ivGallery.setOnClickListener {
+                val position = bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: return@setOnClickListener
+                imageItemClicked(
+                    getItem(position).uri
+                )
+            }
 
-    fun setImageList(item: List<GalleryImage>, viewModel: GalleryViewModel, lifeCycleOwner: LifecycleOwner) {
-        galleryViewModel = viewModel
-        imageList = item
-        lifeCycle = lifeCycleOwner
-        galleryViewModel.setCurrentImage(imageList[0].uri)
-
-        notifyDataSetChanged()
+            viewModel.setCurrentImage(getItem(0).uri)
+        }
     }
 
-    inner class ViewHolder(val binding: ItemGalleryImageBinding, val lifeCycleOwner: LifecycleOwner)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bindTo(getItem(position))
+    }
+
+    inner class ViewHolder(val binding: ItemGalleryImageBinding, private val lifeCycleOwner: LifecycleOwner)
         : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.apply {
-                viewModel = galleryViewModel
+                vm = viewModel
                 lifecycleOwner = this@ViewHolder.lifeCycleOwner
-                ivGallery.setOnClickListener {
-                    galleryViewModel.setCurrentImage(imageList[adapterPosition].uri)
-                }
             }
         }
 
@@ -51,14 +55,13 @@ class GalleryRecyclerAdapter @Inject constructor()
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemGalleryImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, lifeCycle)
-    }
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<GalleryImage>() {
+            override fun areItemsTheSame(oldItem: GalleryImage, newItem: GalleryImage): Boolean =
+                oldItem.uri == newItem.uri
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindTo(imageList[position])
+            override fun areContentsTheSame(oldItem: GalleryImage, newItem: GalleryImage): Boolean =
+                oldItem == newItem
+        }
     }
-
-    override fun getItemCount(): Int = imageList.size
 }

@@ -20,8 +20,6 @@ import javax.inject.Inject
 class LikeViewModel @Inject constructor(
     @CurrentUserUid val currentUserUid: String,
     private val likeRepository: LikeRepository,
-    private val fireStore: FirebaseFirestore,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val favorites = savedStateHandle.get<Map<String, Boolean>>(FAVORITES)
@@ -47,76 +45,10 @@ class LikeViewModel @Inject constructor(
     }
 
     // 팔로우 요청
-    suspend fun requestFollow(userUid: String, position: Int): Flow<UiState<Boolean>> {
+    suspend fun requestFollow(userUid: String): Flow<UiState<Boolean>> {
         return withContext(viewModelScope.coroutineContext) {
             likeRepository.saveThirdPerson(userUid)
             likeRepository.saveMyAccount(userUid)
-        }
-    }
-
-    // 팔로우 요청에 대한 내 팔로잉 정보 수정
-    private suspend fun saveMyAccount(userUid: String, uid: String, position: Int) {
-        withContext(ioDispatcher) {
-            val tsDocFollowing = fireStore.collection("users").document(uid)
-            fireStore.runTransaction { transaction ->
-                var followDTOItem = transaction.get(tsDocFollowing).toObject(UserDTO::class.java)
-                if (followDTOItem == null) {
-                    followDTOItem = UserDTO()
-                    followDTOItem.followingCount = 1
-                    followDTOItem.followings[userUid] = true
-
-                    transaction.set(tsDocFollowing, followDTOItem)
-                    return@runTransaction
-                }
-
-                if (followDTOItem.followings.containsKey(userUid)) {
-                    // remove
-                    followDTOItem.followingCount = followDTOItem.followingCount - 1
-                    followDTOItem.followings.remove(userUid)
-                } else {
-                    // add
-                    followDTOItem.followingCount = followDTOItem.followingCount + 1
-                    followDTOItem.followings[userUid] = true
-                }
-
-                val isFollow = followDTOItem.followings.containsKey(userUid)
-
-                transaction.set(tsDocFollowing, followDTOItem)
-//                val newFavoriteDTOs = favoriteDTOs.value?.toMutableList()
-//                newFavoriteDTOs?.set(position, newFavoriteDTOs[position].copy(isFollow = isFollow))
-//                _favoriteDTOs.postValue(newFavoriteDTOs!!)
-            }
-        }
-    }
-
-    // 팔로우 요청에 대한 상대방 팔로워 정보 수정
-    private suspend fun saveThirdPerson(userUid: String, uid: String) {
-        withContext(ioDispatcher) {
-            val tsDocFollower = fireStore.collection("users").document(userUid)
-            fireStore.runTransaction { transaction ->
-                var followDTOItem = transaction.get(tsDocFollower).toObject(UserDTO::class.java)
-                if (followDTOItem == null) {
-                    followDTOItem = UserDTO()
-                    followDTOItem.followerCount = 1
-                    followDTOItem.followers[uid] = true
-
-                    transaction.set(tsDocFollower, followDTOItem)
-                    return@runTransaction
-                }
-
-                if (followDTOItem.followers.containsKey(uid)) {
-                    // cancel
-                    followDTOItem.followerCount = followDTOItem.followerCount - 1
-                    followDTOItem.followers.remove(uid)
-                } else {
-                    // add
-                    followDTOItem.followerCount = followDTOItem.followerCount + 1
-                    followDTOItem.followers[uid] = true
-                }
-
-                transaction.set(tsDocFollower, followDTOItem)
-            }
-
         }
     }
 }

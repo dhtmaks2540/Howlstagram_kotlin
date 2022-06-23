@@ -3,19 +3,17 @@ package kr.co.lee.howlstargram_kotlin.ui.user
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
 
-class UserRecyclerAdapter(private val widthPixels: Int): RecyclerView.Adapter<UserRecyclerAdapter.ViewHolder>() {
+class UserRecyclerAdapter(
+    private val widthPixels: Int
+): ListAdapter<ContentDTO, UserRecyclerAdapter.ViewHolder>(diffUtil) {
     private lateinit var imageView: AppCompatImageView
-    private lateinit var contentDTOs: List<ContentDTO>
-
-    fun setItems(contentDTOs: List<ContentDTO>) {
-        this.contentDTOs = contentDTOs
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         imageView = AppCompatImageView(parent.context)
@@ -24,23 +22,25 @@ class UserRecyclerAdapter(private val widthPixels: Int): RecyclerView.Adapter<Us
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(contentDTOs[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = contentDTOs.size
-
-    inner class ViewHolder(imageView: AppCompatImageView): RecyclerView.ViewHolder(imageView) {
-        init {
-           imageView.setOnClickListener {
-
-           }
-        }
-
+    class ViewHolder(private val imageView: AppCompatImageView): RecyclerView.ViewHolder(imageView) {
         fun bind(contentDTO: ContentDTO) {
             Glide.with(itemView.context)
                 .load(contentDTO.imageUrl)
                 .apply(RequestOptions.centerCropTransform())
                 .into(imageView)
+        }
+    }
+
+    companion object {
+        private val diffUtil = object : DiffUtil.ItemCallback<ContentDTO>() {
+            override fun areItemsTheSame(oldItem: ContentDTO, newItem: ContentDTO): Boolean =
+                oldItem.uid == newItem.uid
+
+            override fun areContentsTheSame(oldItem: ContentDTO, newItem: ContentDTO): Boolean =
+                oldItem == newItem
         }
     }
 }

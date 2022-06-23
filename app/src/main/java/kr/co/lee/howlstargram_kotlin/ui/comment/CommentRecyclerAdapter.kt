@@ -7,9 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.lee.howlstargram_kotlin.databinding.ItemCommentBinding
 import kr.co.lee.howlstargram_kotlin.model.Comment
-import kr.co.lee.howlstargram_kotlin.model.Content
-import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
-import kr.co.lee.howlstargram_kotlin.utilites.successOrNull
 
 class CommentRecyclerAdapter(
     private val profileItemClicked: (String) -> Unit,

@@ -21,6 +21,7 @@ import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.ui.like.LikeFragmentDirections
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.utilites.*
+import org.joda.time.DateTime
 
 @AndroidEntryPoint
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
@@ -30,7 +31,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         DetailRecyclerAdapter(
             currentUserUid = viewModel.currentUserUid,
             favoriteItemClicked = { contentUid, position ->
-                viewModel.setFavoriteEvent(contentUid, position)
+                lifecycleScope.launch {
+                    viewModel.setFavoriteEvent(contentUid, position)
+                }
             },
             commentItemClicked = { content ->
                 val bundle = bundleOf(
@@ -73,33 +76,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         return super.onOptionsItemSelected(item)
     }
 
-//    private suspend fun loadContents() {
-//        loadJob?.cancel()
-//        loadJob = lifecycleScope.launch {
-//            viewModel.getAllContents().collectLatest { state ->
-//                when(state) {
-//                    is State.Loading -> {
-//                        showToast("글을 불러오고 있습니다.")
-//                    }
-//
-//                    is State.Success -> {
-//                        val contents = state.data
-//                        if(contents.isNullOrEmpty()) {
-//                            binding.tvEmpty.visibility = View.VISIBLE
-//                        } else {
-//                            binding.tvEmpty.visibility = View.INVISIBLE
-//                        }
-//                        viewModel.setContents(contents)
-//                    }
-//
-//                    is State.Failed -> {
-//                        showToast("${state.message}로 인해 글을 불러오는데 실패!!")
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     // 전체 초기화
     private fun init() {
         navController = findNavController()
@@ -109,7 +85,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
             refreshLayout.setOnRefreshListener {
                 lifecycleScope.launch {
-                    refreshLayout.isRefreshing = false
                     val job = viewModel.refresh()
                     job.join()
                     refreshLayout.isRefreshing = false
@@ -117,7 +92,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
             }
         }
         setToolbar()
-//        observeLiveData()
     }
 
     // 툴바 지정
@@ -125,23 +99,4 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         setHasOptionsMenu(true)
         (activity as MainActivity).setSupportActionBar(binding.toolbar)
     }
-
-    // LiveData 관찰
-//    private fun observeLiveData() {
-//        lifecycleScope.launch {
-//            viewModel.test.collect { state ->
-//                when(state) {
-//                    is State.Loading -> {
-//                        println("LOADING!!!")
-//                    }
-//                    is State.Success -> {
-//                        println("DATE!!! ${state.data}")
-//                    }
-//                    is State.Failed -> {
-//                        println("FAILED!!! ${state.message}")
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

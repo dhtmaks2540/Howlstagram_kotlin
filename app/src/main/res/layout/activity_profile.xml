@@ -7,11 +7,12 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.profile.ProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.profile.ProfileEditActivity">
@@ -41,7 +42,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:set_glide_circle_image="@{viewModel.profileUrl}" />
+            app:set_glide_circle_image="@{vm.profileUrl}" />
 
         <TextView
             android:id="@+id/tv_edit_profile"
@@ -69,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/user_name"
-                android:text="@{viewModel.userName}" />
+                android:text="@{vm.userName}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,10 +87,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/user_nickName"
-                android:text="@{viewModel.userNickName}" />
+                android:text="@{vm.userNickName}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <ProgressBar
+            android:id="@+id/loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

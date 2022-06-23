@@ -7,11 +7,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
-import kr.co.lee.howlstargram_kotlin.model.Comment
-import kr.co.lee.howlstargram_kotlin.model.CommentDTO
-import kr.co.lee.howlstargram_kotlin.model.Content
+import kr.co.lee.howlstargram_kotlin.model.*
 import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import javax.inject.Inject
 
@@ -20,8 +19,25 @@ class CommentRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid private val currentUserUid: String,
 ) {
+    suspend fun loadMyInfo(): User {
+        return withContext(ioDispatcher) {
+            val userSnapshot = fireStore.collection("users")
+                .document(currentUserUid)
+                .get().await()
+
+            val profileSnapshot = fireStore.collection("profileImages")
+                .document(currentUserUid)
+                .get().await()
+
+            val item = userSnapshot.toObject(UserDTO::class.java)
+            val user = User(userDTO = item!!, profileUrl = profileSnapshot.data?.get("image").toString(), currentUserUid)
+
+            user
+        }
+    }
+
     fun getAllComments(content: Content) = flow<UiState<List<Comment>>> {
-        val snapShot = fireStore.collection("images")
+        val commentSnapShot = fireStore.collection("images")
             .document(content.contentUid!!)
             .collection("comments")
             .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -43,11 +59,19 @@ class CommentRepository @Inject constructor(
         )
 
         // 댓글 불러오기
-        snapShot.documents.forEach { documentSnapshot ->
+        commentSnapShot.documents.forEach { documentSnapshot ->
             val item = documentSnapshot.toObject(CommentDTO::class.java)
-            val profileShot = fireStore.collection("profileImages").document(item?.uid!!).get().await()
+
+            val userSnapShot = fireStore.collection("users")
+                .document(item?.uid!!)
+                .get().await()
+
+            val profileShot = fireStore.collection("profileImages")
+                .document(item.uid!!)
+                .get().await()
+
             val comment = Comment(
-                commentDTO = item,
+                commentDTO = item.copy(userNickName = userSnapShot.data?.get("userNickName").toString()),
                 profileUrl = profileShot.data?.get("image").toString(),
                 commentUid = documentSnapshot.id
             )

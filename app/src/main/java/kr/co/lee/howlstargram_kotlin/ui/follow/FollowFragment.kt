@@ -25,7 +25,7 @@ class FollowFragment: BaseFragment<FragmentFollowBinding>(R.layout.fragment_foll
             },
             followItemClicked = { userUid, position ->
                 lifecycleScope.launch {
-                    viewModel.requestFollow(userUid, position).collect { state ->
+                    viewModel.requestFollow(userUid).collect { state ->
                         when(state) {
                             is UiState.Success -> {
                                 recyclerAdapter.changeFavoriteDTOs(state.successOrNull()!!, position)
@@ -44,16 +44,6 @@ class FollowFragment: BaseFragment<FragmentFollowBinding>(R.layout.fragment_foll
 
     override fun initView() {
         init()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            android.R.id.home -> {
-                navController.navigateUp()
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     // 초기화

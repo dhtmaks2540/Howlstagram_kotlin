@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,9 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val fireStore: FirebaseFirestore,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher): ViewModel() {
+    private val registerRepository: RegisterRepository,
+) : ViewModel() {
     val _userEmail = MutableLiveData<String>()
     val userEmail: LiveData<String> = _userEmail
 
@@ -38,49 +38,26 @@ class RegisterViewModel @Inject constructor(
     private val _success = MutableLiveData<Boolean>()
     val success: LiveData<Boolean> = _success
 
-    fun signUp() {
+    fun signUp(){
         viewModelScope.launch {
-            requestSignUp()
-        }
-    }
-
-    fun insertUser(userItem: FirebaseUser) {
-        viewModelScope.launch {
-            insertUserInformation(userItem)
-        }
-    }
-
-    private suspend fun requestSignUp() {
-        withContext(ioDispatcher) {
-            auth.createUserWithEmailAndPassword(
+            val task = registerRepository.requestSignUp(
                 userEmail.value.toString().trim(),
                 userPassword.value.toString().trim()
-            ).addOnCompleteListener { task ->
-                if(task.isSuccessful) {
-                    _success.postValue(true)
-                    _user.postValue(task.result.user)
-                } else {
-                    _success.postValue(false)
-                }
+            )
+
+            task.addOnSuccessListener {
+                _success.postValue(true)
+                _user.postValue(it.user)
             }.addOnFailureListener {
-                println("FAILURE!!! : ${it.message}")
+                _success.postValue(false)
             }
         }
     }
 
-    // 유저 정보 삽입
-    private suspend fun insertUserInformation(userItem: FirebaseUser) {
-        withContext(ioDispatcher) {
-            val tsDocUser = fireStore.collection("users").document(userItem.uid)
-            fireStore.runTransaction { transaction ->
-                val item = transaction.get(tsDocUser).toObject(UserDTO::class.java)
-                if(item == null) {
-                    val userDTO = UserDTO(userEmail = userItem.email.toString(),
-                        userName = userName.value.toString(),
-                        userNickName = userNickName.value.toString())
-                    transaction.set(tsDocUser, userDTO)
-                }
-            }
-        }
+    suspend fun insertUser(userItem: FirebaseUser): Task<FirebaseUser> {
+        return registerRepository.insertUserInformation(userItem,
+            userName.value.toString().trim(),
+            userNickName.value.toString().trim()
+        )
     }
 }

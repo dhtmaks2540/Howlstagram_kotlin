@@ -42,8 +42,17 @@ object FirebaseUidModule {
     @CurrentUserUid
     @ActivityRetainedScoped
     fun getUid() = FirebaseAuth.getInstance().currentUser?.uid!!
+
+    @Provides
+    @CurrentUserEmail
+    @ActivityRetainedScoped
+    fun getEmail() = FirebaseAuth.getInstance().currentUser?.email!!
 }
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class CurrentUserUid
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class CurrentUserEmail

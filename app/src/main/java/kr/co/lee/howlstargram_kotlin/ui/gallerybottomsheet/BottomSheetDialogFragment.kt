@@ -16,14 +16,30 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentAddBottomSheetBinding
 import kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity
-import kr.co.lee.howlstargram_kotlin.utilites.BottomSheetClickListener
 import kr.co.lee.howlstargram_kotlin.utilites.GalleryImageType
 import kr.co.lee.howlstargram_kotlin.utilites.IMAGE_TYPE
 import kr.co.lee.howlstargram_kotlin.utilites.ImageType
 
 @AndroidEntryPoint
-class BottomSheetDialogFragment: BottomSheetDialogFragment() {
-    private lateinit var adapter: RecyclerAdapter
+class BottomSheetDialogFragment : BottomSheetDialogFragment() {
+    private val itemList = listOf(GalleryImageType.PHOTO, GalleryImageType.STORY)
+    private val recyclerAdapter: BottomSheetRecyclerAdapter by lazy {
+        BottomSheetRecyclerAdapter(
+            bottomItemClicked = { galleryImageType ->
+                when(galleryImageType) {
+                    GalleryImageType.PHOTO -> {
+                        val intent = Intent(requireContext(), GalleryActivity::class.java)
+                        intent.putExtra(IMAGE_TYPE, ImageType.POST_TYPE)
+                        startActivity(intent)
+                        this@BottomSheetDialogFragment.dismiss()
+                    }
+                    GalleryImageType.STORY -> {
+                        Toast.makeText(activity, "현재 구현되지 않은 기능입니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        )
+    }
     private var _binding: FragmentAddBottomSheetBinding? = null
     private val binding: FragmentAddBottomSheetBinding
         get() = _binding!!
@@ -39,7 +55,14 @@ class BottomSheetDialogFragment: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initAdapter()
+
+        binding.apply {
+            adapter = recyclerAdapter
+        }
+
+        val decoration = DividerItemDecoration(activity, VERTICAL)
+        recyclerAdapter.submitList(itemList)
+        binding.rvMake.addItemDecoration(decoration)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -52,28 +75,5 @@ class BottomSheetDialogFragment: BottomSheetDialogFragment() {
         }
 
         return dialog
-    }
-
-    // Adapter 초기화
-    private fun initAdapter() {
-        adapter = RecyclerAdapter()
-        adapter.setOnClickListener(object : BottomSheetClickListener {
-            override fun click(itemType: GalleryImageType) {
-                when(itemType) {
-                    GalleryImageType.PHOTO -> {
-                        val intent = Intent(requireContext(), GalleryActivity::class.java)
-                        intent.putExtra(IMAGE_TYPE, ImageType.POST_TYPE)
-                        startActivity(intent)
-                    }
-                    GalleryImageType.STORY -> {
-                        Toast.makeText(activity, "현재 구현되지 않은 기능입니다.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
-
-        val decoration = DividerItemDecoration(activity, VERTICAL)
-        binding.rvMake.adapter = adapter
-        binding.rvMake.addItemDecoration(decoration)
     }
 }

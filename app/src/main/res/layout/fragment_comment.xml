@@ -18,6 +18,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".navigation.CommentActivity">
@@ -37,17 +38,27 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:adapter="@{adapter}"
-            app:contentItems="@{vm.uiState}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:descendantFocusability="blocksDescendants"
             app:layout_constraintBottom_toTopOf="@id/layout_comment"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:toast="@{UiStateKt.throwableOrNull(vm.uiState)}"
-            tools:listitem="@layout/item_comment" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:adapter="@{adapter}"
+                app:contentItems="@{vm.uiState}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/layout_comment"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:toast="@{UiStateKt.throwableOrNull(vm.uiState)}"
+                tools:listitem="@layout/item_comment" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <ProgressBar
             android:id="@+id/loading_bar"

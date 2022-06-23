@@ -1,27 +1,25 @@
 package kr.co.lee.howlstargram_kotlin.ui.comment
 
 import androidx.lifecycle.*
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
-import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
-import kr.co.lee.howlstargram_kotlin.model.*
+import kr.co.lee.howlstargram_kotlin.model.Comment
+import kr.co.lee.howlstargram_kotlin.model.CommentDTO
+import kr.co.lee.howlstargram_kotlin.model.Content
+import kr.co.lee.howlstargram_kotlin.model.User
 import kr.co.lee.howlstargram_kotlin.utilites.CONTENT
 import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel @Inject constructor(
-    private val fireStore: FirebaseFirestore,
     private val commentRepository: CommentRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid private val currentUserUid: String,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val _commentContent = MutableLiveData<String>()
     val commentContent: LiveData<String> = _commentContent
@@ -48,21 +46,22 @@ class CommentViewModel @Inject constructor(
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
 
+    fun refresh(): Job {
+        val job = viewModelScope.launch {
+            commentRepository.getAllComments(content)
+                .collect { state ->
+                    _uiState.value = state
+                }
+        }
+
+        return job
+    }
+
     // 내 정보 불러오기
     fun loadMyInfo() {
-        viewModelScope.launch(ioDispatcher) {
-            val userSnapshot = fireStore.collection("users")
-                .document(currentUserUid)
-                .get().await()
-
-            val profileSnapshot = fireStore.collection("profileImages")
-                .document(currentUserUid)
-                .get().await()
-
-            val item = userSnapshot.toObject(UserDTO::class.java)
-            val user = User(userDTO = item!!, profileUrl = profileSnapshot.data?.get("image").toString(), currentUserUid)
-
-            _user.postValue(user)
+        viewModelScope.launch {
+            val result = commentRepository.loadMyInfo()
+            _user.postValue(result)
         }
     }
 

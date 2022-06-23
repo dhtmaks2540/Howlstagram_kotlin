@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryViewModel" />
 
         <variable
@@ -26,7 +26,7 @@
             android:id="@+id/iv_gallery"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:foreground='@{viewModel.currentSelectedImage.equals(imageItem.uri) ? Color.parseColor("#BBFFFFFF") : Color.parseColor("#00FFFFFF")}' />
+            android:foreground='@{vm.currentSelectedImage.equals(imageItem.uri) ? Color.parseColor("#BBFFFFFF") : Color.parseColor("#00FFFFFF")}' />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
