@@ -18,6 +18,7 @@ import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentUserBinding
 import kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity
+import kr.co.lee.howlstargram_kotlin.ui.grid.GridItemDecoration
 import kr.co.lee.howlstargram_kotlin.ui.login.LoginActivity
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.ui.profile.ProfileEditActivity
@@ -30,6 +31,9 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
         UserRecyclerAdapter(
             resources.displayMetrics.widthPixels / 3
         )
+    }
+    private val userItemDecoration: GridItemDecoration by lazy {
+        GridItemDecoration()
     }
 
     private lateinit var profileLauncher: ActivityResultLauncher<Intent>
@@ -73,71 +77,17 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
         binding.apply {
             vm = viewModel
             adapter = recyclerAdapter
-
-            // 프로필 이미지 클릭 이벤트
-            ivAccountProfile.setOnClickListener {
-                // 내 프로필이라면 -> 프로필 이미지 수정
-                if (viewModel.uid.value == viewModel.currentUserId) {
-                    val intent = Intent(activity, GalleryActivity::class.java)
-                    intent.putExtra(IMAGE_TYPE, ImageType.PROFILE_TYPE)
-                    profileLauncher.launch(intent)
-                }
-            }
-
-            // Follow 버튼 클릭 
-            btnAccountFollowSignout.setOnClickListener {
-                // 내 프로필이라면 -> 프로필 수정
-                if (viewModel.uid.value == viewModel.currentUserId) {
-                    val intent = Intent(activity, ProfileEditActivity::class.java)
-                    intent.putExtra(PROFILE_URL, viewModel.userAndContent.value?.first?.profileUrl)
-                    intent.putExtra(
-                        USER_NAME,
-                        viewModel.userAndContent.value?.first?.userDTO?.userName
-                    )
-                    intent.putExtra(
-                        USER_NICKNAME,
-                        viewModel.userAndContent.value?.first?.userDTO?.userNickName
-                    )
-                    profileEditLauncher.launch(intent)
-                } else { // 상대방 프로필이라면 -> 팔로우 요청
-                    lifecycleScope.launch {
-                        viewModel.requestFollow()
-                    }
-                }
-            }
-
-            // 팔로워 버튼 클릭
-            layoutFollower.setOnClickListener {
-                val bundle = bundleOf(
-                    USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
-                    FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
-                    FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
-                    TAB_TYPE to TabType.FOLLOWER_TAB
-                )
-
-                // 팔로워로 이동
-                navController.navigate(R.id.action_to_follow, bundle)
-            }
-
-            // 팔로잉 버튼 클릭
-            layoutFollowing.setOnClickListener {
-                val bundle = bundleOf(
-                    USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
-                    FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
-                    FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
-                    TAB_TYPE to TabType.FOLLOWING_TAB
-                )
-
-                // 팔로잉으로 이동
-                navController.navigate(R.id.action_to_follow, bundle)
-            }
+            handler = this@UserFragment
+            itemDecoration = userItemDecoration
 
             // 새로고침
             refreshLayout.setOnRefreshListener {
                 lifecycleScope.launch {
+                    binding.layoutRoot.forEachChildView { it.isEnabled = false }
                     val job = viewModel.refresh()
                     job.join()
                     refreshLayout.isRefreshing = false
+                    binding.layoutRoot.forEachChildView { it.isEnabled = true }
                 }
             }
 
@@ -183,6 +133,64 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
         viewModel.isMyProfile.observe(viewLifecycleOwner) {
             setToolbar(it)
+        }
+    }
+
+    // 팔로잉  클릭
+    fun followingClickListener() {
+        val bundle = bundleOf(
+            USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
+            FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
+            FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
+            TAB_TYPE to TabType.FOLLOWING_TAB
+        )
+
+        // 팔로잉으로 이동
+        navController.navigate(R.id.action_to_follow, bundle)
+    }
+
+    // 팔로워 클릭
+    fun followerClickListener() {
+        val bundle = bundleOf(
+            USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
+            FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
+            FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
+            TAB_TYPE to TabType.FOLLOWER_TAB
+        )
+
+        // 팔로워로 이동
+        navController.navigate(R.id.action_to_follow, bundle)
+    }
+
+    // 팔로우 클릭
+    fun followClickListener() {
+        // 내 프로필이라면 -> 프로필 수정
+        if (viewModel.uid.value == viewModel.currentUserId) {
+            val intent = Intent(activity, ProfileEditActivity::class.java)
+            intent.putExtra(PROFILE_URL, viewModel.userAndContent.value?.first?.profileUrl)
+            intent.putExtra(
+                USER_NAME,
+                viewModel.userAndContent.value?.first?.userDTO?.userName
+            )
+            intent.putExtra(
+                USER_NICKNAME,
+                viewModel.userAndContent.value?.first?.userDTO?.userNickName
+            )
+            profileEditLauncher.launch(intent)
+        } else { // 상대방 프로필이라면 -> 팔로우 요청
+            lifecycleScope.launch {
+                viewModel.requestFollow()
+            }
+        }
+    }
+
+    // 프로필 이미지 클릭
+    fun profileClickListener() {
+        // 내 프로필이라면 -> 프로필 이미지 수정
+        if (viewModel.uid.value == viewModel.currentUserId) {
+            val intent = Intent(activity, GalleryActivity::class.java)
+            intent.putExtra(IMAGE_TYPE, ImageType.PROFILE_TYPE)
+            profileLauncher.launch(intent)
         }
     }
 }

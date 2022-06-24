@@ -7,9 +7,8 @@ import com.google.firebase.firestore.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.model.Content
@@ -22,11 +21,7 @@ class DetailViewModel @Inject constructor(
     @CurrentUserUid val currentUserUid: String,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState<List<Content>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<Content>>> = _uiState.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = UiState.Loading
-    )
+    val uiState: StateFlow<UiState<List<Content>>> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -48,7 +43,7 @@ class DetailViewModel @Inject constructor(
         return job
     }
 
-    suspend fun setFavoriteEvent(contentUid: String, position: Int): Task<Transaction> {
+    suspend fun setFavoriteEvent(contentUid: String): Task<Transaction> {
         return detailRepository.favoriteEvent(contentUid)
     }
 }

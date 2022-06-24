@@ -15,6 +15,7 @@ class ProfileRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid private val currentUserUid: String,
 ) {
+    // 사용자 정보 업데이트
     suspend fun requestUpdateUser(userName: String, userNickName: String): Task<Transaction> {
         val tsDoc = fireStore.collection("users").document(currentUserUid)
         return withContext(ioDispatcher) {

@@ -40,67 +40,41 @@ class ResearchFragment: BaseFragment<FragmentResearchBinding>(R.layout.fragment_
 
         binding.apply {
             vm = viewModel
-
-            // 팔로우 버튼 클릭
-            btnFollow.setOnClickListener {
-                viewModel.requestFollow()
-            }
-
-            // 좋아요 이미지 클릭
-            ivItemFavorite.setOnClickListener {
-                viewModel.favoriteEvent()
-            }
-
-            // 댓글 클릭
-            ivItemComment.setOnClickListener {
-                startCommentFragment(content = viewModel.userAndContent.value?.first!!)
-            }
-            
-            // 댓글 클릭
-            tvItemComment.setOnClickListener { 
-                startCommentFragment(content = viewModel.userAndContent.value?.first!!)
-            }
-
-            // 글 내용 클릭
-            tvItemExplain.setOnClickListener {
-                startCommentFragment(content = viewModel.userAndContent.value?.first!!)
-            }
-
-            // 프로필 클릭
-            ivUserProfile.setOnClickListener {
-                val action = ResearchFragmentDirections.actionToUser(destinationUid = viewModel.userAndContent.value?.first?.contentDTO?.uid!!)
-                navController.navigate(action)
-            }
-
-            // 닉네임 클릭
-            tvUserNickname.setOnClickListener {
-                val action = ResearchFragmentDirections.actionToUser(destinationUid =  viewModel.userAndContent.value?.first?.contentDTO?.uid!!)
-                navController.navigate(action)
-            }
-
-            // 닉네임 클릭
-            tvItemName.setOnClickListener {
-                val action = ResearchFragmentDirections.actionToUser(destinationUid =  viewModel.userAndContent.value?.first?.contentDTO?.uid!!)
-                navController.navigate(action)
-            }
-
-            // 좋아요 텍스트 클릭
-            tvItemFavoritecounter.setOnClickListener {
-                val bundle = bundleOf(
-                    FAVORITES to viewModel.userAndContent.value?.first?.contentDTO?.favorites
-                )
-
-                navController.navigate(R.id.action_to_like, bundle)
-            }
+            handler = this@ResearchFragment
         }
 
         setToolbar()
     }
 
-    // bundle 데이터 획득
-    private fun startCommentFragment(content: Content) {
+    // 팔로우 클릭
+    fun followClickListener() {
+        viewModel.requestFollow()
+    }
+
+    // 좋아요 이미지 클릭
+    fun favoriteClickListener() {
+        viewModel.favoriteEvent()
+    }
+
+    // 좋아요 페이지 이동
+    fun startFavoriteClickListener() {
         val bundle = bundleOf(
-            CONTENT to content
+            FAVORITES to viewModel.userAndContent.value?.first?.contentDTO?.favorites
+        )
+
+        navController.navigate(R.id.action_to_like, bundle)
+    }
+
+    // 프로필 페이지 이동
+    fun startProfileClickListener() {
+        val action = ResearchFragmentDirections.actionToUser(destinationUid =  viewModel.userAndContent.value?.first?.contentDTO?.uid!!)
+        navController.navigate(action)
+    }
+
+    // 댓글 페이지 이동
+    fun startCommentClickListener() {
+        val bundle = bundleOf(
+            CONTENT to viewModel.userAndContent.value?.first!!
         )
 
         navController.navigate(R.id.action_to_comment, bundle)

@@ -5,11 +5,19 @@
 
     <data>
 
+        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+
+        <variable
+            name="itemDecoration"
+            type="kr.co.lee.howlstargram_kotlin.ui.grid.GridItemDecoration" />
+
+        <variable
+            name="handler"
+            type="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment" />
+
         <variable
             name="isMyProfile"
             type="Boolean" />
-
-        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
 
         <variable
             name="adapter"
@@ -21,10 +29,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:clickable="true">
+        android:background="@color/white">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -56,6 +64,8 @@
                     android:id="@+id/iv_account_profile"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginStart="5dp"
+                    android:onClick="@{() -> handler.profileClickListener()}"
                     android:src="@drawable/ic_account"
                     app:civ_border_color="@color/black"
                     app:civ_border_width="0.5dp"
@@ -66,6 +76,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_marginEnd="5dp"
                     android:baselineAligned="false"
                     android:gravity="center"
                     app:layout_constraintBottom_toBottomOf="@id/iv_account_profile"
@@ -98,6 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:onClick="@{() -> handler.followerClickListener()}"
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -119,6 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:onClick="@{() -> handler.followingClickListener()}"
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -136,7 +149,7 @@
 
                 </LinearLayout>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -153,10 +166,19 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
+                    android:onClick="@{() -> handler.followClickListener()}"
                     android:text='@{isMyProfile ? "프로필 편집" : vm.userAndContent.first.userDTO.followers.containsKey(vm.currentUserId) ? "팔로우 취소" : "팔로우"}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#000000"
+                    app:layout_constraintTop_toBottomOf="@id/btn_account_follow_signout" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcv_accont"
@@ -164,9 +186,10 @@
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
                     app:adapter="@{adapter}"
+                    app:itemDecoration="@{itemDecoration}"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btn_account_follow_signout"
+                    app:layout_constraintTop_toBottomOf="@id/divider"
                     app:spanCount="3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

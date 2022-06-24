@@ -17,10 +17,11 @@ class GridRepository @Inject constructor(
     private val fireStore: FirebaseFirestore,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
+    // 게시글 호출하기
     fun getAllContents() = flow<UiState<List<Content>>> {
         val snapshot = fireStore.collection("images")
             .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(20)
+            .limit(30)
             .get().await()
 
         val contents = ArrayList<Content>()

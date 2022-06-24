@@ -1,8 +1,10 @@
 package kr.co.lee.howlstargram_kotlin.ui.follow
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.utilites.*
 import javax.inject.Inject
 

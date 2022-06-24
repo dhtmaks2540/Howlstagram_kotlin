@@ -24,6 +24,7 @@ ext.versions = [
         lifecycleVersion     : '2.4.0',
         roomVersion          : '2.4.0',
         archCompomentVersion : '2.1.0',
+        swipeVersion : '1.1.0',
 
         // di
         hiltVersion      : '2.40.5',
@@ -55,12 +56,12 @@ ext.versions = [
         googleVersion : '4.3.8',
 
         // Firebase
-        firebaseAuthVersion : '21.0.2',
+        firebaseAuthVersion : '21.0.6',
         firebaseStorageVersion : '20.0.1',
-        firebaseFireStoreVersion : '24.0.1',
+        firebaseFireStoreVersion : '24.2.0',
 
         // play services
-        playServicesAuthVersion : '20.1.0',
+        playServicesAuthVersion : '20.2.0',
 
         // CircleImageView
         circleImageViewVersion : '3.1.0',

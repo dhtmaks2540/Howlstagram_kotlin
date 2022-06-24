@@ -16,12 +16,14 @@ class RegisterRepository @Inject constructor(
     private val fireStore: FirebaseFirestore,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
+    // 회원가입 요청
     suspend fun requestSignUp(userEmail: String, userPassword: String): Task<AuthResult> {
         return withContext(ioDispatcher) {
            auth.createUserWithEmailAndPassword(userEmail, userPassword)
         }
     }
 
+    // 유저 정보 데이터베이스에 입력
     suspend fun insertUserInformation(userItem: FirebaseUser, userName: String, userNickName: String): Task<FirebaseUser> {
         return withContext(ioDispatcher) {
             val tsDocUser = fireStore.collection("users").document(userItem.uid)

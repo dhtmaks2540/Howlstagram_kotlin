@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="handler"
+            type="kr.co.lee.howlstargram_kotlin.ui.research.ResearchFragment" />
+
+        <variable
             name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.research.ResearchViewModel" />
 
@@ -63,6 +67,7 @@
                     android:layout_height="35dp"
                     android:layout_marginStart="7.5dp"
                     android:layout_marginTop="10dp"
+                    android:onClick="@{() -> handler.startProfileClickListener()}"
                     app:civ_border_color="@color/black"
                     app:civ_border_width="0.5dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -74,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7.5dp"
+                    android:onClick="@{() -> handler.startProfileClickListener()}"
                     android:text="@{vm.userAndContent.first.contentDTO.userNickName}"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@id/iv_user_profile"
@@ -85,6 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="7.5dp"
+                    android:onClick="@{() -> handler.followClickListener()}"
                     android:text='@{vm.userAndContent.second ? "팔로우 취소" : "팔로우"}'
                     android:visibility="@{vm.userAndContent.third ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
@@ -105,6 +112,7 @@
                     android:layout_height="35dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:onClick="@{() -> handler.favoriteClickListener()}"
                     android:src="@drawable/ic_favorite_border"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_item"
@@ -115,6 +123,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginStart="20dp"
+                    android:onClick="@{() -> handler.startCommentClickListener()}"
                     android:src="@drawable/ic_chat_black"
                     app:layout_constraintBottom_toBottomOf="@id/iv_item_favorite"
                     app:layout_constraintStart_toEndOf="@id/iv_item_favorite"
@@ -125,6 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:onClick="@{() -> handler.startFavoriteClickListener()}"
                     android:text='@{"좋아요 " + vm.userAndContent.first.contentDTO.favoriteCount + "개"}'
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@id/iv_item_favorite"
@@ -134,6 +144,7 @@
                     android:id="@+id/tv_item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="@{() -> handler.startCommentClickListener()}"
                     android:text="@{vm.userAndContent.first.contentDTO.userNickName}"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@id/tv_item_favoritecounter"
@@ -146,6 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:onClick="@{() -> handler.startCommentClickListener()}"
                     android:text="@{vm.userAndContent.first.contentDTO.explain}"
                     app:layout_constraintStart_toEndOf="@id/tv_item_name"
                     app:layout_constraintTop_toBottomOf="@id/tv_item_favoritecounter" />
@@ -154,6 +166,7 @@
                     android:id="@+id/tv_item_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="@{() -> handler.startCommentClickListener()}"
                     android:text='@{"댓글 " + vm.userAndContent.first.commentSize + "개 모두보기"}'
                     app:layout_constraintStart_toStartOf="@id/tv_item_name"
                     app:layout_constraintTop_toBottomOf="@id/tv_item_name" />

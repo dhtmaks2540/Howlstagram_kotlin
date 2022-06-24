@@ -10,7 +10,11 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
-import kr.co.lee.howlstargram_kotlin.model.*
+import kr.co.lee.howlstargram_kotlin.model.Comment
+import kr.co.lee.howlstargram_kotlin.model.CommentDTO
+import kr.co.lee.howlstargram_kotlin.model.Content
+import kr.co.lee.howlstargram_kotlin.model.User
+import kr.co.lee.howlstargram_kotlin.model.UserDTO
 import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import javax.inject.Inject
 
@@ -19,6 +23,7 @@ class CommentRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid private val currentUserUid: String,
 ) {
+    // 내 정보 불러오기
     suspend fun loadMyInfo(): User {
         return withContext(ioDispatcher) {
             val userSnapshot = fireStore.collection("users")
@@ -30,16 +35,22 @@ class CommentRepository @Inject constructor(
                 .get().await()
 
             val item = userSnapshot.toObject(UserDTO::class.java)
-            val user = User(userDTO = item!!, profileUrl = profileSnapshot.data?.get("image").toString(), currentUserUid)
+            val user = User(
+                userDTO = item!!,
+                profileUrl = profileSnapshot.data?.get("image").toString(),
+                currentUserUid
+            )
 
             user
         }
     }
 
+    // 댓글 목록 불러 오기
     fun getAllComments(content: Content) = flow<UiState<List<Comment>>> {
         val commentSnapShot = fireStore.collection("images")
             .document(content.contentUid!!)
             .collection("comments")
+            .limit(20)
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .get().await()
 
@@ -71,7 +82,9 @@ class CommentRepository @Inject constructor(
                 .get().await()
 
             val comment = Comment(
-                commentDTO = item.copy(userNickName = userSnapShot.data?.get("userNickName").toString()),
+                commentDTO = item.copy(
+                    userNickName = userSnapShot.data?.get("userNickName").toString()
+                ),
                 profileUrl = profileShot.data?.get("image").toString(),
                 commentUid = documentSnapshot.id
             )
@@ -83,6 +96,7 @@ class CommentRepository @Inject constructor(
         emit(UiState.Failed(it.message.toString()))
     }.flowOn(ioDispatcher)
 
+    // 댓글 추가하기
     fun addComment(comment: Comment, contentUid: String) = flow<UiState<Comment>> {
         fireStore.collection("images")
             .document(contentUid)

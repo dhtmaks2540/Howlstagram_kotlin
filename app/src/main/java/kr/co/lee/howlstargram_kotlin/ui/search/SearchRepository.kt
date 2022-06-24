@@ -16,7 +16,9 @@ class SearchRepository @Inject constructor(
     private val fireStore: FirebaseFirestore,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
+    // 유저 정보 불러오기
     fun getAllUsers(text: String) = flow<UiState<List<User>>> {
+        emit(UiState.Loading)
         val userShot = fireStore.collection("users")
             .limit(20)
             .get().await()
@@ -24,9 +26,10 @@ class SearchRepository @Inject constructor(
         val userItems = ArrayList<User>()
 
         userShot.forEach { documentSnapshot ->
+            val nameData = documentSnapshot.getString("userName")
             val nickNameData = documentSnapshot.getString("userNickName")
 
-            if(nickNameData != null && nickNameData.contains(text)) {
+            if((nickNameData != null && nickNameData.contains(text)) || (nameData != null && nameData.contains(text))) {
                 val item = documentSnapshot.toObject(UserDTO::class.java)
                 val profileShot = fireStore.collection("profileImages").document(documentSnapshot.id).get().await()
 

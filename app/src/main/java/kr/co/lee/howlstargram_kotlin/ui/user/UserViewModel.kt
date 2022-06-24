@@ -2,18 +2,14 @@ package kr.co.lee.howlstargram_kotlin.ui.user
 
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
-import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
 import kr.co.lee.howlstargram_kotlin.model.User
-import kr.co.lee.howlstargram_kotlin.model.UserDTO
 import kr.co.lee.howlstargram_kotlin.utilites.DESTINATION_UID
-import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,15 +60,6 @@ class UserViewModel @Inject constructor(
         }
 
         return job
-    }
-
-    // 프로필 사진 업데이트
-    fun updateProfileUrl(profileUrl: String?) {
-        viewModelScope.launch {
-            profileUrl?.let {
-                _user.postValue(user.value?.copy(profileUrl = it))
-            }
-        }
     }
 
     // 팔로우 요청

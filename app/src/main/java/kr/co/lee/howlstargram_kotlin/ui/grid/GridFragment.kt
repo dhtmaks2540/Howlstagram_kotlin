@@ -28,6 +28,9 @@ class GridFragment : BaseFragment<FragmentGridBinding>(R.layout.fragment_grid) {
             }
         )
     }
+    private val gridItemDecoration: GridItemDecoration by lazy {
+        GridItemDecoration()
+    }
 
     private lateinit var navController: NavController
 
@@ -42,11 +45,8 @@ class GridFragment : BaseFragment<FragmentGridBinding>(R.layout.fragment_grid) {
         binding.apply {
             vm = viewModel
             adapter = recyclerAdapter
-
-            // 검색창 클릭
-            etSearch.setOnClickListener {
-                navController.navigate(R.id.action_to_search)
-            }
+            handler = this@GridFragment
+            itemDecoration = gridItemDecoration
 
             // 새로고침 클릭
             refreshLayout.setOnRefreshListener {
@@ -57,5 +57,9 @@ class GridFragment : BaseFragment<FragmentGridBinding>(R.layout.fragment_grid) {
                 }
             }
         }
+    }
+
+    fun searchClickListener() {
+        navController.navigate(R.id.action_to_search)
     }
 }

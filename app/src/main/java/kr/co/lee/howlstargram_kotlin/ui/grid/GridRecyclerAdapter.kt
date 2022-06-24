@@ -20,7 +20,7 @@ class GridRecyclerAdapter(
     private lateinit var imageView: AppCompatImageView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         imageView = AppCompatImageView(parent.context)
-        imageView.layoutParams = LinearLayout.LayoutParams(widthPixels, widthPixels)
+        imageView.layoutParams = LinearLayout.LayoutParams(widthPixels - 10, widthPixels)
         return ViewHolder(imageView).apply {
             imageView.setOnClickListener {
                 val position = bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: return@setOnClickListener

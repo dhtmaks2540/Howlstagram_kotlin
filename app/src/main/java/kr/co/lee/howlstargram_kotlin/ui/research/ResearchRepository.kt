@@ -17,6 +17,7 @@ class ResearchRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid val currentUserUid: String,
 ) {
+    // 유저 정보와 게시글 호출
     suspend fun getUserAndContent(
         contentDTO: ContentDTO,
         contentUid: String

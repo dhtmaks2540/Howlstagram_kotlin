@@ -19,7 +19,7 @@ import javax.inject.Inject
 class CommentViewModel @Inject constructor(
     private val commentRepository: CommentRepository,
     @CurrentUserUid private val currentUserUid: String,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val _commentContent = MutableLiveData<String>()
     val commentContent: LiveData<String> = _commentContent
@@ -36,6 +36,9 @@ class CommentViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val result = commentRepository.loadMyInfo()
+            _user.postValue(result)
+
             commentRepository.getAllComments(content)
                 .collect { state ->
                     _uiState.value = state
@@ -57,14 +60,6 @@ class CommentViewModel @Inject constructor(
         return job
     }
 
-    // 내 정보 불러오기
-    fun loadMyInfo() {
-        viewModelScope.launch {
-            val result = commentRepository.loadMyInfo()
-            _user.postValue(result)
-        }
-    }
-
     suspend fun addComment(): Flow<UiState<Comment>> {
         return withContext(viewModelScope.coroutineContext) {
             val commentDTO = CommentDTO(
@@ -74,10 +69,8 @@ class CommentViewModel @Inject constructor(
                 timestamp = System.currentTimeMillis()
             )
             val commentState = commentRepository.addComment(
-                Comment(
-                    commentDTO = commentDTO,
-                    profileUrl = user.value?.profileUrl
-                ), content.contentUid!!
+                Comment(commentDTO = commentDTO, profileUrl = user.value?.profileUrl),
+                content.contentUid!!
             )
 
             commentState

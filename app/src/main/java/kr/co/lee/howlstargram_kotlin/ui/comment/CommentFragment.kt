@@ -29,7 +29,6 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
     }
     private lateinit var navController: NavController
 
-
     override fun initView() {
         init()
     }
@@ -49,36 +48,40 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
         binding.apply {
             vm = viewModel
             adapter = recyclerAdapter
+            handler = this@CommentFragment
 
-            tvUploadComment.setOnClickListener {
-                lifecycleScope.launch {
-                    binding.loadingBar.visibility = View.VISIBLE
-                    binding.layoutRoot.forEachChildView { it.isEnabled = false }
-                    viewModel.addComment().collect { state ->
-                        when (state) {
-                            is UiState.Success -> {
-                                binding.loadingBar.visibility = View.GONE
-                                binding.layoutRoot.forEachChildView { it.isEnabled = true }
-                                recyclerAdapter.addComment(state.successOrNull())
-                            }
-                        }
-                    }
-
-                    etCommentMessage.setText("")
-                }
-            }
-
+            // 새로고침
             refreshLayout.setOnRefreshListener {
                 lifecycleScope.launch {
+                    binding.layoutRoot.forEachChildView { it.isEnabled = false }
                     val job = viewModel.refresh()
                     job.join()
                     binding.refreshLayout.isRefreshing = false
+                    binding.layoutRoot.forEachChildView { it.isEnabled = true }
                 }
             }
         }
 
-        viewModel.loadMyInfo()
         initToolbar()
+    }
+
+    // 업로드 클릭
+    fun uploadClickListener() {
+        lifecycleScope.launch {
+            binding.loadingBar.visibility = View.VISIBLE
+            binding.layoutRoot.forEachChildView { it.isEnabled = false }
+            viewModel.addComment().collect { state ->
+                when (state) {
+                    is UiState.Success -> {
+                        binding.loadingBar.visibility = View.GONE
+                        binding.layoutRoot.forEachChildView { it.isEnabled = true }
+                        recyclerAdapter.addComment(state.successOrNull())
+                    }
+                }
+            }
+
+            binding.etCommentMessage.setText("")
+        }
     }
 
     // 툴바 설정

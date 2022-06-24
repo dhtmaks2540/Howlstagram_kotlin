@@ -4,15 +4,10 @@ import androidx.lifecycle.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.utilites.PROFILE_URL
 import kr.co.lee.howlstargram_kotlin.utilites.USER_NAME
 import kr.co.lee.howlstargram_kotlin.utilites.USER_NICKNAME
-import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import javax.inject.Inject
 
 @HiltViewModel

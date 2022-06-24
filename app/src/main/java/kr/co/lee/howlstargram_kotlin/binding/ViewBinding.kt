@@ -14,25 +14,15 @@ import kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryRecyclerAdapter
 import kr.co.lee.howlstargram_kotlin.ui.grid.GridRecyclerAdapter
 import kr.co.lee.howlstargram_kotlin.ui.like.LikeRecyclerAdapter
 import kr.co.lee.howlstargram_kotlin.ui.search.SearchRecyclerAdapter
-import kr.co.lee.howlstargram_kotlin.ui.user.UserRecyclerAdapter
 import kr.co.lee.howlstargram_kotlin.utilites.UiState
 import kr.co.lee.howlstargram_kotlin.utilites.successOrNull
 
 object ViewBinding {
-//    @JvmStatic
-//    @BindingAdapter("onNavigationItemSelected")
-//    fun bindOnNavigationItemSelectedListener(
-//        view: BottomNavigationView,
-//        listener: NavigationBarView.OnItemSelectedListener
-//    ) {
-//        view.setOnItemSelectedListener(listener)
-//    }
-
     @JvmStatic
     @BindingAdapter("search", "searchText")
     fun AppCompatTextView.bindSearch(state: UiState<*>, textInput: String?) {
         visibility = if (state is UiState.Loading) View.VISIBLE else View.GONE
-        text = "\"textInput\" 검색중..."
+        text = "\"$textInput\" 검색중..."
     }
 
     @JvmStatic
@@ -83,9 +73,6 @@ object ViewBinding {
             is GalleryRecyclerAdapter -> {
                 boundAdapter.submitList(state.successOrNull() as List<GalleryImage>)
             }
-//            is UserRecyclerAdapter -> {
-//                boundAdapter.submitList(state.successOrNull())
-//            }
         }
     }
 
@@ -102,17 +89,6 @@ object ViewBinding {
     fun View.bindToast(message: String?) {
         message?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("addComment")
-    fun RecyclerView.bindAddComment(state: UiState<Comment>) {
-        val boundAdapter = this.adapter
-        if (boundAdapter is CommentRecyclerAdapter) {
-            val newCommentList = boundAdapter.currentList.toMutableList()
-            newCommentList.add(1, state.successOrNull())
-            boundAdapter.submitList(newCommentList)
         }
     }
 }

@@ -23,16 +23,17 @@ class DetailRepository @Inject constructor(
     @CurrentUserUid private val currentUserUid: String,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
+    // 게시글 불러오기
     fun getAllContents() = flow<UiState<List<Content>>> {
+        // 내 정보 호출 후 팔로잉 불러오기
         val mySnapShot = fireStore.collection("users")
             .document(currentUserUid)
             .get().await()
-
         val myFollowings = mySnapShot.data?.get("followings") as HashMap<String, Boolean>
         myFollowings[currentUserUid] = true
 
+        // 이틀동안의 글 불러오기
         val timeStamp = DateTime().minusDays(2).millis
-
         val snapshot = fireStore.collection("images")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .endAt(timeStamp)
@@ -45,14 +46,17 @@ class DetailRepository @Inject constructor(
         snapshot.documents.forEach { documentSnapshot ->
             val item = documentSnapshot.toObject(ContentDTO::class.java)!!
 
+            // 유저 정보
             val userSnapShot = fireStore.collection("users")
                 .document(item.uid!!)
                 .get().await()
 
+            // 프로필 정보
             val profileSnapShot = fireStore.collection("profileImages")
                 .document(item.uid!!)
                 .get().await()
 
+            // 댓글 정보
             val commentShot = fireStore.collection("images")
                 .document(documentSnapshot.id)
                 .collection("comments")
@@ -75,6 +79,7 @@ class DetailRepository @Inject constructor(
         emit(UiState.Failed(it.message.toString()))
     }.flowOn(ioDispatcher)
 
+    // 좋아요 이벤트
     suspend fun favoriteEvent(contentUid: String): Task<Transaction> {
         return withContext(ioDispatcher) {
             val tsDoc = fireStore.collection("images").document(contentUid)

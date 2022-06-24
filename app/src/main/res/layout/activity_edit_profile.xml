@@ -7,6 +7,10 @@
     <data>
 
         <variable
+            name="handler"
+            type="kr.co.lee.howlstargram_kotlin.ui.profile.ProfileEditActivity" />
+
+        <variable
             name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.profile.ProfileViewModel" />
     </data>
@@ -36,6 +40,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
+            android:onClick="@{() -> handler.profileClickListener()}"
             android:src="@drawable/baseline_account_circle_black_20"
             app:civ_border_color="@color/black"
             app:civ_border_width="0.5dp"
@@ -48,6 +53,7 @@
             android:id="@+id/tv_edit_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> handler.profileClickListener()}"
             android:text="@string/edit_profile_image"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/iv_profile"

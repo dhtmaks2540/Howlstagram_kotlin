@@ -13,7 +13,7 @@ import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
 import kr.co.lee.howlstargram_kotlin.model.UserDTO
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 class AddPhotoRepository @Inject constructor(
@@ -23,6 +23,7 @@ class AddPhotoRepository @Inject constructor(
     @CurrentUserEmail private val currentUserEmail: String,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
+    // 글 업로드 요청
     suspend fun requestContentUpload(uri: String, explain: String): Task<Void> {
         return withContext(ioDispatcher) {
             // 이미지 이름 생성
@@ -34,7 +35,8 @@ class AddPhotoRepository @Inject constructor(
             val storageRef = fireStorage.reference.child("images").child(imageFileName)
 
             // 이미지 추가
-            val imageUri = storageRef.putFile(uriValue).await().storage.downloadUrl.await().toString()
+            val imageUri =
+                storageRef.putFile(uriValue).await().storage.downloadUrl.await().toString()
 
             val userSnapShot = fireStore.collection("users").document(currentUserUid).get().await()
             val userDTOItem = userSnapShot.toObject(UserDTO::class.java)

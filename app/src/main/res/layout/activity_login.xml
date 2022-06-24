@@ -6,13 +6,28 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="handler"
+            type="kr.co.lee.howlstargram_kotlin.ui.login.LoginActivity" />
+
+        <variable
+            name="vm"
             type="kr.co.lee.howlstargram_kotlin.ui.login.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
@@ -45,7 +60,7 @@
                     android:hint="@string/email"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:text="@={viewModel._email}" />
+                    android:text="@={vm._email}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,7 +79,7 @@
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="@={viewModel._password}" />
+                    android:text="@={vm._password}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatButton
@@ -75,6 +90,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
+                android:onClick="@{() -> handler.signInEmail()}"
                 android:text="@string/signin_email"
                 android:theme="@style/ButtonStyle" />
 
@@ -85,6 +101,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="35dp"
+                android:onClick="@{() -> handler.signUp()}"
                 android:text="@string/signup_email"
                 android:theme="@style/ButtonStyle" />
 

@@ -13,7 +13,7 @@ import kr.co.lee.howlstargram_kotlin.model.Content
 
 class DetailRecyclerAdapter(
     private val currentUserUid: String,
-    private val favoriteItemClicked: (String, Int) -> Unit,
+    private val favoriteItemClicked: (String) -> Unit,
     private val commentItemClicked: (Content) -> Unit,
     private val profileItemClicked: (String) -> Unit,
     private val likeItemClicked: (Map<String, Boolean>) -> Unit,
@@ -26,8 +26,7 @@ class DetailRecyclerAdapter(
                 val position = bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: return@setOnClickListener
 
                 favoriteItemClicked(
-                    getItem(position).contentUid!!,
-                    position
+                    getItem(position).contentUid!!
                 )
                 
                 updateFavorite(currentUserUid, position)
@@ -90,7 +89,7 @@ class DetailRecyclerAdapter(
     // 좋아요 UI 업데이트
     private fun updateFavorite(uid: String, position: Int) {
         CoroutineScope(Dispatchers.Main).launch {
-            if(getItem(position).contentDTO?.favorites?.containsKey(uid)!!) {
+            if (getItem(position).contentDTO?.favorites?.containsKey(uid)!!) {
                 getItem(position).contentDTO?.favoriteCount = getItem(position).contentDTO?.favoriteCount?.minus(1)!!
                 getItem(position).contentDTO?.favorites?.remove(uid)
             } else {
@@ -101,7 +100,7 @@ class DetailRecyclerAdapter(
         }
     }
 
-    class ViewHolder(val binding: ItemDetailBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ItemDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Content, currentUserUid: String) {
             binding.apply {
                 currentUserIdItem = currentUserUid

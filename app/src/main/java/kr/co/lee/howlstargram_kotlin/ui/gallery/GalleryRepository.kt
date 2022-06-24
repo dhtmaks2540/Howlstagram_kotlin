@@ -28,6 +28,7 @@ class GalleryRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid private val currentUserUid: String,
 ) {
+    // 갤러리 이미지 불러오기
     fun getAllImages() = flow<UiState<List<GalleryImage>>> {
         emit(UiState.Loading)
         val imageList = mutableListOf<GalleryImage>()
@@ -67,6 +68,7 @@ class GalleryRepository @Inject constructor(
         emit(UiState.Failed(it.message.toString()))
     }.flowOn(ioDispatcher)
 
+    // 프로필 업로드
     suspend fun insertProfile(currentImageUri: String?): Task<Uri> {
         return withContext(Dispatchers.IO) {
             val storageRef = fireStorage.reference.child("userProfileImages").child(currentUserUid)

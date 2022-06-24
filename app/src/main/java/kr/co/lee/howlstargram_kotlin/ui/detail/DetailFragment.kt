@@ -3,25 +3,19 @@ package kr.co.lee.howlstargram_kotlin.ui.detail
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentDetailBinding
-import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.ui.like.LikeFragmentDirections
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.utilites.*
-import org.joda.time.DateTime
 
 @AndroidEntryPoint
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
@@ -30,9 +24,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     private val detailAdapter: DetailRecyclerAdapter by lazy {
         DetailRecyclerAdapter(
             currentUserUid = viewModel.currentUserUid,
-            favoriteItemClicked = { contentUid, position ->
+            favoriteItemClicked = { contentUid ->
                 lifecycleScope.launch {
-                    viewModel.setFavoriteEvent(contentUid, position)
+                    viewModel.setFavoriteEvent(contentUid)
                 }
             },
             commentItemClicked = { content ->

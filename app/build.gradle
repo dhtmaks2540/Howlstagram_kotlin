@@ -56,6 +56,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycleVersion"
     implementation "androidx.room:room-runtime:$versions.roomVersion"
     implementation "androidx.room:room-ktx:$versions.roomVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipeVersion"
     kapt "androidx.room:room-compiler:$versions.roomVersion"
     // Activity KTX
 

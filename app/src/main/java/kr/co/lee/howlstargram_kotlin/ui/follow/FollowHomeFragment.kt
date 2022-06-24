@@ -9,7 +9,7 @@ import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentFollowHomeBinding
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
-import kr.co.lee.howlstargram_kotlin.utilites.*
+import kr.co.lee.howlstargram_kotlin.utilites.TabType
 
 @AndroidEntryPoint
 class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding>(R.layout.fragment_follow_home) {
@@ -53,7 +53,7 @@ class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding>(R.layout.frag
         viewModel.follow.observe(viewLifecycleOwner) {
             viewPagerAdapter = ViewPagerAdapter(it, this)
             binding.pager.adapter = viewPagerAdapter
-            when(viewModel.tabType) {
+            when (viewModel.tabType) {
                 TabType.FOLLOWER_TAB ->
                     binding.pager.setCurrentItem(0, false)
                 TabType.FOLLOWING_TAB ->
@@ -61,7 +61,7 @@ class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding>(R.layout.frag
             }
 
             TabLayoutMediator(binding.tab, binding.pager) { tab, position ->
-                when(position) {
+                when (position) {
                     0 -> tab.text = "팔로워 ${it.first.size}"
                     1 -> tab.text = "팔로잉 ${it.second.size}"
                 }

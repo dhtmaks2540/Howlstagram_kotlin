@@ -9,6 +9,10 @@
         <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
 
         <variable
+            name="handler"
+            type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentFragment" />
+
+        <variable
             name="adapter"
             type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentRecyclerAdapter" />
 
@@ -105,6 +109,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> handler.uploadClickListener()}"
             android:id="@+id/tv_upload_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

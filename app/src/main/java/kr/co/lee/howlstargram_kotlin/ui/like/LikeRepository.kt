@@ -19,12 +19,18 @@ class LikeRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid val currentUserUid: String,
 ) {
+    // 좋아요 호출하기
     fun getAllFavorites(favorites: Map<String, Boolean>) = flow<UiState<List<FavoriteDTO>>> {
         val favoriteDTOItems = ArrayList<FavoriteDTO>()
         favorites.forEach { (userId, _) ->
-            val userSnapShot = fireStore.collection("users").document(userId).get().await()
-            val profileSnapShot =
-                fireStore.collection("profileImages").document(userId).get().await()
+            val userSnapShot = fireStore.collection("users")
+                .document(userId)
+                .get().await()
+
+            val profileSnapShot = fireStore.collection("profileImages")
+                .document(userId)
+                .get().await()
+
             val isFollow =
                 (userSnapShot.data?.get("followers") as Map<*, *>).containsKey(currentUserUid)
 
@@ -48,6 +54,7 @@ class LikeRepository @Inject constructor(
         emit(UiState.Failed(it.message.toString()))
     }.flowOn(ioDispatcher)
 
+    // 팔로우 요청에 대한 내 정보 저장
     suspend fun saveMyAccount(userUid: String) = flow<UiState<Boolean>> {
         val tsDocFollowing = fireStore.collection("users").document(currentUserUid)
         var followDTO = tsDocFollowing.get().await().toObject(UserDTO::class.java)
@@ -79,6 +86,7 @@ class LikeRepository @Inject constructor(
         emit(UiState.Failed(it.message.toString()))
     }.flowOn(ioDispatcher)
 
+    // 팔로우 요청에 대한 상대방 정보 저장
     suspend fun saveThirdPerson(userUid: String) {
         withContext(ioDispatcher) {
             val tsDocFollower = fireStore.collection("users").document(userUid)

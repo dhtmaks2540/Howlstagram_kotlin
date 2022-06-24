@@ -1,6 +1,5 @@
 package kr.co.lee.howlstargram_kotlin.ui.follow
 
-import android.view.MenuItem
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -11,10 +10,12 @@ import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentFollowBinding
 import kr.co.lee.howlstargram_kotlin.ui.comment.CommentFragmentDirections
-import kr.co.lee.howlstargram_kotlin.utilites.*
+import kr.co.lee.howlstargram_kotlin.utilites.UiState
+import kr.co.lee.howlstargram_kotlin.utilites.successOrNull
+import kr.co.lee.howlstargram_kotlin.utilites.throwableOrNull
 
 @AndroidEntryPoint
-class FollowFragment: BaseFragment<FragmentFollowBinding>(R.layout.fragment_follow) {
+class FollowFragment : BaseFragment<FragmentFollowBinding>(R.layout.fragment_follow) {
     private val viewModel: FollowViewModel by viewModels()
     private val recyclerAdapter: FollowRecyclerAdapter by lazy {
         FollowRecyclerAdapter(
@@ -26,9 +27,12 @@ class FollowFragment: BaseFragment<FragmentFollowBinding>(R.layout.fragment_foll
             followItemClicked = { userUid, position ->
                 lifecycleScope.launch {
                     viewModel.requestFollow(userUid).collect { state ->
-                        when(state) {
+                        when (state) {
                             is UiState.Success -> {
-                                recyclerAdapter.changeFavoriteDTOs(state.successOrNull()!!, position)
+                                recyclerAdapter.changeFavoriteDTOs(
+                                    state.successOrNull()!!,
+                                    position
+                                )
                             }
                             is UiState.Failed -> {
                                 showToast("Error Message : ${state.throwableOrNull()}")

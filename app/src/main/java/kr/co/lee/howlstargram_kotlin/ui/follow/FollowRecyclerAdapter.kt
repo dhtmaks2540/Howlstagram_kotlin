@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.lee.howlstargram_kotlin.databinding.ItemLikeBinding
 import kr.co.lee.howlstargram_kotlin.model.FavoriteDTO
-import kr.co.lee.howlstargram_kotlin.utilites.FollowClickListener
-import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
 
 class FollowRecyclerAdapter(
     private val currentUserUid: String,

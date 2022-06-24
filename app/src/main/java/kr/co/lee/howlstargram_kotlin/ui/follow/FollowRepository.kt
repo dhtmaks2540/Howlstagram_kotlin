@@ -19,18 +19,21 @@ class FollowRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @CurrentUserUid val currentUserUid: String,
 ) {
+    // 팔로워 또는 팔로잉 정보 불러오기
     fun getAllFollows(follow: Map<String, Boolean>) = flow<UiState<List<FavoriteDTO>>> {
         val followDTOItems = ArrayList<FavoriteDTO>()
 
         for (key in follow.keys) {
-            val myUserSnapShot = fireStore.collection("users").document(currentUserUid).get().await()
+            val myUserSnapShot =
+                fireStore.collection("users").document(currentUserUid).get().await()
             val userSnapShot = fireStore.collection("users").document(key).get().await()
             val profileSnapShot = fireStore.collection("profileImages").document(key).get().await()
             val userItem = userSnapShot.toObject(UserDTO::class.java)
             val isFollow = (myUserSnapShot.data?.get("followings") as Map<*, *>).containsKey(key)
 
             userItem?.let {
-                val followDTO = FavoriteDTO(userUid = key,
+                val followDTO = FavoriteDTO(
+                    userUid = key,
                     profileUrl = profileSnapShot.data?.get("image").toString(),
                     userName = it.userName,
                     userNickName = it.userNickName,
@@ -45,6 +48,7 @@ class FollowRepository @Inject constructor(
         emit(UiState.Failed(it.message.toString()))
     }.flowOn(ioDispatcher)
 
+    // 팔로우 요청에 대한 내 정보 저장
     suspend fun saveMyAccount(userUid: String) = flow<UiState<Boolean>> {
         val tsDocFollowing = fireStore.collection("users").document(currentUserUid)
         var followDTO = tsDocFollowing.get().await().toObject(UserDTO::class.java)
@@ -76,6 +80,7 @@ class FollowRepository @Inject constructor(
         emit(UiState.Failed(it.message.toString()))
     }.flowOn(ioDispatcher)
 
+    // 팔로우 요청에 대한 상대방 정보 저장
     suspend fun saveThirdPerson(userUid: String) {
         withContext(ioDispatcher) {
             val tsDocFollower = fireStore.collection("users").document(userUid)
@@ -99,10 +104,8 @@ class FollowRepository @Inject constructor(
                     followDTOItem.followerCount = followDTOItem.followerCount + 1
                     followDTOItem.followers[currentUserUid] = true
                 }
-
                 transaction.set(tsDocFollower, followDTOItem)
             }
-
         }
     }
 }

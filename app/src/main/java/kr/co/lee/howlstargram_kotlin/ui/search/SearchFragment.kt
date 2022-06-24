@@ -14,8 +14,6 @@ import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseFragment
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentSearchBinding
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
-import kr.co.lee.howlstargram_kotlin.utilites.ProfileClickListener
-import okhttp3.internal.wait
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
@@ -58,13 +56,14 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                 // 텍스트 변경 이벤트
                 override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     text?.let {
-                        if (it.isBlank() || it.isEmpty()) {
-                            binding.recyclerView.visibility = View.INVISIBLE
-                            binding.labelWait.visibility = View.GONE
-                        } else {
-                            lifecycleScope.launch {
+                        lifecycleScope.launch {
+                            if(it.isBlank()) {
+                                binding.recyclerView.visibility = View.INVISIBLE
+                            } else {
+                                binding.recyclerView.visibility = View.INVISIBLE
                                 val job = viewModel.findUsers(it.toString())
                                 job.join()
+                                binding.recyclerView.visibility = View.VISIBLE
                             }
                         }
                     }

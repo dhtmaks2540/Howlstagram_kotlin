@@ -2,32 +2,27 @@ package kr.co.lee.howlstargram_kotlin.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityLoginBinding
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.ui.register.RegisterActivity
 import kr.co.lee.howlstargram_kotlin.utilites.USER
+import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModels()
 
     // FirebaseAuth Instance(Firebase 인증 객체)
     @Inject
@@ -46,9 +41,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
         super.onCreate(savedInstanceState)
 
         binding.apply {
-            viewModel = loginViewModel
-            btEmailLogin.setOnClickListener { signInEmail() }
-            btEmailSignup.setOnClickListener { signUp() }
+            vm = viewModel
+            handler = this@LoginActivity
         }
     }
 
@@ -58,24 +52,26 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     }
 
     // 회원가입
-    private fun signUp() {
+    fun signUp() {
         val intent = Intent(this, RegisterActivity::class.java)
         registerLauncher.launch(intent)
     }
 
-    // 로그인 메소드
-    private fun signInEmail() {
-        // 유효성 검사 후 로그인
-        auth.signInWithEmailAndPassword(
-            loginViewModel.email.value.toString().trim(),
-            loginViewModel.password.value.toString().trim()
-        ).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // Login
-                moveMainPage(task.result?.user)
-            } else {
-                // Show the error Message
-                showToast(resources.getString(R.string.checkout_id_password))
+    // 로그인
+    fun signInEmail() {
+        lifecycleScope.launch {
+            binding.loadingBar.visibility = View.VISIBLE
+            binding.layoutRoot.forEachChildView { it.isEnabled = false }
+            val task = viewModel.signInEmail()
+            task.addOnCompleteListener {
+                if(task.isSuccessful) {
+                    moveMainPage(task.result?.user)
+                } else {
+                    // Show the error Message
+                    showToast(resources.getString(R.string.checkout_id_password))
+                    binding.loadingBar.visibility = View.GONE
+                    binding.layoutRoot.forEachChildView { it.isEnabled = true }
+                }
             }
         }
     }
