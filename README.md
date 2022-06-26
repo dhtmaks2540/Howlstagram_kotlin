@@ -4,6 +4,10 @@
 
 <br/>
 
+<img src="screenshots/preview.gif" width="50%" height="50%">
+
+<br/>
+
 # Mad Scored
 
 <img src="screenshots/summary.png">
