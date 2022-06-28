@@ -15,8 +15,8 @@ import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
-class LikeFragment: BaseFragment<FragmentLikeBinding>(R.layout.fragment_like) {
-    private val viewModel: LikeViewModel by viewModels()
+class LikeFragment: BaseFragment<FragmentLikeBinding, LikeViewModel>(R.layout.fragment_like) {
+    override val viewModel: LikeViewModel by viewModels()
     private val recyclerAdapter: LikeRecyclerAdapter by lazy {
         LikeRecyclerAdapter(
             currentUserUid = viewModel.currentUserUid,

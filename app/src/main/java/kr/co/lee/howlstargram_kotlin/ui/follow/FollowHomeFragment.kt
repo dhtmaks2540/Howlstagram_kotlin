@@ -12,8 +12,8 @@ import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.utilites.TabType
 
 @AndroidEntryPoint
-class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding>(R.layout.fragment_follow_home) {
-    private val viewModel: FollowHomeViewModel by viewModels()
+class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding, FollowHomeViewModel>(R.layout.fragment_follow_home) {
+    override val viewModel: FollowHomeViewModel by viewModels()
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun initView() {

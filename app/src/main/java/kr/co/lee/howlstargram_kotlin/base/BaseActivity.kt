@@ -6,12 +6,15 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModel
 
-abstract class BaseActivity<T : ViewDataBinding>(@LayoutRes val layoutRes: Int) : AppCompatActivity() {
+abstract class BaseActivity<VDB : ViewDataBinding, VM: ViewModel>(@LayoutRes val layoutRes: Int) : AppCompatActivity() {
     /**
      * 바인딩 변수
      */
-    protected lateinit var binding: T
+    protected lateinit var binding: VDB
+    protected abstract val viewModel: VM
+
     private val TAG = this.toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,8 +22,10 @@ abstract class BaseActivity<T : ViewDataBinding>(@LayoutRes val layoutRes: Int) 
 
         // 초기화된 layoutResId로 DataBinding 객체 생성
         binding = DataBindingUtil.setContentView(this, layoutRes)
-        // LiveData를 사용하기 위한 lifecycleOwner 지정
-        binding.lifecycleOwner = this@BaseActivity
+
+        binding.apply {
+            lifecycleOwner = this@BaseActivity
+        }
     }
 
     /**

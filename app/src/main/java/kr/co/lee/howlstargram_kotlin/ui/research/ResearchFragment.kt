@@ -16,8 +16,8 @@ import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
-class ResearchFragment: BaseFragment<FragmentResearchBinding>(R.layout.fragment_research) {
-    private val viewModel: ResearchViewModel by viewModels()
+class ResearchFragment: BaseFragment<FragmentResearchBinding, ResearchViewModel>(R.layout.fragment_research) {
+    override val viewModel: ResearchViewModel by viewModels()
 
     private lateinit var navController: NavController
 

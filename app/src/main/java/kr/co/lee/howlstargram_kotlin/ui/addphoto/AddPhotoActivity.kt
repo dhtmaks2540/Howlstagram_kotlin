@@ -14,8 +14,8 @@ import kr.co.lee.howlstargram_kotlin.databinding.ActivityAddPhotoBinding
 import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 
 @AndroidEntryPoint
-class AddPhotoActivity : BaseActivity<ActivityAddPhotoBinding>(R.layout.activity_add_photo) {
-    private val viewModel by viewModels<AddPhotoViewModel>()
+class AddPhotoActivity : BaseActivity<ActivityAddPhotoBinding, AddPhotoViewModel>(R.layout.activity_add_photo) {
+    override val viewModel by viewModels<AddPhotoViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -25,8 +25,8 @@ import kr.co.lee.howlstargram_kotlin.ui.profile.ProfileEditActivity
 import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
-class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
-    private val viewModel: UserViewModel by viewModels()
+class UserFragment : BaseFragment<FragmentUserBinding, UserViewModel>(R.layout.fragment_user) {
+    override val viewModel: UserViewModel by viewModels()
     private val recyclerAdapter: UserRecyclerAdapter by lazy {
         UserRecyclerAdapter(
             resources.displayMetrics.widthPixels / 3

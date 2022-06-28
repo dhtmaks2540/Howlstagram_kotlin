@@ -22,8 +22,8 @@ import kr.co.lee.howlstargram_kotlin.utilites.PROFILE_URL
 import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 
 @AndroidEntryPoint
-class ProfileEditActivity : BaseActivity<ActivityEditProfileBinding>(R.layout.activity_edit_profile) {
-    private val viewModel: ProfileViewModel by viewModels()
+class ProfileEditActivity : BaseActivity<ActivityEditProfileBinding, ProfileViewModel>(R.layout.activity_edit_profile) {
+    override val viewModel: ProfileViewModel by viewModels()
     private lateinit var profileLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {

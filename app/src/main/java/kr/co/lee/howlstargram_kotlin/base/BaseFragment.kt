@@ -9,9 +9,11 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 
-abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes val layoutRes: Int) : Fragment() {
-    protected lateinit var binding: T
+abstract class BaseFragment<VDB : ViewDataBinding, VM: ViewModel>(@LayoutRes val layoutRes: Int) : Fragment() {
+    protected lateinit var binding: VDB
+    protected abstract val viewModel: VM
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,9 +25,13 @@ abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes val layoutRes: Int) 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.lifecycleOwner = viewLifecycleOwner
-        initView()
         super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+
+        initView()
     }
 
     abstract fun initView()

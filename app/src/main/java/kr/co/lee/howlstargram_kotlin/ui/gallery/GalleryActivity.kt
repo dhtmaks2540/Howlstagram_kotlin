@@ -26,8 +26,8 @@ import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
-class GalleryActivity : BaseActivity<ActivityGalleryBinding>(R.layout.activity_gallery) {
-    private val viewModel: GalleryViewModel by viewModels()
+class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>(R.layout.activity_gallery) {
+    override val viewModel: GalleryViewModel by viewModels()
     private val recyclerAdapter: GalleryRecyclerAdapter by lazy {
         GalleryRecyclerAdapter(
             lifeCycle = this,

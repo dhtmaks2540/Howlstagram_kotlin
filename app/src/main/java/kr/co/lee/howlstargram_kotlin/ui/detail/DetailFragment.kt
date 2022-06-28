@@ -18,8 +18,8 @@ import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 import kr.co.lee.howlstargram_kotlin.utilites.*
 
 @AndroidEntryPoint
-class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
-    private val viewModel: DetailViewModel by viewModels()
+class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(R.layout.fragment_detail) {
+    override val viewModel: DetailViewModel by viewModels()
     private lateinit var navController: NavController
     private val detailAdapter: DetailRecyclerAdapter by lazy {
         DetailRecyclerAdapter(

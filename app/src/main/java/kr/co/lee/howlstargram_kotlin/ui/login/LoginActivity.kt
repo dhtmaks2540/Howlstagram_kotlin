@@ -6,6 +6,7 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -21,8 +22,8 @@ import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
-    private val viewModel: LoginViewModel by viewModels()
+class LoginActivity : BaseActivity<ActivityLoginBinding, ViewModel>(R.layout.activity_login) {
+    override val viewModel: LoginViewModel by viewModels()
 
     // FirebaseAuth Instance(Firebase 인증 객체)
     @Inject

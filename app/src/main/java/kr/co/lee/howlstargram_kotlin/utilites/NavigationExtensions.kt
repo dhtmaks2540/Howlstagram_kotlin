@@ -25,7 +25,8 @@ fun BottomNavigationView.setupWithNavController(
     intent: Intent
 ): LiveData<NavController> {
 
-    // Map of tags
+    // Map of tags(Sparse Array : Int 값을 Objects에 매핑시켜주는 안드로이드의 독특한 Map)
+    // 원시형 타입을 사용하여 ArrayMap, HashMap 보다 효율성이 뛰어나지만 인덱스 사이에 공간이 존재해 크기가 큼)
     val graphIdToTagMap = SparseArray<String>()
     // Result. Mutable live data with the selected controlled
     val selectedNavController = MutableLiveData<NavController>()
@@ -33,10 +34,13 @@ fun BottomNavigationView.setupWithNavController(
     var firstFragmentGraphId = 0
 
     // First create a NavHostFragment for each NavGraph ID
+    // 각 NavGraph ID에 대한 NavHostFragment 첫 생성
     navGraphIds.forEachIndexed { index, navGraphId ->
+        // Tag 획득
         val fragmentTag = getFragmentTag(index)
 
         // Find or create the Navigation host fragment
+        // NavHostFragment 생성 또는 획득
         val navHostFragment = obtainNavHostFragment(
             fragmentManager,
             fragmentTag,
@@ -44,17 +48,18 @@ fun BottomNavigationView.setupWithNavController(
             containerId
         )
 
-        // Obtain its id
+        // id 획득
         val graphId = navHostFragment.navController.graph.id
 
         if (index == 0) {
             firstFragmentGraphId = graphId
         }
 
-        // Save to the map
+        // map에 값 저장
         graphIdToTagMap.put(graphId, fragmentTag)
 
         // Attach or detach nav host fragment depending on whether it's the selected item.
+        // 현재 선택된 아이템인지 아닌지에 따라서 NavHostFragment를 Attach하거나 Detach
         if (this.selectedItemId == graphId) {
             // Update livedata with the selected graph
             selectedNavController.value = navHostFragment.navController
@@ -205,17 +210,18 @@ private fun attachNavHostFragment(
 
 }
 
+// NavHostFragment 획득
 private fun obtainNavHostFragment(
     fragmentManager: FragmentManager,
     fragmentTag: String,
     navGraphId: Int,
     containerId: Int
 ): NavHostFragment {
-    // If the Nav Host fragment exists, return it
+    // NavHostFragment를 획득한 후 존재한다면(null이 아니라면) return
     val existingFragment = fragmentManager.findFragmentByTag(fragmentTag) as NavHostFragment?
     existingFragment?.let { return it }
 
-    // Otherwise, create it and return it.
+    // NavHostFragment가 없다면 생성 후 반환
     val navHostFragment = NavHostFragment.create(navGraphId)
     fragmentManager.beginTransaction()
         .add(containerId, navHostFragment, fragmentTag)
@@ -223,6 +229,7 @@ private fun obtainNavHostFragment(
     return navHostFragment
 }
 
+//
 private fun FragmentManager.isOnBackStack(backStackName: String): Boolean {
     val backStackCount = backStackEntryCount
     for (index in 0 until backStackCount) {
@@ -233,4 +240,5 @@ private fun FragmentManager.isOnBackStack(backStackName: String): Boolean {
     return false
 }
 
+// Fragment Tag 획득
 private fun getFragmentTag(index: Int) = "bottomNavigation#$index"

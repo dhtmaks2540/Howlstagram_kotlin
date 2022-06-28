@@ -7,6 +7,8 @@
 
         <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
 
+        <import type="kr.co.lee.howlstargram_kotlin.model.Content" />
+
         <variable
             name="adapter"
             type="kr.co.lee.howlstargram_kotlin.ui.detail.DetailRecyclerAdapter" />
@@ -55,19 +57,19 @@
                 android:layout_height="match_parent"
                 android:descendantFocusability="blocksDescendants">
 
-<!--                <androidx.appcompat.widget.AppCompatTextView-->
-<!--                    android:id="@+id/tv_empty"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="@string/no_content"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:visibility="gone"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:noFollow="@{vm.uiState}" />-->
+                <!--                <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                    android:id="@+id/tv_empty"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:gravity="center"-->
+                <!--                    android:text="@string/no_content"-->
+                <!--                    android:textColor="@color/black"-->
+                <!--                    android:visibility="gone"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toTopOf="parent"-->
+                <!--                    app:noFollow="@{vm.uiState}" />-->
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"

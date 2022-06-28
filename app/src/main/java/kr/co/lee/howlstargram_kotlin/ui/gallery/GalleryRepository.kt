@@ -39,10 +39,12 @@ class GalleryRepository @Inject constructor(
             MediaStore.Images.Media.DATE_TAKEN
         )
 
+        val sortOrder = "${MediaStore.Video.Media.DATE_TAKEN} DESC"
+
         context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
-            null, null, null
+            null, null, sortOrder
         )?.use { cursor ->
             // Cache Column indices
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)

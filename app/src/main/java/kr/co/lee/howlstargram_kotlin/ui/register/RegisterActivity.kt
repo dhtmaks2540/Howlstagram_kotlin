@@ -15,8 +15,8 @@ import kr.co.lee.howlstargram_kotlin.utilites.USER
 import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 
 @AndroidEntryPoint
-class RegisterActivity : BaseActivity<ActivityRegisterBinding>(R.layout.activity_register) {
-    private val viewModel: RegisterViewModel by viewModels()
+class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel>(R.layout.activity_register) {
+    override val viewModel: RegisterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

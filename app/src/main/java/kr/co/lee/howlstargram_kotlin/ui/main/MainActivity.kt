@@ -13,14 +13,14 @@ import kr.co.lee.howlstargram_kotlin.databinding.ActivityMainBinding
 import kr.co.lee.howlstargram_kotlin.utilites.setupWithNavController
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
-    private val mainViewModel by viewModels<MainViewModel>()
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main) {
+    override val viewModel by viewModels<MainViewModel>()
     private var navController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.apply {
-            viewModel = mainViewModel
+            vm = viewModel
         }
 
         if(savedInstanceState == null)

@@ -15,8 +15,8 @@ import kr.co.lee.howlstargram_kotlin.utilites.successOrNull
 import kr.co.lee.howlstargram_kotlin.utilites.throwableOrNull
 
 @AndroidEntryPoint
-class FollowFragment : BaseFragment<FragmentFollowBinding>(R.layout.fragment_follow) {
-    private val viewModel: FollowViewModel by viewModels()
+class FollowFragment : BaseFragment<FragmentFollowBinding, FollowViewModel>(R.layout.fragment_follow) {
+    override val viewModel: FollowViewModel by viewModels()
     private val recyclerAdapter: FollowRecyclerAdapter by lazy {
         FollowRecyclerAdapter(
             currentUserUid = viewModel.currentUserUid,

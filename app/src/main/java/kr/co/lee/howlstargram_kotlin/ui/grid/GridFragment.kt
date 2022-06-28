@@ -14,8 +14,8 @@ import kr.co.lee.howlstargram_kotlin.utilites.CONTENT_DTO
 import kr.co.lee.howlstargram_kotlin.utilites.CONTENT_UID
 
 @AndroidEntryPoint
-class GridFragment : BaseFragment<FragmentGridBinding>(R.layout.fragment_grid) {
-    private val viewModel: GridViewModel by viewModels()
+class GridFragment : BaseFragment<FragmentGridBinding, GridViewModel>(R.layout.fragment_grid) {
+    override val viewModel: GridViewModel by viewModels()
     private val recyclerAdapter: GridRecyclerAdapter by lazy {
         GridRecyclerAdapter(
             widthPixels = resources.displayMetrics.widthPixels / 3,

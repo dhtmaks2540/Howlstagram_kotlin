@@ -16,8 +16,8 @@ import kr.co.lee.howlstargram_kotlin.databinding.FragmentSearchBinding
 import kr.co.lee.howlstargram_kotlin.ui.main.MainActivity
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_search) {
-    private val viewModel: SearchViewModel by viewModels()
+class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>(R.layout.fragment_search) {
+    override val viewModel: SearchViewModel by viewModels()
     private val recyclerAdapter: SearchRecyclerAdapter by lazy {
         SearchRecyclerAdapter(
             profileItemClicked = { destinationUid ->

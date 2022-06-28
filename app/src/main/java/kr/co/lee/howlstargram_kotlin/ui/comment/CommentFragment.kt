@@ -17,8 +17,8 @@ import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 import kr.co.lee.howlstargram_kotlin.utilites.successOrNull
 
 @AndroidEntryPoint
-class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_comment) {
-    private val viewModel: CommentViewModel by viewModels()
+class CommentFragment : BaseFragment<FragmentCommentBinding, CommentViewModel>(R.layout.fragment_comment) {
+    override val viewModel: CommentViewModel by viewModels()
     private val recyclerAdapter: CommentRecyclerAdapter by lazy {
         CommentRecyclerAdapter(
             profileItemClicked = { destinationUid ->
