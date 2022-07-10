@@ -1,23 +1,22 @@
 package kr.co.lee.howlstargram_kotlin.utilites
 
 import android.content.Intent
-import android.os.Build
+import android.util.Log
 import android.util.SparseArray
 import androidx.core.util.forEach
-import androidx.core.util.set
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kr.co.lee.howlstargram_kotlin.R
 
 /**
  * Manages the various graphs needed for a [BottomNavigationView].
  *
  * This sample is a workaround until the Navigation Component supports multiple back stacks.
  */
+@Suppress("DEPRECATION")
 fun BottomNavigationView.setupWithNavController(
     navGraphIds: List<Int>,
     fragmentManager: FragmentManager,
@@ -27,19 +26,18 @@ fun BottomNavigationView.setupWithNavController(
 
     // Map of tags(Sparse Array : Int 값을 Objects에 매핑시켜주는 안드로이드의 독특한 Map)
     // 원시형 타입을 사용하여 ArrayMap, HashMap 보다 효율성이 뛰어나지만 인덱스 사이에 공간이 존재해 크기가 큼)
+    // graphId, tag
     val graphIdToTagMap = SparseArray<String>()
-    // Result. Mutable live data with the selected controlled
+    // 선택된 NavController를 나타내는 LiveData
     val selectedNavController = MutableLiveData<NavController>()
 
     var firstFragmentGraphId = 0
 
-    // First create a NavHostFragment for each NavGraph ID
     // 각 NavGraph ID에 대한 NavHostFragment 첫 생성
     navGraphIds.forEachIndexed { index, navGraphId ->
         // Tag 획득
         val fragmentTag = getFragmentTag(index)
 
-        // Find or create the Navigation host fragment
         // NavHostFragment 생성 또는 획득
         val navHostFragment = obtainNavHostFragment(
             fragmentManager,
@@ -51,6 +49,7 @@ fun BottomNavigationView.setupWithNavController(
         // id 획득
         val graphId = navHostFragment.navController.graph.id
 
+        // 첫 번째 navigation graph 설정
         if (index == 0) {
             firstFragmentGraphId = graphId
         }
@@ -58,10 +57,9 @@ fun BottomNavigationView.setupWithNavController(
         // map에 값 저장
         graphIdToTagMap.put(graphId, fragmentTag)
 
-        // Attach or detach nav host fragment depending on whether it's the selected item.
         // 현재 선택된 아이템인지 아닌지에 따라서 NavHostFragment를 Attach하거나 Detach
         if (this.selectedItemId == graphId) {
-            // Update livedata with the selected graph
+            // 현재 선택된 NavController 설정
             selectedNavController.value = navHostFragment.navController
             attachNavHostFragment(fragmentManager, navHostFragment, index == 0)
         } else {
@@ -69,29 +67,34 @@ fun BottomNavigationView.setupWithNavController(
         }
     }
 
-    // Now connect selecting an item with swapping Fragments
+    // 선택된 Fragment Tag
     var selectedItemTag = graphIdToTagMap[this.selectedItemId]
+    // 첫 번째 Fragment Tag
     val firstFragmentTag = graphIdToTagMap[firstFragmentGraphId]
+    // 첫 번째 Fragment인지 확인하는 변수
     var isOnFirstFragment = selectedItemTag == firstFragmentTag
 
-    // When a navigation item is selected
+    // Navigation Item 선택 리스너(뒤로가기, 선택 모두)
     setOnNavigationItemSelectedListener { item ->
-        // Don't do anything if the state is state has already been saved.
+        // 이미 Fragment Manager의 state가 저장된 상태라면 패스
         if (fragmentManager.isStateSaved) {
             false
         } else {
+            // 새롭게 선택된 Fragment Tag
             val newlySelectedItemTag = graphIdToTagMap[item.itemId]
+            Log.d("NAVIGATION EXTENSION", "ItemSelected : $item, selectedItemTag : ${selectedItemTag}, newlySelectedItemTag : ${newlySelectedItemTag}")
+            // 새롭게 선택된 Fragment Tag라면
             if (selectedItemTag != newlySelectedItemTag) {
-                // Pop everything above the first fragment (the "fixed start destination")
+                // FirstFragment 백스택에서 제거
                 fragmentManager.popBackStack(firstFragmentTag,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                // 선택된 NavHostFragment
                 val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
                         as NavHostFragment
 
-                // Exclude the first fragment tag because it's always in the back stack.
+                // 현재 선택된 Fragment Tag가 첫 번째 Fragment Tag가 아니라면 -> 첫 번째 Fragment는 항상 백스택에 저장
                 if (firstFragmentTag != newlySelectedItemTag) {
-                    // Commit a transaction that cleans the back stack and adds the first fragment
-                    // to it, creating the fixed started destination.
+                    // 현재 선택된 Fragment attach 및 현재 FragmentManager의 기본 탐색 Fragment로 설정
                     fragmentManager.beginTransaction()
                         .setCustomAnimations(
                             androidx.navigation.ui.R.anim.nav_default_enter_anim,
@@ -101,17 +104,18 @@ fun BottomNavigationView.setupWithNavController(
                         .attach(selectedFragment)
                         .setPrimaryNavigationFragment(selectedFragment)
                         .apply {
-                            // Detach all other Fragments
+                            // 현재 선택된 Fragment 제외 나머지 Fragment Detach
                             graphIdToTagMap.forEach { _, fragmentTagIter ->
                                 if (fragmentTagIter != newlySelectedItemTag) {
                                     detach(fragmentManager.findFragmentByTag(firstFragmentTag)!!)
                                 }
                             }
                         }
-                        .addToBackStack(firstFragmentTag)
+                        .addToBackStack(firstFragmentTag) // 첫 번째 Fragment 백스택에 저장
                         .setReorderingAllowed(true)
                         .commit()
                 }
+                // 선택된 Fragment에 따른 변수변경
                 selectedItemTag = newlySelectedItemTag
                 isOnFirstFragment = selectedItemTag == firstFragmentTag
                 selectedNavController.value = selectedFragment.navController
@@ -122,20 +126,21 @@ fun BottomNavigationView.setupWithNavController(
         }
     }
 
-    // Optional: on item reselected, pop back stack to the destination of the graph
+    // 재선택 리스너(현재 그래프의 시작 destination으로 이동)
     setupItemReselected(graphIdToTagMap, fragmentManager)
 
     // Handle deep link
     setupDeepLinks(navGraphIds, fragmentManager, containerId, intent)
 
     // Finally, ensure that we update our BottomNavigationView when the back stack changes
+    // BackStack 변경 리스너
     fragmentManager.addOnBackStackChangedListener {
+        // 첫 번째 Fragment가 아니고 첫 번째 Fragment가 BackStack에 존재하지 않는다면 BottomNavigationView 첫 번째 Fragment로 변경
         if (!isOnFirstFragment && !fragmentManager.isOnBackStack(firstFragmentTag)) {
             this.selectedItemId = firstFragmentGraphId
         }
 
-        // Reset the graph if the currentDestination is not valid (happens when the back
-        // stack is popped after using the back button).
+        // 현재 destination이 유효하지 않은 경우 graph 재설정 (happens when the back stack is popped after using the back button).
         selectedNavController.value?.let { controller ->
             if (controller.currentDestination == null) {
                 controller.navigate(controller.graph.id)
@@ -145,6 +150,7 @@ fun BottomNavigationView.setupWithNavController(
     return selectedNavController
 }
 
+// DeepLink 설정 메서드
 private fun BottomNavigationView.setupDeepLinks(
     navGraphIds: List<Int>,
     fragmentManager: FragmentManager,
@@ -154,7 +160,7 @@ private fun BottomNavigationView.setupDeepLinks(
     navGraphIds.forEachIndexed { index, navGraphId ->
         val fragmentTag = getFragmentTag(index)
 
-        // Find or create the Navigation host fragment
+        // NavHostFragment 찾기 또는 생성
         val navHostFragment = obtainNavHostFragment(
             fragmentManager,
             fragmentTag,
@@ -169,6 +175,8 @@ private fun BottomNavigationView.setupDeepLinks(
     }
 }
 
+// 같은 아이템 재선택 리스너(시작 destination으로 이동)
+@Suppress("DEPRECATION")
 private fun BottomNavigationView.setupItemReselected(
     graphIdToTagMap: SparseArray<String>,
     fragmentManager: FragmentManager
@@ -178,13 +186,13 @@ private fun BottomNavigationView.setupItemReselected(
         val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
                 as NavHostFragment
         val navController = selectedFragment.navController
-        // Pop the back stack to the start destination of the current navController graph
         navController.popBackStack(
             navController.graph.startDestination, false
         )
     }
 }
 
+// 현재 UI에서 NavHostFragment Detach
 private fun detachNavHostFragment(
     fragmentManager: FragmentManager,
     navHostFragment: NavHostFragment
@@ -194,6 +202,7 @@ private fun detachNavHostFragment(
         .commitNow()
 }
 
+// 현재 UI에서 NavHostFragment Attach
 private fun attachNavHostFragment(
     fragmentManager: FragmentManager,
     navHostFragment: NavHostFragment,
@@ -202,6 +211,7 @@ private fun attachNavHostFragment(
     fragmentManager.beginTransaction()
         .attach(navHostFragment)
         .apply {
+            // 첫 번째 NavHostFragment라면 주요 Navigation Fragment로 설정
             if (isPrimaryNavFragment) {
                 setPrimaryNavigationFragment(navHostFragment)
             }
@@ -229,7 +239,7 @@ private fun obtainNavHostFragment(
     return navHostFragment
 }
 
-//
+// 현재 백스택에 있는지 체크하는 메서드
 private fun FragmentManager.isOnBackStack(backStackName: String): Boolean {
     val backStackCount = backStackEntryCount
     for (index in 0 until backStackCount) {
