@@ -51,3 +51,9 @@ MVVM 디자인 패턴 및 repository 패턴
 <img src="screenshots/screenshot_gallery.jpg" width="30%" height="30%">
 
 <br/>
+
+# 데이터베이스 구조
+
+<img src="screenshots/database.png">
+
+<br/>
