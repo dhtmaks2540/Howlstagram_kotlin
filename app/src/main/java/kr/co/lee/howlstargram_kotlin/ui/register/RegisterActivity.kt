@@ -1,6 +1,7 @@
 package kr.co.lee.howlstargram_kotlin.ui.register
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.base.BaseActivity
 import kr.co.lee.howlstargram_kotlin.databinding.ActivityRegisterBinding
+import kr.co.lee.howlstargram_kotlin.utilites.RegisterState
 import kr.co.lee.howlstargram_kotlin.utilites.USER
 import kr.co.lee.howlstargram_kotlin.utilites.forEachChildView
 
@@ -36,7 +38,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-
             android.R.id.home -> {
                 this.finish()
             }

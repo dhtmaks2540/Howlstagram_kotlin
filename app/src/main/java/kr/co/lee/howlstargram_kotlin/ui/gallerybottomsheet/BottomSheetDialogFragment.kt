@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout.VERTICAL
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kr.co.lee.howlstargram_kotlin.R
 import kr.co.lee.howlstargram_kotlin.databinding.FragmentAddBottomSheetBinding
 import kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryActivity
 import kr.co.lee.howlstargram_kotlin.utilites.GalleryImageType
@@ -49,7 +51,7 @@ class BottomSheetDialogFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddBottomSheetBinding.inflate(inflater, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_bottom_sheet, container, false)
         return binding.root
     }
 
@@ -75,5 +77,10 @@ class BottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         return dialog
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

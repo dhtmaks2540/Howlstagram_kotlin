@@ -7,6 +7,16 @@ sealed class UiState<out T> {
     data class Failed<T>(val message: String) : UiState<T>()
 }
 
+sealed class RegisterState {
+    object Success: RegisterState()
+    object Failed: RegisterState()
+}
+
+sealed class RegisterDatabaseState {
+    object Success: RegisterState()
+    object Failed: RegisterState()
+}
+
 fun <T> UiState<T>.successOrNull(): T? = if (this is UiState.Success<T>) {
     data
 } else {

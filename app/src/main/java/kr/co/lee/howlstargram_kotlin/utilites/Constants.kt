@@ -21,14 +21,6 @@ const val CONTENT_UID = "contentUid"
 const val USER = "user"
 const val READ_EXTERNAL_STORAGE_PERMISSION = 10
 
-// BottomNavigationView와 연결된 프래그먼트
-enum class FragmentType(val fragmentTitle: String, val fragmentTag: String) {
-    FRAGMENT1("fragment1", "DetailFragment"),
-    FRAGMENT2("fragment2", "GridFragment"),
-    FRAGMENT3("fragment3", "AlarmFragment"),
-    FRAGMENT4("fragment4", "UserFragment");
-}
-
 enum class ImageType {
     PROFILE_TYPE,
     POST_TYPE;

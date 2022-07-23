@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.UserDTO
+import kr.co.lee.howlstargram_kotlin.utilites.RegisterState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,5 +60,17 @@ class RegisterViewModel @Inject constructor(
             userName.value.toString().trim(),
             userNickName.value.toString().trim()
         )
+    }
+
+    suspend fun insertUser2(userItem: FirebaseUser): RegisterState{
+        val task = registerRepository.insertUserInformation(userItem,
+            userName.value.toString().trim(),
+            userNickName.value.toString().trim()
+        )
+
+        return when {
+            task.isSuccessful -> RegisterState.Success
+            else -> RegisterState.Failed
+        }
     }
 }
