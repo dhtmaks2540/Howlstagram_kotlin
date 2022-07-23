@@ -128,7 +128,7 @@ class UserFragment : BaseFragment<FragmentUserBinding, UserViewModel>(R.layout.f
         }
 
         viewModel.userAndContent.observe(viewLifecycleOwner) {
-            recyclerAdapter.submitList(it.second)
+            recyclerAdapter.submitList(it.contents)
         }
 
         viewModel.isMyProfile.observe(viewLifecycleOwner) {
@@ -139,9 +139,9 @@ class UserFragment : BaseFragment<FragmentUserBinding, UserViewModel>(R.layout.f
     // 팔로잉  클릭
     fun followingClickListener() {
         val bundle = bundleOf(
-            USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
-            FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
-            FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
+            USER_NICKNAME to viewModel.userAndContent.value?.user?.userDTO?.userNickName,
+            FOLLOWER to viewModel.userAndContent.value?.user?.userDTO?.followers,
+            FOLLOWING to viewModel.userAndContent.value?.user?.userDTO?.followings,
             TAB_TYPE to TabType.FOLLOWING_TAB
         )
 
@@ -152,9 +152,9 @@ class UserFragment : BaseFragment<FragmentUserBinding, UserViewModel>(R.layout.f
     // 팔로워 클릭
     fun followerClickListener() {
         val bundle = bundleOf(
-            USER_NICKNAME to viewModel.userAndContent.value?.first?.userDTO?.userNickName,
-            FOLLOWER to viewModel.userAndContent.value?.first?.userDTO?.followers,
-            FOLLOWING to viewModel.userAndContent.value?.first?.userDTO?.followings,
+            USER_NICKNAME to viewModel.userAndContent.value?.user?.userDTO?.userNickName,
+            FOLLOWER to viewModel.userAndContent.value?.user?.userDTO?.followers,
+            FOLLOWING to viewModel.userAndContent.value?.user?.userDTO?.followings,
             TAB_TYPE to TabType.FOLLOWER_TAB
         )
 
@@ -167,14 +167,14 @@ class UserFragment : BaseFragment<FragmentUserBinding, UserViewModel>(R.layout.f
         // 내 프로필이라면 -> 프로필 수정
         if (viewModel.uid.value == viewModel.currentUserId) {
             val intent = Intent(activity, ProfileEditActivity::class.java)
-            intent.putExtra(PROFILE_URL, viewModel.userAndContent.value?.first?.profileUrl)
+            intent.putExtra(PROFILE_URL, viewModel.userAndContent.value?.user?.profileUrl)
             intent.putExtra(
                 USER_NAME,
-                viewModel.userAndContent.value?.first?.userDTO?.userName
+                viewModel.userAndContent.value?.user?.userDTO?.userName
             )
             intent.putExtra(
                 USER_NICKNAME,
-                viewModel.userAndContent.value?.first?.userDTO?.userNickName
+                viewModel.userAndContent.value?.user?.userDTO?.userNickName
             )
             profileEditLauncher.launch(intent)
         } else { // 상대방 프로필이라면 -> 팔로우 요청

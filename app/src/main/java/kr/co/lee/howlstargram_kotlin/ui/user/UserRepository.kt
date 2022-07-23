@@ -10,6 +10,7 @@ import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
 import kr.co.lee.howlstargram_kotlin.model.User
+import kr.co.lee.howlstargram_kotlin.model.UserAndContent
 import kr.co.lee.howlstargram_kotlin.model.UserDTO
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class UserRepository @Inject constructor(
     @CurrentUserUid val currentUserId: String,
 ) {
     // 유저 정보 및 게시글 불러오기
-    suspend fun getUserAndContentDTOs(uid: String): Pair<User, List<ContentDTO>> {
+    suspend fun getUserAndContentDTOs(uid: String): UserAndContent {
         return withContext(ioDispatcher) {
             val userSnapShot = fireStore.collection("users")
                 .document(uid)
@@ -49,7 +50,7 @@ class UserRepository @Inject constructor(
                 contentDTOs.add(contentDTO!!)
             }
 
-            Pair(user, contentDTOs)
+            UserAndContent(user, contentDTOs)
         }
     }
 

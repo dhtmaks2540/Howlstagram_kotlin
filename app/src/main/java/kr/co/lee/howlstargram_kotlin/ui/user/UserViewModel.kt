@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
 import kr.co.lee.howlstargram_kotlin.model.User
+import kr.co.lee.howlstargram_kotlin.model.UserAndContent
 import kr.co.lee.howlstargram_kotlin.utilites.DESTINATION_UID
 import javax.inject.Inject
 
@@ -36,16 +37,11 @@ class UserViewModel @Inject constructor(
 
     val uid: LiveData<String> = _uid
 
-    private val _userAndContent = MutableLiveData<Pair<User, List<ContentDTO>>>()
-    val userAndContent: LiveData<Pair<User, List<ContentDTO>>> = _userAndContent
+    private val _userAndContent = MutableLiveData<UserAndContent>()
+    val userAndContent: LiveData<UserAndContent> = _userAndContent
 
     init {
-        viewModelScope.launch {
-            uid.value?.let {
-                val result = userRepository.getUserAndContentDTOs(it)
-                _userAndContent.postValue(result)
-            }
-        }
+        refresh()
     }
 
     private val _user = MutableLiveData<User>()
@@ -69,9 +65,9 @@ class UserViewModel @Inject constructor(
                 userRepository.saveMyAccount(uid.value!!)
                 val task = userRepository.saveThirdPerson(uid.value!!)
                 task.addOnSuccessListener { result ->
-                    val user = _userAndContent.value?.first?.copy(userDTO = result)
+                    val user = _userAndContent.value?.user?.copy(userDTO = result)
                     user?.let {
-                        _userAndContent.postValue(_userAndContent.value?.copy(first = it))
+                        _userAndContent.postValue(_userAndContent.value?.copy(user = it))
                     }
                 }
             }
