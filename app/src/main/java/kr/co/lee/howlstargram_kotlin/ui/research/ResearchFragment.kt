@@ -59,7 +59,7 @@ class ResearchFragment: BaseFragment<FragmentResearchBinding, ResearchViewModel>
     // 좋아요 페이지 이동
     fun startFavoriteClickListener() {
         val bundle = bundleOf(
-            FAVORITES to viewModel.userAndContent.value?.first?.contentDTO?.favorites
+            FAVORITES to viewModel.userAndContent.value?.content?.contentDTO?.favorites
         )
 
         navController.navigate(R.id.action_to_like, bundle)
@@ -67,14 +67,14 @@ class ResearchFragment: BaseFragment<FragmentResearchBinding, ResearchViewModel>
 
     // 프로필 페이지 이동
     fun startProfileClickListener() {
-        val action = ResearchFragmentDirections.actionToUser(destinationUid =  viewModel.userAndContent.value?.first?.contentDTO?.uid!!)
+        val action = ResearchFragmentDirections.actionToUser(destinationUid =  viewModel.userAndContent.value?.content?.contentDTO?.uid!!)
         navController.navigate(action)
     }
 
     // 댓글 페이지 이동
     fun startCommentClickListener() {
         val bundle = bundleOf(
-            CONTENT to viewModel.userAndContent.value?.first!!
+            CONTENT to viewModel.userAndContent.value?.content!!
         )
 
         navController.navigate(R.id.action_to_comment, bundle)

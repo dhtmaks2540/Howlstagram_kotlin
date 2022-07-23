@@ -9,6 +9,7 @@ import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
+import kr.co.lee.howlstargram_kotlin.model.ResearchContent
 import kr.co.lee.howlstargram_kotlin.model.UserDTO
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class ResearchRepository @Inject constructor(
     suspend fun getUserAndContent(
         contentDTO: ContentDTO,
         contentUid: String
-    ): Triple<Content, Boolean, Boolean> {
+    ): ResearchContent {
         return withContext(ioDispatcher) {
             val myUserSnapShot =
                 fireStore.collection("users").document(currentUserUid).get().await()
@@ -47,7 +48,7 @@ class ResearchRepository @Inject constructor(
             )
             val isMyPost = currentUserUid != contentDTO.uid
 
-            Triple(content, isFollow, isMyPost)
+            ResearchContent(content, isFollow, isMyPost)
         }
     }
 

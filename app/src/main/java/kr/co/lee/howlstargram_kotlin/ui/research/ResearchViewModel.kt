@@ -11,6 +11,7 @@ import kr.co.lee.howlstargram_kotlin.di.CurrentUserUid
 import kr.co.lee.howlstargram_kotlin.di.IoDispatcher
 import kr.co.lee.howlstargram_kotlin.model.Content
 import kr.co.lee.howlstargram_kotlin.model.ContentDTO
+import kr.co.lee.howlstargram_kotlin.model.ResearchContent
 import kr.co.lee.howlstargram_kotlin.model.UserDTO
 import kr.co.lee.howlstargram_kotlin.utilites.CONTENT_DTO
 import kr.co.lee.howlstargram_kotlin.utilites.CONTENT_UID
@@ -28,8 +29,8 @@ class ResearchViewModel @Inject constructor(
     private val contentUid = stateHandle.get<String>(CONTENT_UID)
         ?: throw IllegalStateException("There is no value of contentUid.")
 
-    private val _userAndContent = MutableLiveData<Triple<Content, Boolean, Boolean>>()
-    val userAndContent: LiveData<Triple<Content, Boolean, Boolean>> = _userAndContent
+    private val _userAndContent = MutableLiveData<ResearchContent>()
+    val userAndContent: LiveData<ResearchContent> = _userAndContent
 
     init {
         viewModelScope.launch {
@@ -40,12 +41,12 @@ class ResearchViewModel @Inject constructor(
 
     fun favoriteEvent() {
         viewModelScope.launch {
-            if(userAndContent.value?.first?.contentUid != null) {
-                val task = researchRepository.requestFavoriteEvent(userAndContent.value?.first?.contentUid!!)
+            if(userAndContent.value?.content?.contentUid != null) {
+                val task = researchRepository.requestFavoriteEvent(userAndContent.value?.content?.contentUid!!)
                 task.addOnSuccessListener { result ->
-                    val newContent = _userAndContent.value?.first?.copy(contentDTO = result)
+                    val newContent = _userAndContent.value?.content?.copy(contentDTO = result)
                     newContent?.let {
-                        _userAndContent.postValue(_userAndContent.value?.copy(first = it))
+                        _userAndContent.postValue(_userAndContent.value?.copy(content = it))
                     }
                 }
             }
@@ -56,11 +57,11 @@ class ResearchViewModel @Inject constructor(
     fun requestFollow() {
         viewModelScope.launch {
             coroutineScope {
-                val job = researchRepository.saveMyAccount(userAndContent.value?.first?.contentDTO?.uid!!)
-                researchRepository.saveThirdPerson(userAndContent.value?.first?.contentDTO?.uid!!)
+                val job = researchRepository.saveMyAccount(userAndContent.value?.content?.contentDTO?.uid!!)
+                researchRepository.saveThirdPerson(userAndContent.value?.content?.contentDTO?.uid!!)
 
                 job.addOnSuccessListener { result ->
-                    _userAndContent.postValue(_userAndContent.value?.copy(second = result))
+                    _userAndContent.postValue(_userAndContent.value?.copy(isFollow = result))
                 }
             }
         }
