@@ -15,7 +15,6 @@ import kr.co.lee.howlstargram_kotlin.utilites.setupWithNavController
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main) {
     override val viewModel by viewModels<MainViewModel>()
-    private var navController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +42,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             intent
         )
 
-        controller.observe(this) {
+        viewModel.setController(controller)
+
+        viewModel.navController.observe(this) {
             it.addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
                     R.id.screen_comment -> {
@@ -55,11 +56,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                 }
             }
         }
-
-        navController = controller
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController?.value?.navigateUp()!! || super.onSupportNavigateUp()
+        return viewModel.navController.value?.navigateUp()!! || super.onSupportNavigateUp()
     }
 }
