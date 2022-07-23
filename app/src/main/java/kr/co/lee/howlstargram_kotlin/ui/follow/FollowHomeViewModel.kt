@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kr.co.lee.howlstargram_kotlin.model.FollowerAndFollowing
 import kr.co.lee.howlstargram_kotlin.utilites.*
 import javax.inject.Inject
 
@@ -21,6 +22,6 @@ class FollowHomeViewModel @Inject constructor(
     private val followings = savedStateHandle.get<Map<String, Boolean>>(FOLLOWING)
         ?: throw IllegalStateException("There is no followings.")
 
-    private val _follow = MutableLiveData(Pair(followers, followings))
-    val follow: LiveData<Pair<Map<String, Boolean>, Map<String, Boolean>>> = _follow
+    private val _followerAndFollowing = MutableLiveData(FollowerAndFollowing(followers, followings))
+    val followerAndFollowing: LiveData<FollowerAndFollowing> = _followerAndFollowing
 }

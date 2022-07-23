@@ -50,7 +50,7 @@ class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding, FollowHomeVie
 
     // Observe LiveData
     private fun observeLiveData() {
-        viewModel.follow.observe(viewLifecycleOwner) {
+        viewModel.followerAndFollowing.observe(viewLifecycleOwner) {
             viewPagerAdapter = ViewPagerAdapter(it, this)
             binding.pager.adapter = viewPagerAdapter
             when (viewModel.tabType) {
@@ -62,8 +62,8 @@ class FollowHomeFragment : BaseFragment<FragmentFollowHomeBinding, FollowHomeVie
 
             TabLayoutMediator(binding.tab, binding.pager) { tab, position ->
                 when (position) {
-                    0 -> tab.text = "팔로워 ${it.first.size}"
-                    1 -> tab.text = "팔로잉 ${it.second.size}"
+                    0 -> tab.text = "팔로워 ${it.follower.size}"
+                    1 -> tab.text = "팔로잉 ${it.following.size}"
                 }
             }.attach()
         }
