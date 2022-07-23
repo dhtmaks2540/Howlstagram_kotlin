@@ -1,18 +1,19 @@
 package kr.co.lee.howlstargram_kotlin.utilites
 
 import android.content.Intent
+<<<<<<< HEAD
 import android.os.Build
+=======
+>>>>>>> 715bcee962913b23cb924692680a95a81d496ac4
 import android.util.Log
 import android.util.SparseArray
 import androidx.core.util.forEach
-import androidx.core.util.set
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kr.co.lee.howlstargram_kotlin.R
 
 /**
  * Manages the various graphs needed for a [BottomNavigationView].
@@ -29,7 +30,11 @@ fun BottomNavigationView.setupWithNavController(
 
     // Map of tags(Sparse Array : Int 값을 Objects에 매핑시켜주는 안드로이드의 독특한 Map)
     // 원시형 타입을 사용하여 ArrayMap, HashMap 보다 효율성이 뛰어나지만 인덱스 사이에 공간이 존재해 크기가 큼)
+<<<<<<< HEAD
     // graphId, tag 
+=======
+    // graphId, tag
+>>>>>>> 715bcee962913b23cb924692680a95a81d496ac4
     val graphIdToTagMap = SparseArray<String>()
     // 선택된 NavController를 나타내는 LiveData
     val selectedNavController = MutableLiveData<NavController>()
