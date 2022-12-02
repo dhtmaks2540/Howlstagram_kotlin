@@ -7,11 +7,11 @@
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.gallery.GalleryViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.gallery.GalleryViewModel" />
 
         <variable
             name="imageItem"
-            type="kr.co.lee.howlstargram_kotlin.model.GalleryImage" />
+            type="kr.co.lee.howlstagram_kotlin.model.GalleryImage" />
 
         <import type="android.graphics.Color" />
 

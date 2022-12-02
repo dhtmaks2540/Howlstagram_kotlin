@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.follow.FollowHomeViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.follow.FollowHomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

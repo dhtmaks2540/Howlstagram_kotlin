@@ -7,11 +7,11 @@
 
         <variable
             name="handler"
-            type="kr.co.lee.howlstargram_kotlin.ui.login.LoginActivity" />
+            type="kr.co.lee.howlstagram_kotlin.ui.login.LoginActivity" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.login.LoginViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.login.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

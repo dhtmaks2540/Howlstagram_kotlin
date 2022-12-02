@@ -13,7 +13,7 @@
 
         <variable
             name="favoriteDTOItem"
-            type="kr.co.lee.howlstargram_kotlin.model.FavoriteDTO" />
+            type="kr.co.lee.howlstagram_kotlin.model.FavoriteDTO" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

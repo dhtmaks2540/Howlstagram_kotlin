@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/test_screen"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.grid.GridFragment"
         android:label="GridFragment" />
 </navigation>

@@ -6,19 +6,19 @@
 
     <data>
 
-        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+        <import type="kr.co.lee.howlstagram_kotlin.utilites.UiStateKt" />
 
         <variable
             name="handler"
-            type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentFragment" />
+            type="kr.co.lee.howlstagram_kotlin.ui.comment.CommentFragment" />
 
         <variable
             name="adapter"
-            type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentRecyclerAdapter" />
+            type="kr.co.lee.howlstagram_kotlin.ui.comment.CommentRecyclerAdapter" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.comment.CommentViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.comment.CommentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,7 +6,7 @@
 
         <variable
             name="adapter"
-            type="kr.co.lee.howlstargram_kotlin.ui.gallerybottomsheet.BottomSheetRecyclerAdapter" />
+            type="kr.co.lee.howlstagram_kotlin.ui.gallerybottomsheet.BottomSheetRecyclerAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

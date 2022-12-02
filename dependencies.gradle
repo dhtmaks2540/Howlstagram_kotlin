@@ -1,6 +1,6 @@
 ext.versions = [
         minSdk               : 23,
-        compileSdk           : 32,
+        compileSdk           : 33,
         versionCode          : 1,
         versionName          : '1.0',
 
@@ -11,7 +11,7 @@ ext.versions = [
         ktlint               : '0.41.0',
 
         // kotlin
-        kotlin               : '1.5.31',
+        kotlin               : '1.7.20',
 
         // support library
         materialVersion      : '1.5.0',
@@ -20,14 +20,15 @@ ext.versions = [
         constraintVersion    : '2.1.3',
 
         // architecture components
-        fragmentVersion      : '1.4.0',
+        fragmentVersion      : '1.5.4',
         lifecycleVersion     : '2.4.0',
         roomVersion          : '2.4.0',
         archCompomentVersion : '2.1.0',
-        swipeVersion : '1.1.0',
+        swipeVersion         : '1.1.0',
+        activityKtxVersion   : '1.6.1',
 
         // di
-        hiltVersion      : '2.40.5',
+        hiltVersion          : '2.44',
 
         // network
         retrofitVersion      : '2.9.0',
@@ -38,30 +39,30 @@ ext.versions = [
         glidePaletteVersion  : '2.1.2',
 
         // unit test
-        truthVersion         : '1.0.1',
-        junitVersion         : '4.13.1',
-        turbineVersion       : '0.6.0',
-        robolectricVersion   : '4.4',
-        androidxTest         : '1.3.0',
-        androidxTestJunit    : '1.1.2',
-        androidTestRunner    : '1.3.0-beta01',
-        espressoVersion      : '3.3.0',
-        mockitoKotlinVersion : '2.2.0',
-        mockitoInlineVersion : '3.5.13',
+        truthVersion               : '1.0.1',
+        junitVersion               : '4.13.1',
+        turbineVersion             : '0.6.0',
+        robolectricVersion         : '4.4',
+        androidxTest               : '1.3.0',
+        androidxTestJunit          : '1.1.2',
+        androidTestRunner          : '1.3.0-beta01',
+        espressoVersion            : '3.3.0',
+        mockitoKotlinVersion       : '2.2.0',
+        mockitoInlineVersion       : '3.5.13',
 
         // Navigation
-        navigationVersion    : '2.3.1',
+        navigationVersion          : '2.3.1',
 
         // Google Services
-        googleVersion : '4.3.8',
+        googleVersion              : '4.3.8',
 
         // Firebase
-        firebaseAuthVersion : '21.0.6',
-        firebaseStorageVersion : '20.0.1',
-        firebaseFireStoreVersion : '24.2.0',
+        firebaseAuthVersion        : '21.1.0',
+        firebaseStorageVersion     : '20.1.0',
+        firebaseFireStoreVersion   : '24.4.1',
 
         // play services
-        playServicesAuthVersion : '20.2.0',
+        playServicesAuthVersion : '20.4.0',
 
         // CircleImageView
         circleImageViewVersion : '3.1.0',
@@ -76,4 +77,9 @@ ext.versions = [
 
         // RecyclerView
         recyclerViewVersions : '1.2.1',
+
+        // Rx
+        rxKotlinVersion : '3.0.1',
+        rxJavaVersion : '3.1.5',
+        rxAndroidVersion : '3.0.2'
 ]

@@ -5,15 +5,15 @@
 
     <data>
 
-        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+        <import type="kr.co.lee.howlstagram_kotlin.utilites.UiStateKt" />
 
         <variable
             name="itemDecoration"
-            type="kr.co.lee.howlstargram_kotlin.ui.grid.GridItemDecoration" />
+            type="kr.co.lee.howlstagram_kotlin.ui.grid.GridItemDecoration" />
 
         <variable
             name="handler"
-            type="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment" />
+            type="kr.co.lee.howlstagram_kotlin.ui.user.UserFragment" />
 
         <variable
             name="isMyProfile"
@@ -21,11 +21,11 @@
 
         <variable
             name="adapter"
-            type="kr.co.lee.howlstargram_kotlin.ui.user.UserRecyclerAdapter" />
+            type="kr.co.lee.howlstagram_kotlin.ui.user.UserRecyclerAdapter" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.user.UserViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.user.UserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,23 +6,23 @@
 
     <data>
 
-        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+        <import type="kr.co.lee.howlstagram_kotlin.utilites.UiStateKt" />
 
         <variable
             name="itemDecoration"
-            type="kr.co.lee.howlstargram_kotlin.ui.grid.GridItemDecoration" />
+            type="kr.co.lee.howlstagram_kotlin.ui.grid.GridItemDecoration" />
 
         <variable
             name="handler"
-            type="kr.co.lee.howlstargram_kotlin.ui.grid.GridFragment" />
+            type="kr.co.lee.howlstagram_kotlin.ui.grid.GridFragment" />
 
         <variable
             name="adapter"
-            type="kr.co.lee.howlstargram_kotlin.ui.grid.GridRecyclerAdapter" />
+            type="kr.co.lee.howlstagram_kotlin.ui.grid.GridRecyclerAdapter" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.grid.GridViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.grid.GridViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

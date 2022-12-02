@@ -14,4 +14,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "HowlStargram_Kotlin"
 include ':app'
-include ':imageselectmodule'
+include ':data'
+include ':domain'
+include ':feature'
+include ':model'
+include ':network'

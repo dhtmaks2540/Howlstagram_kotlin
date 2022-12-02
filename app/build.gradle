@@ -58,7 +58,8 @@ dependencies {
     implementation "androidx.room:room-ktx:$versions.roomVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipeVersion"
     kapt "androidx.room:room-compiler:$versions.roomVersion"
-    // Activity KTX
+    implementation "androidx.activity:activity-ktx:$versions.activityKtxVersion"
+
 
     // hilt
     implementation "com.google.dagger:hilt-android:$versions.hiltVersion"
@@ -105,4 +106,9 @@ dependencies {
 
     // RecyclerView
     implementation "androidx.recyclerview:recyclerview:$versions.recyclerViewVersions"
+
+    // Rx
+    implementation "io.reactivex.rxjava3:rxkotlin:$versions.rxKotlinVersion"
+    implementation "io.reactivex.rxjava3:rxjava:$versions.rxJavaVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:$versions.rxAndroidVersion"
 }

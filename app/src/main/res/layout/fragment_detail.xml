@@ -5,17 +5,17 @@
 
     <data>
 
-        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+        <import type="kr.co.lee.howlstagram_kotlin.utilites.UiStateKt" />
 
-        <import type="kr.co.lee.howlstargram_kotlin.model.Content" />
+        <import type="kr.co.lee.howlstagram_kotlin.model.Content" />
 
         <variable
             name="adapter"
-            type="kr.co.lee.howlstargram_kotlin.ui.detail.DetailRecyclerAdapter" />
+            type="kr.co.lee.howlstagram_kotlin.ui.detail.DetailRecyclerAdapter" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.detail.DetailViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.detail.DetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

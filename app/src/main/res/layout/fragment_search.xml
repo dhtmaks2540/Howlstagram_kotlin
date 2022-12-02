@@ -5,15 +5,15 @@
 
     <data>
 
-        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+        <import type="kr.co.lee.howlstagram_kotlin.utilites.UiStateKt" />
 
         <variable
             name="adapter"
-            type="kr.co.lee.howlstargram_kotlin.ui.search.SearchRecyclerAdapter" />
+            type="kr.co.lee.howlstagram_kotlin.ui.search.SearchRecyclerAdapter" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.search.SearchViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.search.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

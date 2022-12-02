@@ -7,7 +7,7 @@
 
         <variable
             name="commentItem"
-            type="kr.co.lee.howlstargram_kotlin.model.Comment" />
+            type="kr.co.lee.howlstagram_kotlin.model.Comment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

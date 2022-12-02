@@ -6,7 +6,7 @@
 
         <variable
             name="userItem"
-            type="kr.co.lee.howlstargram_kotlin.model.User" />
+            type="kr.co.lee.howlstagram_kotlin.model.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

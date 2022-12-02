@@ -6,7 +6,7 @@
 
         <variable
             name="content"
-            type="kr.co.lee.howlstargram_kotlin.model.Content" />
+            type="kr.co.lee.howlstagram_kotlin.model.Content" />
 
         <variable
             name="currentUserIdItem"

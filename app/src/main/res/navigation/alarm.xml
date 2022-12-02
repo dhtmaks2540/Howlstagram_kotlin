@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/screen_alarm"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.alarm.AlarmFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.alarm.AlarmFragment"
         android:label="AlarmFragment" />
 </navigation>

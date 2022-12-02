@@ -8,7 +8,7 @@
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.register.RegisterViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.register.RegisterViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

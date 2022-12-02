@@ -6,12 +6,12 @@
 
     <fragment
         android:id="@+id/screen_detail"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.detail.DetailFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.detail.DetailFragment"
         android:label="DetailFragment" />
 
     <fragment
         android:id="@+id/screen_user"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.user.UserFragment"
         android:label="UserFragment">
         <argument
             android:name="destinationUid"
@@ -28,12 +28,12 @@
 
     <fragment
         android:id="@+id/screen_like"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.like.LikeFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.like.LikeFragment"
         android:label="LikeFragment" />
 
     <fragment
         android:id="@+id/screen_follow_home"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowHomeFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.follow.FollowHomeFragment"
         android:label="FollowHomeFragment">
         <action
             android:id="@+id/detail_follow_home_to_follow"
@@ -46,17 +46,17 @@
 
     <fragment
         android:id="@+id/screen_follow"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.follow.FollowFragment"
         android:label="FollowFragment" />
 
     <fragment
         android:id="@+id/screen_comment"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.comment.CommentFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.comment.CommentFragment"
         android:label="CommentFragment" />
 
     <dialog
         android:id="@+id/screen_bottom_sheet"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.gallerybottomsheet.BottomSheetDialogFragment" />
+        android:name="kr.co.lee.howlstagram_kotlin.ui.gallerybottomsheet.BottomSheetDialogFragment" />
 
     <action
         android:id="@+id/action_to_user"

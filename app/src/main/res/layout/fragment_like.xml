@@ -5,15 +5,15 @@
 
     <data>
 
-        <import type="kr.co.lee.howlstargram_kotlin.utilites.UiStateKt" />
+        <import type="kr.co.lee.howlstagram_kotlin.utilites.UiStateKt" />
 
         <variable
             name="adapter"
-            type="kr.co.lee.howlstargram_kotlin.ui.like.LikeRecyclerAdapter" />
+            type="kr.co.lee.howlstagram_kotlin.ui.like.LikeRecyclerAdapter" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.like.LikeViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.like.LikeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -8,11 +8,11 @@
 
         <variable
             name="handler"
-            type="kr.co.lee.howlstargram_kotlin.ui.profile.ProfileEditActivity" />
+            type="kr.co.lee.howlstagram_kotlin.ui.profile.ProfileEditActivity" />
 
         <variable
             name="vm"
-            type="kr.co.lee.howlstargram_kotlin.ui.profile.ProfileViewModel" />
+            type="kr.co.lee.howlstagram_kotlin.ui.profile.ProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

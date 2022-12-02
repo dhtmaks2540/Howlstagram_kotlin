@@ -5,7 +5,7 @@
     <data>
         <variable
             name="imageTypeItem"
-            type="kr.co.lee.howlstargram_kotlin.utilites.GalleryImageType" />
+            type="kr.co.lee.howlstagram_kotlin.utilites.GalleryImageType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

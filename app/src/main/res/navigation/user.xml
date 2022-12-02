@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/screen_user"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.user.UserFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.user.UserFragment"
         android:label="UserFragment">
         <argument
             android:name="destinationUid"
@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/screen_follow_home"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowHomeFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.follow.FollowHomeFragment"
         android:label="FollowHomeFragment">
         <action
             android:id="@+id/follow_home_to_follow"
@@ -37,12 +37,12 @@
 
     <fragment
         android:id="@+id/screen_follow"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.follow.FollowFragment"
+        android:name="kr.co.lee.howlstagram_kotlin.ui.follow.FollowFragment"
         android:label="FollowFragment" />
 
     <dialog
         android:id="@+id/screen_bottom_sheet"
-        android:name="kr.co.lee.howlstargram_kotlin.ui.gallerybottomsheet.BottomSheetDialogFragment" />
+        android:name="kr.co.lee.howlstagram_kotlin.ui.gallerybottomsheet.BottomSheetDialogFragment" />
 
     <action
         android:id="@+id/action_to_user"
